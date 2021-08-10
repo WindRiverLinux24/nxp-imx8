@@ -311,7 +311,7 @@ Can validate using the following steps:
 
 Simply add line as follows to ${buildprj}/build/conf/local.conf:
 
-	KERNEL_FEATURES_append = " features/iwlwifi/iwlwifi.scc"
+	KERNEL_FEATURES:append = " features/iwlwifi/iwlwifi.scc"
 
 This will include the iwlwifi and mac80211 kernel modules in
 the root file system.

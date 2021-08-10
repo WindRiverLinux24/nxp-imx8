@@ -146,7 +146,7 @@ FSL_MIRROR ?= "${IMX_MIRROR}"
 FSL_EULA_FILE_GRAPHIC = "${LAYERDIR}/EULA"
 
 LAYERSERIES_COMPAT_imx8-graphic-layer = "wrl hardknott"
-DISTRO_FEATURES_append = " imx8-graphic"
+DISTRO_FEATURES:append = " imx8-graphic"
 EOF
 fi
 
@@ -163,20 +163,20 @@ file_modify()
 
 if [ $PLATFORM_TYPE = "imx8mq" ]; then
 file_modify $GRAPHIC_DTS/imx8-graphic/conf/layer.conf \
-			"20iMACHINEOVERRIDES_EXTENDER_nxp-imx8   = \"imx:mx8:mx8m:mx8mq:imxdrm:imxdcss:imxvpu:imxvpuhantro:imxgpu:imxgpu3d\"" \
-			"24iIMAGE_INSTALL_append += \"assimp devil imx-vpu-hantro imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos\""
+			"20iMACHINEOVERRIDES_EXTENDER:nxp-imx8   = \"imx:mx8:mx8m:mx8mq:imxdrm:imxdcss:imxvpu:imxvpuhantro:imxgpu:imxgpu3d\"" \
+			"24iIMAGE_INSTALL:append += \"assimp devil imx-vpu-hantro imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos\""
 elif [ $PLATFORM_TYPE = "imx8mm" ]; then
 file_modify $GRAPHIC_DTS/imx8-graphic/conf/layer.conf \
-			"20iMACHINEOVERRIDES_EXTENDER_nxp-imx8   = \"imx:mx8:mx8m:mx8mm:imxdrm:imxvpu:imxvpuhantro:imxgpu:imxgpu2d:imxgpu3d\"" \
-			"24iIMAGE_INSTALL_append += \"assimp devil imx-vpu-hantro imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos\""
+			"20iMACHINEOVERRIDES_EXTENDER:nxp-imx8   = \"imx:mx8:mx8m:mx8mm:imxdrm:imxvpu:imxvpuhantro:imxgpu:imxgpu2d:imxgpu3d\"" \
+			"24iIMAGE_INSTALL:append += \"assimp devil imx-vpu-hantro imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos\""
 elif [ $PLATFORM_TYPE = "imx8qm" ]; then
 file_modify $GRAPHIC_DTS/imx8-graphic/conf/layer.conf \
-			"20iMACHINEOVERRIDES_EXTENDER_nxp-imx8   = \"imx:mx8:mx8qm:imxdrm:imxdpu:imxgpu:imxgpu2d:imxgpu3d\"" \
-			"24iIMAGE_INSTALL_append += \"assimp devil imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos\""
+			"20iMACHINEOVERRIDES_EXTENDER:nxp-imx8   = \"imx:mx8:mx8qm:imxdrm:imxdpu:imxgpu:imxgpu2d:imxgpu3d\"" \
+			"24iIMAGE_INSTALL:append += \"assimp devil imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos\""
 elif [ $PLATFORM_TYPE = "imx8qxp" ]; then
 file_modify $GRAPHIC_DTS/imx8-graphic/conf/layer.conf \
-			"20iMACHINEOVERRIDES_EXTENDER_nxp-imx8   = \"imx:mx8:mx8qxp:imxdrm:imxdpu:imxgpu:imxgpu2d:imxgpu3d\"" \
-			"24iIMAGE_INSTALL_append += \"assimp devil imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos\""
+			"20iMACHINEOVERRIDES_EXTENDER:nxp-imx8   = \"imx:mx8:mx8qxp:imxdrm:imxdpu:imxgpu:imxgpu2d:imxgpu3d\"" \
+			"24iIMAGE_INSTALL:append += \"assimp devil imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos\""
 fi
 
 if [ ! -f $GRAPHIC_DTS/imx8-graphic/conf/imx8-graphic.inc ]; then
@@ -192,12 +192,12 @@ PREFERRED_VERSION_wayland-protocols = "1.18.imx"
 PREFERRED_VERSION_libdrm = "2.4.99.imx"
 PREFERRED_VERSION_weston = "7.0.0.imx"
 
-PREFERRED_PROVIDER_opencl-headers_nxp-imx8 = "imx-gpu-viv"
+PREFERRED_PROVIDER_opencl-headers:nxp-imx8 = "imx-gpu-viv"
 
-DISTRO_FEATURES_remove = "directfb "
-DISTRO_FEATURES_append = " x11 wayland pam"
+DISTRO_FEATURES:remove = "directfb "
+DISTRO_FEATURES:append = " x11 wayland pam"
 
-PNWHITELIST_openembedded-layer += 'freeglut'
+PNWHITELIST:openembedded-layer += 'freeglut'
 PNWHITELIST_imx8-graphic-layer += 'imx-gpu-viv'
 PNWHITELIST_imx8-graphic-layer += 'imx-gpu-viv-demos'
 PNWHITELIST_imx8-graphic-layer += 'imx-gpu-sdk'
@@ -210,10 +210,10 @@ PNWHITELIST_imx8-graphic-layer += 'spirv-tools'
 PNWHITELIST_imx8-graphic-layer += 'glslang'
 PNWHITELIST_imx8-graphic-layer += 'wayland-protocols'
 PNWHITELIST_imx8-graphic-layer += 'libdrm'
-PNWHITELIST_openembedded-layer += 'fmt'
-PNWHITELIST_openembedded-layer += 'googletest'
-PNWHITELIST_openembedded-layer += 'rapidjson'
-PNWHITELIST_openembedded-layer += 'glm'
+PNWHITELIST:openembedded-layer += 'fmt'
+PNWHITELIST:openembedded-layer += 'googletest'
+PNWHITELIST:openembedded-layer += 'rapidjson'
+PNWHITELIST:openembedded-layer += 'glm'
 PNWHITELIST_imx8-graphic-layer += 'stb'
 PNWHITELIST_imx8-graphic-layer += 'rapidvulkan'
 PNWHITELIST_imx8-graphic-layer += 'rapidopencl'
@@ -227,35 +227,35 @@ PNWHITELIST_imx8-graphic-layer += 'vulkan-loader'
 PNWHITELIST_imx8-graphic-layer += 'vulkan-tools'
 PNWHITELIST_imx8-graphic-layer += 'weston-init'
 PNWHITELIST_imx8-graphic-layer += 'weston'
-PNWHITELIST_openembedded-layer += 'libxaw'
-PNWHITELIST_openembedded-layer += 'xterm'
+PNWHITELIST:openembedded-layer += 'libxaw'
+PNWHITELIST:openembedded-layer += 'xterm'
 
-IMAGE_INSTALL_append += " \\
+IMAGE_INSTALL:append += " \\
     \${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'weston-init', '', d)} \\
     \${@bb.utils.contains('DISTRO_FEATURES', 'x11 wayland', 'weston-xwayland xterm', '', d)} \\
     imx-gpu-apitrace \\
 "
 
 
-IMAGE_FEATURES_remove = "\${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'x11-base  x11-sato', '', d)}"
+IMAGE_FEATURES:remove = "\${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'x11-base  x11-sato', '', d)}"
 
 # QA check settings - a little stricter than the OE-Core defaults
 WARN_TO_ERROR_QA = "already-stripped compile-host-path install-host-path \\
                     installed-vs-shipped ldflags pn-overrides rpaths staticdev \\
                     useless-rpaths"
-WARN_QA_remove = "\${WARN_TO_ERROR_QA}"
-ERROR_QA_append = " \${WARN_TO_ERROR_QA}"
+WARN_QA:remove = "\${WARN_TO_ERROR_QA}"
+ERROR_QA:append = " \${WARN_TO_ERROR_QA}"
 
 EOF
 fi
 
 if [ ! -f $GRAPHIC_DTS/imx8-graphic/conf/third_party_build.inc ]; then
 	cat > $GRAPHIC_DTS/imx8-graphic/conf/third_party_build.inc << EOF
-WRLINUX_SUPPORTED_RECIPE_pn-imx-gpu-sdk ?= "0 "
-WRLINUX_SUPPORTED_RECIPE_pn-imx-gpu-viv ?= "0 "
-WRLINUX_SUPPORTED_RECIPE_pn-imx-gpu-g2d ?= "0 "
-WRLINUX_SUPPORTED_RECIPE_pn-imx-gpu-apitrace ?= "0 "
-WRLINUX_SUPPORTED_RECIPE_pn-imx-dpu-g2d ?= "0 "
+WRLINUX_SUPPORTED_RECIPE:pn-imx-gpu-sdk ?= "0 "
+WRLINUX_SUPPORTED_RECIPE:pn-imx-gpu-viv ?= "0 "
+WRLINUX_SUPPORTED_RECIPE:pn-imx-gpu-g2d ?= "0 "
+WRLINUX_SUPPORTED_RECIPE:pn-imx-gpu-apitrace ?= "0 "
+WRLINUX_SUPPORTED_RECIPE:pn-imx-dpu-g2d ?= "0 "
 EOF
 fi
 
@@ -542,7 +542,7 @@ index 66af62fb..c003fef6 100644
 2.25.1" > $GRAPHIC_DTS/imx8-graphic/recipes-graphics/gli/gli/0001-Fix-build-error-Ordered-comparison-of-pointer-with-i.patch
 mkdir -p $GRAPHIC_DTS/imx8-graphic/recipes-graphics/rapidjson
 touch $GRAPHIC_DTS/imx8-graphic/recipes-graphics/rapidjson/rapidjson_git.bbappend
-echo "FILES_\${PN}-dev += \"\${libdir_native}/*\"" > $GRAPHIC_DTS/imx8-graphic/recipes-graphics/rapidjson/rapidjson_git.bbappend
+echo "FILES:\${PN}-dev += \"\${libdir_native}/*\"" > $GRAPHIC_DTS/imx8-graphic/recipes-graphics/rapidjson/rapidjson_git.bbappend
 
 if [ $PLATFORM_TYPE = "imx8qm" ]; then
 SOURCE_DIR=$GRAPHIC_SRC/meta-imx/meta-bsp/
