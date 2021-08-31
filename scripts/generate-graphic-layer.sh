@@ -145,7 +145,7 @@ IMX_MIRROR ?= "https://www.nxp.com/lgfiles/NMG/MAD/YOCTO/"
 FSL_MIRROR ?= "${IMX_MIRROR}"
 FSL_EULA_FILE_GRAPHIC = "${LAYERDIR}/EULA"
 
-LAYERSERIES_COMPAT_imx8-graphic-layer = "wrl hardknott"
+LAYERSERIES_COMPAT_imx8-graphic-layer = "wrl honister"
 DISTRO_FEATURES:append = " imx8-graphic"
 EOF
 fi
@@ -181,12 +181,12 @@ fi
 
 if [ ! -f $GRAPHIC_DTS/imx8-graphic/conf/imx8-graphic.inc ]; then
 cat > $GRAPHIC_DTS/imx8-graphic/conf/imx8-graphic.inc << EOF
-PREFERRED_PROVIDER_virtual/egl_imxgpu        ?= "imx-gpu-viv"
-PREFERRED_PROVIDER_virtual/libgl_imxgpu3d    ?= "imx-gpu-viv"
-PREFERRED_PROVIDER_virtual/libgles1_imxgpu3d ?= "imx-gpu-viv"
-PREFERRED_PROVIDER_virtual/libgles2_imxgpu3d ?= "imx-gpu-viv"
+PREFERRED_PROVIDER_virtual/egl:imxgpu        ?= "imx-gpu-viv"
+PREFERRED_PROVIDER_virtual/libgl:imxgpu3d    ?= "imx-gpu-viv"
+PREFERRED_PROVIDER_virtual/libgles1:imxgpu3d ?= "imx-gpu-viv"
+PREFERRED_PROVIDER_virtual/libgles2:imxgpu3d ?= "imx-gpu-viv"
 PREFERRED_PROVIDER_virtual/libg2d            ?= "imx-gpu-g2d"
-PREFERRED_PROVIDER_virtual/libg2d_imxdpu     ?= "imx-dpu-g2d"
+PREFERRED_PROVIDER_virtual/libg2d:imxdpu     ?= "imx-dpu-g2d"
 PREFERRED_VERSION_imx-vpu = "5.4.39.1"
 PREFERRED_VERSION_wayland-protocols = "1.18.imx"
 PREFERRED_VERSION_libdrm = "2.4.99.imx"
@@ -198,35 +198,35 @@ DISTRO_FEATURES:remove = "directfb "
 DISTRO_FEATURES:append = " x11 wayland pam"
 
 PNWHITELIST:openembedded-layer += 'freeglut'
-PNWHITELIST_imx8-graphic-layer += 'imx-gpu-viv'
-PNWHITELIST_imx8-graphic-layer += 'imx-gpu-viv-demos'
-PNWHITELIST_imx8-graphic-layer += 'imx-gpu-sdk'
-PNWHITELIST_imx8-graphic-layer += 'assimp'
-PNWHITELIST_imx8-graphic-layer += 'devil'
-PNWHITELIST_imx8-graphic-layer += 'weston'
-PNWHITELIST_imx8-graphic-layer += 'imx-gpu-apitrace'
-PNWHITELIST_imx8-graphic-layer += 'systemd-gpuconfig'
-PNWHITELIST_imx8-graphic-layer += 'spirv-tools'
-PNWHITELIST_imx8-graphic-layer += 'glslang'
-PNWHITELIST_imx8-graphic-layer += 'wayland-protocols'
-PNWHITELIST_imx8-graphic-layer += 'libdrm'
+PNWHITELIST:imx8-graphic-layer += 'imx-gpu-viv'
+PNWHITELIST:imx8-graphic-layer += 'imx-gpu-viv-demos'
+PNWHITELIST:imx8-graphic-layer += 'imx-gpu-sdk'
+PNWHITELIST:imx8-graphic-layer += 'assimp'
+PNWHITELIST:imx8-graphic-layer += 'devil'
+PNWHITELIST:imx8-graphic-layer += 'weston'
+PNWHITELIST:imx8-graphic-layer += 'imx-gpu-apitrace'
+PNWHITELIST:imx8-graphic-layer += 'systemd-gpuconfig'
+PNWHITELIST:imx8-graphic-layer += 'spirv-tools'
+PNWHITELIST:imx8-graphic-layer += 'glslang'
+PNWHITELIST:imx8-graphic-layer += 'wayland-protocols'
+PNWHITELIST:imx8-graphic-layer += 'libdrm'
 PNWHITELIST:openembedded-layer += 'fmt'
 PNWHITELIST:openembedded-layer += 'googletest'
 PNWHITELIST:openembedded-layer += 'rapidjson'
 PNWHITELIST:openembedded-layer += 'glm'
-PNWHITELIST_imx8-graphic-layer += 'stb'
-PNWHITELIST_imx8-graphic-layer += 'rapidvulkan'
-PNWHITELIST_imx8-graphic-layer += 'rapidopencl'
-PNWHITELIST_imx8-graphic-layer += 'half'
-PNWHITELIST_imx8-graphic-layer += 'gli'
-PNWHITELIST_imx8-graphic-layer += 'rapidopenvx'
-PNWHITELIST_imx8-graphic-layer += 'vulkan-validationlayers'
-PNWHITELIST_imx8-graphic-layer += 'linux-imx-headers'
-PNWHITELIST_imx8-graphic-layer += 'vulkan-headers'
-PNWHITELIST_imx8-graphic-layer += 'vulkan-loader'
-PNWHITELIST_imx8-graphic-layer += 'vulkan-tools'
-PNWHITELIST_imx8-graphic-layer += 'weston-init'
-PNWHITELIST_imx8-graphic-layer += 'weston'
+PNWHITELIST:imx8-graphic-layer += 'stb'
+PNWHITELIST:imx8-graphic-layer += 'rapidvulkan'
+PNWHITELIST:imx8-graphic-layer += 'rapidopencl'
+PNWHITELIST:imx8-graphic-layer += 'half'
+PNWHITELIST:imx8-graphic-layer += 'gli'
+PNWHITELIST:imx8-graphic-layer += 'rapidopenvx'
+PNWHITELIST:imx8-graphic-layer += 'vulkan-validationlayers'
+PNWHITELIST:imx8-graphic-layer += 'linux-imx-headers'
+PNWHITELIST:imx8-graphic-layer += 'vulkan-headers'
+PNWHITELIST:imx8-graphic-layer += 'vulkan-loader'
+PNWHITELIST:imx8-graphic-layer += 'vulkan-tools'
+PNWHITELIST:imx8-graphic-layer += 'weston-init'
+PNWHITELIST:imx8-graphic-layer += 'weston'
 PNWHITELIST:openembedded-layer += 'libxaw'
 PNWHITELIST:openembedded-layer += 'xterm'
 
@@ -261,21 +261,21 @@ fi
 
 if [ $PLATFORM_TYPE = "imx8mq" ]; then
 file_modify $GRAPHIC_DTS/imx8-graphic/conf/imx8-graphic.inc \
-			"21iPNWHITELIST_imx8-graphic-layer += 'imx-vpu-hantro'"
+			"21iPNWHITELIST:imx8-graphic-layer += 'imx-vpu-hantro'"
 
 elif [ $PLATFORM_TYPE = "imx8mm" ]; then
 file_modify $GRAPHIC_DTS/imx8-graphic/conf/imx8-graphic.inc \
-                        "21iPNWHITELIST_imx8-graphic-layer += 'imx-vpu-hantro'" \
-			"22iPNWHITELIST_imx8-graphic-layer += 'imx-gpu-g2d'"
+                        "21iPNWHITELIST:imx8-graphic-layer += 'imx-vpu-hantro'" \
+			"22iPNWHITELIST:imx8-graphic-layer += 'imx-gpu-g2d'"
 
 elif [ $PLATFORM_TYPE = "imx8qm" ]; then
 file_modify $GRAPHIC_DTS/imx8-graphic/conf/imx8-graphic.inc \
-			"21iPNWHITELIST_imx8-graphic-layer += 'imx-gpu-g2d'" \
-			"22iPNWHITELIST_imx8-graphic-layer += 'imx-dpu-g2d'"
+			"21iPNWHITELIST:imx8-graphic-layer += 'imx-gpu-g2d'" \
+			"22iPNWHITELIST:imx8-graphic-layer += 'imx-dpu-g2d'"
 
 elif [ $PLATFORM_TYPE = "imx8qxp" ]; then
 file_modify $GRAPHIC_DTS/imx8-graphic/conf/imx8-graphic.inc \
-			"21iPNWHITELIST_imx8-graphic-layer += 'imx-dpu-g2d'"
+			"21iPNWHITELIST:imx8-graphic-layer += 'imx-dpu-g2d'"
 fi
 
 file_copy()
