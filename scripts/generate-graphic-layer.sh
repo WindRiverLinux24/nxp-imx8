@@ -233,7 +233,6 @@ PNWHITELIST:openembedded-layer += 'xterm'
 IMAGE_INSTALL:append += " \\
     \${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'weston-init', '', d)} \\
     \${@bb.utils.contains('DISTRO_FEATURES', 'x11 wayland', 'weston-xwayland xterm', '', d)} \\
-    imx-gpu-apitrace \\
 "
 
 
