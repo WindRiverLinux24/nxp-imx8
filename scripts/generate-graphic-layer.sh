@@ -918,5 +918,17 @@ SOURCE_DIR=$GRAPHIC_SRC/meta-imx/
 file_copy EULA.txt
 mv $GRAPHIC_DTS/imx8-graphic/EULA.txt $GRAPHIC_DTS/imx8-graphic/EULA
 
+convert_override(){
+	if [ $PLATFORM_TYPE = "imx8qm" ];then
+		patchdir="`dirname $1`/patch"
+		patch -p2 -d $GRAPHIC_DTS/imx8-graphic < $patchdir/0001-nxp-imx8-imx8-graphic-convert-to-use-new-override.patch 2>&1 > /dev/null
+		if [ $? != 0 ];then
+			echo "Error: apply patch failed"
+		fi
+	fi
+}
+
+convert_override $0
+
 echo "Graphic layer is generated successfully!"
 clean_up && exit 1

@@ -1,0 +1,1600 @@
+From 320b55f416c2aead9f0e4dbb0a8fb61723b1e878 Mon Sep 17 00:00:00 2001
+From: Liwei Song <liwei.song@windriver.com>
+Date: Wed, 1 Sep 2021 15:12:35 +0800
+Subject: [PATCH] nxp-imx8/imx8-graphic: convert to use new override
+
+Issue: LINCD-6566
+
+convert old override for layer imx8-graphic which create
+by generate-graphic-layer.sh
+
+Upstream-Status: Pending
+
+Signed-off-by: Liwei Song <liwei.song@windriver.com>
+---
+ .../classes/fsl-eula-unpack-graphic.bbclass   |   4 +-
+ .../machine-overrides-extender.bbclass        |   4 +-
+ imx8-graphic/classes/use-imx-headers.bbclass  |   8 +-
+ .../imx-vpu-hantro/imx-vpu-hantro.inc         |  10 +-
+ .../systemd/systemd-gpuconfig_1.0.bb          |   4 +-
+ .../recipes-core/systemd/systemd_%.bbappend   |   4 +-
+ .../recipes-devtools/half/half_2.1.0.bb       |   2 +-
+ imx8-graphic/recipes-devtools/stb/stb_git.bb  |   2 +-
+ .../recipes-graphics/cairo/cairo_%.bbappend   |   4 +-
+ .../recipes-graphics/devil/devil_%.bbappend   |   4 +-
+ .../recipes-graphics/drm/libdrm_2.4.99.imx.bb |  32 ++--
+ .../recipes-graphics/gli/gli_0.8.2.0.bb       |   2 +-
+ .../recipes-graphics/glm/glm_0.9.8.5.bb       |   2 +-
+ .../imx-dpu-g2d/imx-dpu-g2d_1.8.7.bb          |  10 +-
+ .../imx-dpu-g2d/imx-dpu-g2d_1.9.0.bb          |  10 +-
+ .../imx-gpu-apitrace_9.0.0.bb                 |  10 +-
+ .../imx-gpu-g2d/imx-gpu-g2d_6.4.0.p2.4.bb     |   8 +-
+ .../imx-gpu-g2d/imx-gpu-g2d_6.4.3.p1.2.bb     |   8 +-
+ .../imx-gpu-sdk/imx-gpu-sdk_5.6.2.bb          |  58 +++---
+ .../imx-gpu-viv/imx-gpu-viv-6.inc             | 176 +++++++++---------
+ .../mesa/mesa-demos_%.bbappend                |  16 +-
+ .../recipes-graphics/mesa/mesa-gl_%.bbappend  |   2 +-
+ .../recipes-graphics/mesa/mesa_%.bbappend     |  22 +--
+ .../rapidopencl/rapidopencl_1.1.0.1.bb        |   2 +-
+ .../rapidopenvx/rapidopenvx_1.1.0.bb          |   2 +-
+ .../rapidvulkan/rapidvulkan_1.2.141.2001.bb   |   2 +-
+ .../recipes-graphics/vulkan/glslang_git.bb    |   4 +-
+ .../vulkan/spirv-tools_git.bb                 |   4 +-
+ .../recipes-graphics/vulkan/vkmark_1.0.bb     |   2 +-
+ .../vulkan/vulkan-demos_%.bbappend            |   6 +-
+ .../vulkan/vulkan-headers_%.bbappend          |   2 +-
+ .../vulkan/vulkan-headers_1.1.121.bb          |   2 +-
+ .../vulkan/vulkan-loader_1.1.121.bb           |   4 +-
+ .../vulkan/vulkan-loader_1.1.121.bbappend     |   6 +-
+ .../vulkan/vulkan-tools_%.bbappend            |   2 +-
+ .../vulkan/vulkan-validationlayers_%.bbappend |  14 +-
+ .../vulkan/vulkan-validationlayers_1.1.121.bb |   2 +-
+ .../recipes-graphics/waffle/waffle_%.bbappend |  10 +-
+ .../wayland/wayland-protocols_1.18.imx.bb     |   2 +-
+ .../wayland/wayland-protocols_1.20.bb         |   2 +-
+ .../wayland/wayland-protocols_1.20.imx.bb     |   2 +-
+ .../recipes-graphics/wayland/weston-init.bb   |  18 +-
+ .../wayland/weston-init.bbappend              |  22 +--
+ .../recipes-graphics/wayland/weston_9.0.0.sdk.bb  |  26 +--
+ .../wayland/weston_9.0.0.imx.bb               |  30 +--
+ .../xserver-xf86-config_%.bbappend            |   2 +-
+ .../xorg-xserver/xserver-xorg.inc             |  74 ++++----
+ .../xorg-xserver/xserver-xorg_%.bbappend      |  10 +-
+ .../xorg-xserver/xserver-xorg_1.20.8.bb       |   6 +-
+ .../linux/linux-imx-headers_5.10.bb           |   2 +-
+ 50 files changed, 331 insertions(+), 331 deletions(-)
+
+diff --git a/imx8-graphic/classes/fsl-eula-unpack-graphic.bbclass b/imx8-graphic/classes/fsl-eula-unpack-graphic.bbclass
+index 24a603d776d2..d196a1d96fdf 100644
+--- a/imx8-graphic/classes/fsl-eula-unpack-graphic.bbclass
++++ b/imx8-graphic/classes/fsl-eula-unpack-graphic.bbclass
+@@ -71,11 +71,11 @@ FSL_EULA_FILE_GRAPHIC_MD5SUM ?= \
+ 
+ LIC_FILES_CHKSUM_LAYER ?= "file://${FSL_EULA_FILE_GRAPHIC};md5=${FSL_EULA_FILE_GRAPHIC_MD5SUM}"
+ LIC_FILES_CHKSUM_LAYER[vardepsexclude] += "FSL_EULA_FILE_GRAPHIC"
+-LIC_FILES_CHKSUM_append = " ${LIC_FILES_CHKSUM_LAYER}"
++LIC_FILES_CHKSUM:append = " ${LIC_FILES_CHKSUM_LAYER}"
+ 
+ LIC_FILES_CHKSUM[vardepsexclude] += "FSL_EULA_FILE_GRAPHIC"
+ 
+-do_fetch_prepend() {
++do_fetch:prepend() {
+     if "Proprietary" not in d.getVar("LICENSE"):
+         bb.fatal("The recipe LICENSE should include Proprietary but is " + d.getVar("LICENSE") + ".")
+ }
+diff --git a/imx8-graphic/classes/machine-overrides-extender.bbclass b/imx8-graphic/classes/machine-overrides-extender.bbclass
+index 4b7d66d51225..932f78c03e0e 100644
+--- a/imx8-graphic/classes/machine-overrides-extender.bbclass
++++ b/imx8-graphic/classes/machine-overrides-extender.bbclass
+@@ -20,13 +20,13 @@ def machine_overrides_extender(d):
+     # Gather the list of overrides to filter out
+     machine_overrides_filter_out = []
+     for override in machine_overrides:
+-        machine_overrides_filter_out += (d.getVar('MACHINEOVERRIDES_EXTENDER_FILTER_OUT_%s' % override) or '').split()
++        machine_overrides_filter_out += (d.getVar('MACHINEOVERRIDES_EXTENDER_FILTER_OUT:%s' % override) or '').split()
+ 
+     # Drop any overrides of filter_out prior extending
+     machine_overrides = [o for o in machine_overrides if o not in machine_overrides_filter_out]
+ 
+     for override in machine_overrides:
+-        extender = d.getVar('MACHINEOVERRIDES_EXTENDER_%s' % override)
++        extender = d.getVar('MACHINEOVERRIDES_EXTENDER:%s' % override)
+ 
+         if extender:
+             extender = extender.split(':')
+diff --git a/imx8-graphic/classes/use-imx-headers.bbclass b/imx8-graphic/classes/use-imx-headers.bbclass
+index fcec68c8b3e0..c6c7f0434170 100644
+--- a/imx8-graphic/classes/use-imx-headers.bbclass
++++ b/imx8-graphic/classes/use-imx-headers.bbclass
+@@ -13,14 +13,14 @@
+ #
+ # Copyright 2018 (C) O.S. Systems Software LTDA.
+ 
+-DEPENDS_append_imx = " linux-imx-headers"
++DEPENDS:append:imx = " linux-imx-headers"
+ 
+ # Set runtime dependency of -dev for package inheriting this class to
+ # linux-imx-headers-dev package. This is required in order to propagate
+ # headers into the SDK
+-RDEPENDS_${PN}-dev += "linux-imx-headers-dev"
++RDEPENDS:${PN}-dev += "linux-imx-headers-dev"
+ 
+-PACKAGE_ARCH_imx ?= "${MACHINE_SOCARCH}"
++PACKAGE_ARCH:imx ?= "${MACHINE_SOCARCH}"
+ 
+ STAGING_INCDIR_IMX = "${STAGING_INCDIR}/imx"
+ 
+@@ -34,4 +34,4 @@ STAGING_INCDIR_IMX = "${STAGING_INCDIR}/imx"
+ # Typical example here would be imx-vpu-hantro recipe, which requires NXP
+ # BSP and is not compatible with mainline.
+ COMPATIBLE_HOST = '(null)'
+-COMPATIBLE_HOST_use-nxp-bsp = '.*'
++COMPATIBLE_HOST:use-nxp-bsp = '.*'
+diff --git a/imx8-graphic/recipes-bsp/imx-vpu-hantro/imx-vpu-hantro.inc b/imx8-graphic/recipes-bsp/imx-vpu-hantro/imx-vpu-hantro.inc
+index 8dcc921168ef..8893c90f266b 100644
+--- a/imx8-graphic/recipes-bsp/imx-vpu-hantro/imx-vpu-hantro.inc
++++ b/imx8-graphic/recipes-bsp/imx-vpu-hantro/imx-vpu-hantro.inc
+@@ -8,13 +8,13 @@ inherit fsl-eula-unpack-graphic use-imx-headers
+ PARALLEL_MAKE="-j 1"
+ 
+ PROVIDES = "virtual/imxvpu"
+-RPROVIDES_${PN} = "virtual/imxvpu"
++RPROVIDES:${PN} = "virtual/imxvpu"
+ 
+ SRC_URI = "${FSL_MIRROR}/${BP}.bin;fsl-eula=true"
+ 
+-PLATFORM_mx8mm = "IMX8MM"
+-PLATFORM_mx8mq = "IMX8MQ"
+-PLATFORM_mx8mp = "IMX8MP"
++PLATFORM:mx8mm = "IMX8MM"
++PLATFORM:mx8mq = "IMX8MQ"
++PLATFORM:mx8mp = "IMX8MP"
+ 
+ do_compile () {
+     oe_runmake CROSS_COMPILE="${HOST_PREFIX}" SDKTARGETSYSROOT="${STAGING_DIR_TARGET}" PLATFORM="${PLATFORM}" all
+@@ -24,7 +24,7 @@ do_install () {
+     oe_runmake DEST_DIR="${D}" PLATFORM="${PLATFORM}" install
+ }
+ 
+-FILES_${PN} += "/unit_tests"
++FILES:${PN} += "/unit_tests"
+ 
+ PACKAGE_ARCH = "${MACHINE_ARCH}"
+ 
+diff --git a/imx8-graphic/recipes-core/systemd/systemd-gpuconfig_1.0.bb b/imx8-graphic/recipes-core/systemd/systemd-gpuconfig_1.0.bb
+index 459ddccb9894..5f9ac2283902 100644
+--- a/imx8-graphic/recipes-core/systemd/systemd-gpuconfig_1.0.bb
++++ b/imx8-graphic/recipes-core/systemd/systemd-gpuconfig_1.0.bb
+@@ -8,7 +8,7 @@ SRC_URI = " file://gpuconfig \
+ "
+ S = "${WORKDIR}"
+ 
+-RDEPENDS_${PN} = "systemd"
++RDEPENDS:${PN} = "systemd"
+ 
+ do_install () {
+     install -d ${D}${sysconfdir}
+@@ -23,7 +23,7 @@ do_install () {
+             ${D}${sysconfdir}/systemd/system/multi-user.target.wants/gpuconfig.service
+ }
+ 
+-FILES_${PN} = "${systemd_unitdir}/system/*.service ${sysconfdir}"
++FILES:${PN} = "${systemd_unitdir}/system/*.service ${sysconfdir}"
+ 
+ # As this package is tied to systemd, only build it when we're also building systemd.
+ python () {
+diff --git a/imx8-graphic/recipes-core/systemd/systemd_%.bbappend b/imx8-graphic/recipes-core/systemd/systemd_%.bbappend
+index ab7b8dcdafcd..e9c084bee70c 100644
+--- a/imx8-graphic/recipes-core/systemd/systemd_%.bbappend
++++ b/imx8-graphic/recipes-core/systemd/systemd_%.bbappend
+@@ -1,9 +1,9 @@
+-FILESEXTRAPATHS_prepend := "${THISDIR}/${BPN}:"
++FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}:"
+ 
+ SRC_URI += " \
+             file://0020-logind.conf-Set-HandlePowerKey-to-ignore.patch \
+ "
+-do_install_append () {
++do_install:append () {
+     # Disable the assignment of the fixed network interface name
+     install -d ${D}${sysconfdir}/systemd/network
+     ln -s /dev/null ${D}${sysconfdir}/systemd/network/99-default.link
+diff --git a/imx8-graphic/recipes-devtools/half/half_2.1.0.bb b/imx8-graphic/recipes-devtools/half/half_2.1.0.bb
+index dd1f416e14a8..95ac26483e44 100644
+--- a/imx8-graphic/recipes-devtools/half/half_2.1.0.bb
++++ b/imx8-graphic/recipes-devtools/half/half_2.1.0.bb
+@@ -17,4 +17,4 @@ do_install () {
+     cp -r ${S}/include/* ${D}${includedir}
+ }
+ 
+-ALLOW_EMPTY_${PN} = "1"
++ALLOW_EMPTY:${PN} = "1"
+diff --git a/imx8-graphic/recipes-devtools/stb/stb_git.bb b/imx8-graphic/recipes-devtools/stb/stb_git.bb
+index 17da929b321c..327328fa9638 100644
+--- a/imx8-graphic/recipes-devtools/stb/stb_git.bb
++++ b/imx8-graphic/recipes-devtools/stb/stb_git.bb
+@@ -17,4 +17,4 @@ do_install() {
+ }
+ 
+ # This is a header-only library, so the main package will be empty.
+-ALLOW_EMPTY_${PN} = "1"
++ALLOW_EMPTY:${PN} = "1"
+diff --git a/imx8-graphic/recipes-graphics/cairo/cairo_%.bbappend b/imx8-graphic/recipes-graphics/cairo/cairo_%.bbappend
+index 5b1562ab8b4d..2c73c7f32f25 100644
+--- a/imx8-graphic/recipes-graphics/cairo/cairo_%.bbappend
++++ b/imx8-graphic/recipes-graphics/cairo/cairo_%.bbappend
+@@ -1,2 +1,2 @@
+-PACKAGECONFIG_append_imxgpu3d = " egl glesv2"
+-PACKAGECONFIG_remove_imxgpu3d = "opengl"
++PACKAGECONFIG:append:imxgpu3d = " egl glesv2"
++PACKAGECONFIG:remove:imxgpu3d = "opengl"
+diff --git a/imx8-graphic/recipes-graphics/devil/devil_%.bbappend b/imx8-graphic/recipes-graphics/devil/devil_%.bbappend
+index e4d956e5a3e7..027b225165dd 100644
+--- a/imx8-graphic/recipes-graphics/devil/devil_%.bbappend
++++ b/imx8-graphic/recipes-graphics/devil/devil_%.bbappend
+@@ -1,4 +1,4 @@
+ # Use source package from CAF because of frequent fetch errors.
+-SRC_URI_remove = "http://sourceforge.net/projects/openil/files/DevIL/${PV}/DevIL-${PV}.zip"
++SRC_URI:remove = "http://sourceforge.net/projects/openil/files/DevIL/${PV}/DevIL-${PV}.zip"
+ 
+-SRC_URI_prepend = "https://source.codeaurora.org/mirrored_source/external/imx/DevIL-${PV}.zip "
++SRC_URI:prepend = "https://source.codeaurora.org/mirrored_source/external/imx/DevIL-${PV}.zip "
+diff --git a/imx8-graphic/recipes-graphics/drm/libdrm_2.4.99.imx.bb b/imx8-graphic/recipes-graphics/drm/libdrm_2.4.99.imx.bb
+index dc2aa8a90cd7..3a2f889322ef 100644
+--- a/imx8-graphic/recipes-graphics/drm/libdrm_2.4.99.imx.bb
++++ b/imx8-graphic/recipes-graphics/drm/libdrm_2.4.99.imx.bb
+@@ -42,32 +42,32 @@ PACKAGECONFIG[cairo-tests] = "-Dcairo-tests=true,-Dcairo-tests=false"
+ PACKAGECONFIG[udev] = "-Dudev=true,-Dudev=false,udev"
+ PACKAGECONFIG[manpages] = "-Dman-pages=true,-Dman-pages=false,libxslt-native xmlto-native"
+ 
+-ALLOW_EMPTY_${PN}-drivers = "1"
++ALLOW_EMPTY:${PN}-drivers = "1"
+ PACKAGES =+ "${PN}-tests ${PN}-drivers ${PN}-radeon ${PN}-nouveau ${PN}-omap \
+              ${PN}-intel ${PN}-exynos ${PN}-kms ${PN}-freedreno ${PN}-amdgpu \
+              ${PN}-etnaviv"
+ 
+-RRECOMMENDS_${PN}-drivers = "${PN}-radeon ${PN}-nouveau ${PN}-omap ${PN}-intel \
++RRECOMMENDS:${PN}-drivers = "${PN}-radeon ${PN}-nouveau ${PN}-omap ${PN}-intel \
+                              ${PN}-exynos ${PN}-freedreno ${PN}-amdgpu \
+                              ${PN}-etnaviv"
+ 
+-FILES_${PN}-tests = "${bindir}/*"
+-FILES_${PN}-radeon = "${libdir}/libdrm_radeon.so.*"
+-FILES_${PN}-nouveau = "${libdir}/libdrm_nouveau.so.*"
+-FILES_${PN}-omap = "${libdir}/libdrm_omap.so.*"
+-FILES_${PN}-intel = "${libdir}/libdrm_intel.so.*"
+-FILES_${PN}-exynos = "${libdir}/libdrm_exynos.so.*"
+-FILES_${PN}-kms = "${libdir}/libkms*.so.*"
+-FILES_${PN}-freedreno = "${libdir}/libdrm_freedreno.so.*"
+-FILES_${PN}-amdgpu = "${libdir}/libdrm_amdgpu.so.* ${datadir}/${PN}/amdgpu.ids"
+-FILES_${PN}-etnaviv = "${libdir}/libdrm_etnaviv.so.*"
++FILES:${PN}-tests = "${bindir}/*"
++FILES:${PN}-radeon = "${libdir}/libdrm_radeon.so.*"
++FILES:${PN}-nouveau = "${libdir}/libdrm_nouveau.so.*"
++FILES:${PN}-omap = "${libdir}/libdrm_omap.so.*"
++FILES:${PN}-intel = "${libdir}/libdrm_intel.so.*"
++FILES:${PN}-exynos = "${libdir}/libdrm_exynos.so.*"
++FILES:${PN}-kms = "${libdir}/libkms*.so.*"
++FILES:${PN}-freedreno = "${libdir}/libdrm_freedreno.so.*"
++FILES:${PN}-amdgpu = "${libdir}/libdrm_amdgpu.so.* ${datadir}/${PN}/amdgpu.ids"
++FILES:${PN}-etnaviv = "${libdir}/libdrm_etnaviv.so.*"
+ 
+ BBCLASSEXTEND = "native nativesdk"
+ 
+-PACKAGES_prepend_imxgpu = "${PN}-vivante "
+-RRECOMMENDS_${PN}-drivers_append_imxgpu = " ${PN}-vivante"
+-FILES_${PN}-vivante = "${libdir}/libdrm_vivante.so.*"
+-PACKAGECONFIG_append_imxgpu = " vivante"
++PACKAGES:prepend:imxgpu = "${PN}-vivante "
++RRECOMMENDS:${PN}-drivers:append:imxgpu = " ${PN}-vivante"
++FILES:${PN}-vivante = "${libdir}/libdrm_vivante.so.*"
++PACKAGECONFIG:append:imxgpu = " vivante"
+ PACKAGECONFIG[vivante] = "-Dvivante=true,-Dvivante=false"
+ 
+ PACKAGE_ARCH = "${MACHINE_SOCARCH}"
+diff --git a/imx8-graphic/recipes-graphics/gli/gli_0.8.2.0.bb b/imx8-graphic/recipes-graphics/gli/gli_0.8.2.0.bb
+index dc9309aceca8..27862a66481d 100644
+--- a/imx8-graphic/recipes-graphics/gli/gli_0.8.2.0.bb
++++ b/imx8-graphic/recipes-graphics/gli/gli_0.8.2.0.bb
+@@ -20,6 +20,6 @@ S = "${WORKDIR}/git"
+ inherit cmake
+ 
+ # This is a header-only library, so the main package will be empty.
+-ALLOW_EMPTY_${PN} = "1"
++ALLOW_EMPTY:${PN} = "1"
+ 
+ BBCLASSEXTEND = "native"
+diff --git a/imx8-graphic/recipes-graphics/glm/glm_0.9.8.5.bb b/imx8-graphic/recipes-graphics/glm/glm_0.9.8.5.bb
+index 43c33f495037..15a612608ad6 100644
+--- a/imx8-graphic/recipes-graphics/glm/glm_0.9.8.5.bb
++++ b/imx8-graphic/recipes-graphics/glm/glm_0.9.8.5.bb
+@@ -18,6 +18,6 @@ S = "${WORKDIR}/git"
+ inherit cmake
+ 
+ # This is a header-only library, so the main package will be empty.
+-ALLOW_EMPTY_${PN} = "1"
++ALLOW_EMPTY:${PN} = "1"
+ 
+ BBCLASSEXTEND = "native"
+diff --git a/imx8-graphic/recipes-graphics/imx-dpu-g2d/imx-dpu-g2d_1.8.7.bb b/imx8-graphic/recipes-graphics/imx-dpu-g2d/imx-dpu-g2d_1.8.7.bb
+index 4bb4d1492888..521e3ecb58fc 100644
+--- a/imx8-graphic/recipes-graphics/imx-dpu-g2d/imx-dpu-g2d_1.8.7.bb
++++ b/imx8-graphic/recipes-graphics/imx-dpu-g2d/imx-dpu-g2d_1.8.7.bb
+@@ -21,15 +21,15 @@ do_install () {
+     cp -r ${S}/gpu-demos/opt ${D}
+ }
+ 
+-FILES_${PN} = "${libdir}/libg2d* /opt"
+-FILES_${PN}-dev = "${libdir}/libg2d${SOLIBSDEV} ${includedir}"
+-INSANE_SKIP_${PN} += "ldflags"
++FILES:${PN} = "${libdir}/libg2d* /opt"
++FILES:${PN}-dev = "${libdir}/libg2d${SOLIBSDEV} ${includedir}"
++INSANE_SKIP:${PN} += "ldflags"
+ 
+-RDEPENDS_${PN} = "libgal-imx libdrm"
++RDEPENDS:${PN} = "libgal-imx libdrm"
+ 
+ # This is required to provide support for VPU Amphion HEVC tile format
+ # From NXP [MGS-5547] (commit e175d6b4f78deab24d319b852998bef55cdecc99):
+ # VPU Amphion HEVC tile support was added using OpenCL, so add a dependency on libopencl-imx.
+-RDEPENDS_${PN} += "libopencl-imx"
++RDEPENDS:${PN} += "libopencl-imx"
+ 
+ COMPATIBLE_MACHINE = "(imxdpu)"
+diff --git a/imx8-graphic/recipes-graphics/imx-dpu-g2d/imx-dpu-g2d_1.9.0.bb b/imx8-graphic/recipes-graphics/imx-dpu-g2d/imx-dpu-g2d_1.9.0.bb
+index ddaf7597dcef..7ee005b6d663 100644
+--- a/imx8-graphic/recipes-graphics/imx-dpu-g2d/imx-dpu-g2d_1.9.0.bb
++++ b/imx8-graphic/recipes-graphics/imx-dpu-g2d/imx-dpu-g2d_1.9.0.bb
+@@ -21,15 +21,15 @@ do_install () {
+     cp -r ${S}/gpu-demos/opt ${D}
+ }
+ 
+-FILES_${PN} = "${libdir}/libg2d* /opt"
+-FILES_${PN}-dev = "${libdir}/libg2d${SOLIBSDEV} ${includedir}"
+-INSANE_SKIP_${PN} += "ldflags"
++FILES:${PN} = "${libdir}/libg2d* /opt"
++FILES:${PN}-dev = "${libdir}/libg2d${SOLIBSDEV} ${includedir}"
++INSANE_SKIP:${PN} += "ldflags"
+ 
+-RDEPENDS_${PN} = "libgal-imx libdrm libopencl-imx"
++RDEPENDS:${PN} = "libgal-imx libdrm libopencl-imx"
+ 
+ # This is required to provide support for VPU Amphion HEVC tile format
+ # From NXP [MGS-5547] (commit e175d6b4f78deab24d319b852998bef55cdecc99):
+ # VPU Amphion HEVC tile support was added using OpenCL, so add a dependency on libopencl-imx.
+-RDEPENDS_${PN} += "libopencl-imx"
++RDEPENDS:${PN} += "libopencl-imx"
+ 
+ COMPATIBLE_MACHINE = "(imxdpu)"
+diff --git a/imx8-graphic/recipes-graphics/imx-gpu-apitrace/imx-gpu-apitrace_9.0.0.bb b/imx8-graphic/recipes-graphics/imx-gpu-apitrace/imx-gpu-apitrace_9.0.0.bb
+index 72f8e27f6023..a8438b7a582f 100644
+--- a/imx8-graphic/recipes-graphics/imx-gpu-apitrace/imx-gpu-apitrace_9.0.0.bb
++++ b/imx8-graphic/recipes-graphics/imx-gpu-apitrace/imx-gpu-apitrace_9.0.0.bb
+@@ -13,16 +13,16 @@ S = "${WORKDIR}/git"
+ 
+ inherit cmake pkgconfig perlnative python3native
+ 
+-PACKAGECONFIG_BACKEND_mx6 = " \
++PACKAGECONFIG_BACKEND:mx6 = " \
+     ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'waffle', \
+        bb.utils.contains('DISTRO_FEATURES',     'x11',    'x11', \
+                                                              '', d), d)} \
+ "
+-PACKAGECONFIG_BACKEND_mx7 = "${PACKAGECONFIG_BACKEND_mx6}"
+-PACKAGECONFIG_BACKEND_mx8 = "waffle"
++PACKAGECONFIG_BACKEND:mx7 = "${PACKAGECONFIG_BACKEND:mx6}"
++PACKAGECONFIG_BACKEND:mx8 = "waffle"
+ 
+ PACKAGECONFIG_GPU2D          = ""
+-PACKAGECONFIG_GPU2D_imxgpu2d = "vivante"
++PACKAGECONFIG_GPU2D:imxgpu2d = "vivante"
+ 
+ PACKAGECONFIG = " \
+     egl \
+@@ -39,7 +39,7 @@ PACKAGECONFIG[vivante] = "-DENABLE_VIVANTE=ON,-DENABLE_VIVANTE=OFF,virtual/libg2
+ 
+ SOLIBS = ".so"
+ FILES_SOLIBSDEV = ""
+-FILES_${PN} += " \
++FILES:${PN} += " \
+     ${libdir}/apitrace/scripts/* \
+     ${libdir}/apitrace/wrappers/* \
+ "
+diff --git a/imx8-graphic/recipes-graphics/imx-gpu-g2d/imx-gpu-g2d_6.4.0.p2.4.bb b/imx8-graphic/recipes-graphics/imx-gpu-g2d/imx-gpu-g2d_6.4.0.p2.4.bb
+index 69de35866801..e74e30b7416d 100644
+--- a/imx8-graphic/recipes-graphics/imx-gpu-g2d/imx-gpu-g2d_6.4.0.p2.4.bb
++++ b/imx8-graphic/recipes-graphics/imx-gpu-g2d/imx-gpu-g2d_6.4.0.p2.4.bb
+@@ -30,10 +30,10 @@ do_install () {
+     cp -r ${S}/gpu-demos/opt ${D}
+ }
+ 
+-FILES_${PN} = "${libdir}/libg2d* /opt"
+-FILES_${PN}-dev = "${includedir}"
+-INSANE_SKIP_${PN} = "ldflags"
++FILES:${PN} = "${libdir}/libg2d* /opt"
++FILES:${PN}-dev = "${includedir}"
++INSANE_SKIP:${PN} = "ldflags"
+ 
+-RDEPENDS_${PN} = "libgal-imx"
++RDEPENDS:${PN} = "libgal-imx"
+ 
+ COMPATIBLE_MACHINE = "(imxgpu2d)"
+diff --git a/imx8-graphic/recipes-graphics/imx-gpu-g2d/imx-gpu-g2d_6.4.3.p1.2.bb b/imx8-graphic/recipes-graphics/imx-gpu-g2d/imx-gpu-g2d_6.4.3.p1.2.bb
+index 99eb5b3c9ab5..f504fc3cf65a 100644
+--- a/imx8-graphic/recipes-graphics/imx-gpu-g2d/imx-gpu-g2d_6.4.3.p1.2.bb
++++ b/imx8-graphic/recipes-graphics/imx-gpu-g2d/imx-gpu-g2d_6.4.3.p1.2.bb
+@@ -30,10 +30,10 @@ do_install () {
+     cp -r ${S}/gpu-demos/opt ${D}
+ }
+ 
+-FILES_${PN} = "${libdir}/libg2d* /opt"
+-FILES_${PN}-dev = "${includedir}"
+-INSANE_SKIP_${PN} = "ldflags"
++FILES:${PN} = "${libdir}/libg2d* /opt"
++FILES:${PN}-dev = "${includedir}"
++INSANE_SKIP:${PN} = "ldflags"
+ 
+-RDEPENDS_${PN} = "libgal-imx"
++RDEPENDS:${PN} = "libgal-imx"
+ 
+ COMPATIBLE_MACHINE = "(imxgpu2d)"
+diff --git a/imx8-graphic/recipes-graphics/imx-gpu-sdk/imx-gpu-sdk_5.6.2.bb b/imx8-graphic/recipes-graphics/imx-gpu-sdk/imx-gpu-sdk_5.6.2.bb
+index 2463251e2dc5..91279855acdb 100644
+--- a/imx8-graphic/recipes-graphics/imx-gpu-sdk/imx-gpu-sdk_5.6.2.bb
++++ b/imx8-graphic/recipes-graphics/imx-gpu-sdk/imx-gpu-sdk_5.6.2.bb
+@@ -8,7 +8,7 @@ DEPENDS_BACKEND = \
+         bb.utils.contains('DISTRO_FEATURES',     'x11',  ' xrandr', \
+                                                                 '', d), d)}"
+ DEPENDS_MX8       = ""
+-DEPENDS_MX8_mx8   = " \
++DEPENDS_MX8:mx8   = " \
+     glslang-native \
+     rapidopencl \
+     rapidopenvx \
+@@ -16,7 +16,7 @@ DEPENDS_MX8_mx8   = " \
+     vulkan-headers \
+     vulkan-loader \
+ "
+-DEPENDS_MX8_mx8mm = ""
++DEPENDS_MX8:mx8mm = ""
+ DEPENDS = " \
+     assimp \
+     cmake-native \
+@@ -35,8 +35,8 @@ DEPENDS = " \
+     ${DEPENDS_BACKEND} \
+     ${DEPENDS_MX8} \
+ "
+-DEPENDS_append_imxgpu2d = " virtual/libg2d virtual/libopenvg"
+-DEPENDS_append_imxgpu3d = " virtual/libgles2"
++DEPENDS:append:imxgpu2d = " virtual/libg2d virtual/libopenvg"
++DEPENDS:append:imxgpu3d = " virtual/libgles2"
+ 
+ GPU_SDK_SRC ?= "git://github.com/nxpmicro/gtec-demo-framework.git;protocol=https"
+ GPU_SDK_SRC_BRANCH ?= "master"
+@@ -53,21 +53,21 @@ BACKEND = \
+                                                              'FB', d), d)}"
+ 
+ FEATURES                  = "EarlyAccess,EGL,GoogleUnitTest,OpenVG"
+-FEATURES_append_imxgpu2d  = ",G2D"
+-FEATURES_append_imxgpu3d  = ",OpenGLES2"
+-FEATURES_append           = "${FEATURES_SOC}"
++FEATURES:append:imxgpu2d  = ",G2D"
++FEATURES:append:imxgpu3d  = ",OpenGLES2"
++FEATURES:append           = "${FEATURES_SOC}"
+ 
+ FEATURES_SOC              = ""
+-FEATURES_SOC_mx6q         = ",OpenGLES3"
+-FEATURES_SOC_mx6dl        = ",OpenGLES3"
+-FEATURES_SOC_mx8          = ",OpenCV,Vulkan,OpenGLES3.2,OpenCL1.2,OpenVX1.1"
+-FEATURES_SOC_mx8mm        = ",OpenCV"
++FEATURES_SOC:mx6q         = ",OpenGLES3"
++FEATURES_SOC:mx6dl        = ",OpenGLES3"
++FEATURES_SOC:mx8          = ",OpenCV,Vulkan,OpenGLES3.2,OpenCL1.2,OpenVX1.1"
++FEATURES_SOC:mx8mm        = ",OpenCV"
+ 
+ EXTENSIONS       = "*"
+-EXTENSIONS_mx6q  = "OpenGLES3:GL_EXT_geometry_shader,OpenGLES3:GL_EXT_tessellation_shader"
+-EXTENSIONS_mx6dl = "OpenGLES3:GL_EXT_geometry_shader,OpenGLES3:GL_EXT_tessellation_shader"
+-EXTENSIONS_mx8m  = "OpenGLES3:GL_EXT_color_buffer_float"
+-EXTENSIONS_mx8mm = "*"
++EXTENSIONS:mx6q  = "OpenGLES3:GL_EXT_geometry_shader,OpenGLES3:GL_EXT_tessellation_shader"
++EXTENSIONS:mx6dl = "OpenGLES3:GL_EXT_geometry_shader,OpenGLES3:GL_EXT_tessellation_shader"
++EXTENSIONS:mx8m  = "OpenGLES3:GL_EXT_color_buffer_float"
++EXTENSIONS:mx8mm = "*"
+ 
+ do_compile () {
+     export FSL_PLATFORM_NAME=Yocto
+@@ -81,15 +81,15 @@ REMOVALS = " \
+     GLES2/DirectMultiSamplingVideoYUV \
+     GLES3/DirectMultiSamplingVideoYUV \
+ "
+-REMOVALS_append_imxdpu = " \
++REMOVALS:append:imxdpu = " \
+     G2D/EightLayers \
+ "
+-REMOVALS_append_mx6q = " \
++REMOVALS:append:mx6q = " \
+     GLES3/HDR02_FBBasicToneMapping \
+     GLES3/HDR03_SkyboxTonemapping \
+     GLES3/HDR04_HDRFramebuffer \
+ "
+-REMOVALS_append_mx6dl = " \
++REMOVALS:append:mx6dl = " \
+     GLES3/HDR02_FBBasicToneMapping \
+     GLES3/HDR03_SkyboxTonemapping \
+     GLES3/HDR04_HDRFramebuffer \
+@@ -103,9 +103,9 @@ do_install () {
+     done
+ }
+ 
+-FILES_${PN} += "/opt/${PN}"
+-FILES_${PN}-dbg += "/opt/${PN}/*/*/.debug /usr/src/debug"
+-INSANE_SKIP_${PN} += "already-stripped rpaths"
++FILES:${PN} += "/opt/${PN}"
++FILES:${PN}-dbg += "/opt/${PN}/*/*/.debug /usr/src/debug"
++INSANE_SKIP:${PN} += "already-stripped rpaths"
+ 
+ # Unfortunately recipes with an empty main package, like header-only libraries,
+ # are not included in the SDK. Use RDEPENDS as a workaround.
+@@ -119,26 +119,26 @@ RDEPENDS_EMPTY_MAIN_PACKAGE = " \
+     stb \
+ "
+ RDEPENDS_EMPTY_MAIN_PACKAGE_MX8       = ""
+-RDEPENDS_EMPTY_MAIN_PACKAGE_MX8_mx8   = " \
++RDEPENDS_EMPTY_MAIN_PACKAGE_MX8:mx8   = " \
+     rapidopencl \
+     rapidopenvx \
+     rapidvulkan \
+ "
+-RDEPENDS_EMPTY_MAIN_PACKAGE_MX8_mx8mm = ""
++RDEPENDS_EMPTY_MAIN_PACKAGE_MX8:mx8mm = ""
+ # vulkan-loader is dynamically loaded, so need to add an explicit
+ # dependency
+ RDEPENDS_VULKAN_LOADER       = ""
+-RDEPENDS_VULKAN_LOADER_mx8   = "vulkan-validationlayers vulkan-loader"
+-RDEPENDS_VULKAN_LOADER_mx8mm = ""
+-RDEPENDS_${PN} += " \
++RDEPENDS_VULKAN_LOADER:mx8   = "vulkan-validationlayers vulkan-loader"
++RDEPENDS_VULKAN_LOADER:mx8mm = ""
++RDEPENDS:${PN} += " \
+     ${RDEPENDS_EMPTY_MAIN_PACKAGE} \
+     ${RDEPENDS_EMPTY_MAIN_PACKAGE_MX8} \
+     ${RDEPENDS_VULKAN_LOADER} \
+ "
+ 
+ # For backwards compatibility
+-RPROVIDES_${PN} = "fsl-gpu-sdk"
+-RREPLACES_${PN} = "fsl-gpu-sdk"
+-RCONFLICTS_${PN} = "fsl-gpu-sdk"
++RPROVIDES:${PN} = "fsl-gpu-sdk"
++RREPLACES:${PN} = "fsl-gpu-sdk"
++RCONFLICTS:${PN} = "fsl-gpu-sdk"
+ 
+ COMPATIBLE_MACHINE = "(imxgpu)"
+diff --git a/imx8-graphic/recipes-graphics/imx-gpu-viv/imx-gpu-viv-6.inc b/imx8-graphic/recipes-graphics/imx-gpu-viv/imx-gpu-viv-6.inc
+index 017d647d1349..895b96e094e8 100644
+--- a/imx8-graphic/recipes-graphics/imx-gpu-viv/imx-gpu-viv-6.inc
++++ b/imx8-graphic/recipes-graphics/imx-gpu-viv/imx-gpu-viv-6.inc
+@@ -17,8 +17,8 @@ DEPENDS += " \
+     ${@bb.utils.contains('DISTRO_FEATURES',     'x11', 'libxcb libxshmfence libxxf86vm', \
+                                                        '', d)} \
+ "
+-DEPENDS_append_imxdrm = " libdrm wayland"
+-DEPENDS_append_mx8 = " patchelf-native"
++DEPENDS:append:imxdrm = " libdrm wayland"
++DEPENDS:append:mx8 = " patchelf-native"
+ 
+ # imx-gpu-viv does not provide everything it needs to for virtual/libgl
+ # on x11 backend or on Wayland backend with XWayland support.
+@@ -26,17 +26,17 @@ DEPENDS_append_mx8 = " patchelf-native"
+ DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'mesa', '', d)}"
+ 
+ EXTRA_PROVIDES = ""
+-EXTRA_PROVIDES_append_imxgpu3d = " \
++EXTRA_PROVIDES:append:imxgpu3d = " \
+     virtual/libgl \
+     virtual/libgles1 \
+     virtual/libgles2 \
+ "
+-EXTRA_PROVIDES_append_mx8 = " \
++EXTRA_PROVIDES:append:mx8 = " \
+     virtual/libgbm \
+ "
+ PROVIDES_OPENVX       = ""
+-PROVIDES_OPENVX_mx8   = "virtual/libopenvx"
+-PROVIDES_OPENVX_mx8mm = ""
++PROVIDES_OPENVX:mx8   = "virtual/libopenvx"
++PROVIDES_OPENVX:mx8mm = ""
+ PROVIDES += " \
+     imx-gpu-viv \
+     libgal-imx \
+@@ -49,19 +49,19 @@ PROVIDES += " \
+     ${PROVIDES_OPENVX} \
+ "
+ 
+-RPROVIDES_${PN}_imxgpu3d += "imx-gpu-viv"
++RPROVIDES:${PN}:imxgpu3d += "imx-gpu-viv"
+ 
+ PE = "1"
+ 
+ inherit fsl-eula-unpack-graphic features_check
+ 
+-REQUIRED_DISTRO_FEATURES_mx8 = "wayland"
++REQUIRED_DISTRO_FEATURES:mx8 = "wayland"
+ 
+ SRC_URI = "${FSL_MIRROR}/${BPN}-${PV}.bin;fsl-eula=true"
+ 
+ # Note : If you add a package here, to prevent a naming conflict see the python_anonymous() futher below
+ IMX_PACKAGES_GBM     = ""
+-IMX_PACKAGES_GBM_mx8 = "libgbm-imx libgbm-imx-dev"
++IMX_PACKAGES_GBM:mx8 = "libgbm-imx libgbm-imx-dev"
+ PACKAGES =+ "libclc-imx libclc-imx-dev \
+ 	libgl-imx libgl-imx-dev \
+ 	libgles1-imx libgles1-imx-dev \
+@@ -109,7 +109,7 @@ python __anonymous() {
+     # the source we cannot fix it. Disable the insane check for now.
+     packages = d.getVar('PACKAGES').split()
+     for p in packages:
+-        d.appendVar("INSANE_SKIP_%s" % p, " ldflags")
++        d.appendVar("INSANE_SKIP:%s" % p, " ldflags")
+ 
+     # For the packages that make up the OpenGL interfaces, inject variables so that
+     # they don't get Debian-renamed (which would remove the -imx suffix).
+@@ -118,36 +118,36 @@ python __anonymous() {
+               ("libgles3",), ("libgbm",)):
+         fullp = p[0] + "-imx"
+         pkgs = "".join(' %s' % i for i in p)
+-        d.setVar("DEBIAN_NOAUTONAME_" + fullp, "1")
+-        d.appendVar("RREPLACES_" + fullp, pkgs)
+-        d.appendVar("RPROVIDES_" + fullp, pkgs)
+-        d.appendVar("RCONFLICTS_" + fullp, pkgs)
++        d.setVar("DEBIAN_NOAUTONAME:" + fullp, "1")
++        d.appendVar("RREPLACES:" + fullp, pkgs)
++        d.appendVar("RPROVIDES:" + fullp, pkgs)
++        d.appendVar("RCONFLICTS:" + fullp, pkgs)
+ 
+         # For -dev, the first element is both the Debian and original name
+         fullp += "-dev"
+         pkgs = p[0] + "-dev"
+-        d.setVar("DEBIAN_NOAUTONAME_" + fullp, "1")
+-        d.appendVar("RREPLACES_" + fullp, pkgs)
+-        d.appendVar("RPROVIDES_" + fullp, pkgs)
+-        d.appendVar("RCONFLICTS_" + fullp, pkgs)
++        d.setVar("DEBIAN_NOAUTONAME:" + fullp, "1")
++        d.appendVar("RREPLACES:" + fullp, pkgs)
++        d.appendVar("RPROVIDES:" + fullp, pkgs)
++        d.appendVar("RCONFLICTS:" + fullp, pkgs)
+ }
+ 
+ IS_MX6SL = "0"
+-IS_MX6SL_mx6sl = "1"
++IS_MX6SL:mx6sl = "1"
+ 
+ IS_MX8 = "0"
+-IS_MX8_mx8 = "1"
++IS_MX8:mx8 = "1"
+ 
+ PACKAGE_FP_TYPE = "hardfp"
+ 
+ HAS_GBM     = "false"
+-HAS_GBM_mx8 = "true"
++HAS_GBM:mx8 = "true"
+ 
+ GLES3_HEADER_REMOVALS        = "gl31.h gl32.h"
+-GLES3_HEADER_REMOVALS_mx8m   = "gl32.h"
+-GLES3_HEADER_REMOVALS_mx8mm  = "gl31.h gl32.h"
+-GLES3_HEADER_REMOVALS_mx8qxp = ""
+-GLES3_HEADER_REMOVALS_mx8qm  = ""
++GLES3_HEADER_REMOVALS:mx8m   = "gl32.h"
++GLES3_HEADER_REMOVALS:mx8mm  = "gl31.h gl32.h"
++GLES3_HEADER_REMOVALS:mx8qxp = ""
++GLES3_HEADER_REMOVALS:mx8qm  = ""
+ 
+ do_install () {
+     install -d ${D}${libdir}
+@@ -261,98 +261,98 @@ do_install () {
+     chown -R root:root "${D}"
+ }
+ 
+-ALLOW_EMPTY_${PN} = "1"
++ALLOW_EMPTY:${PN} = "1"
+ 
+-FILES_libclc-imx = "${libdir}/libCLC${SOLIBS} ${includedir}/CL/cl_viv_vx_ext.h"
+-FILES_libclc-imx-dev = "${includedir}/CL ${libdir}/libCLC${SOLIBSDEV}"
++FILES:libclc-imx = "${libdir}/libCLC${SOLIBS} ${includedir}/CL/cl_viv_vx_ext.h"
++FILES:libclc-imx-dev = "${includedir}/CL ${libdir}/libCLC${SOLIBSDEV}"
+ 
+ # libEGL.so is used by some demo apps from Freescale
+-INSANE_SKIP_libegl-imx += "dev-so"
+-FILES_libegl-imx = "${libdir}/libEGL${REALSOLIBS} ${libdir}/libEGL${SOLIBSDEV} "
+-FILES_libegl-imx-dev = "${includedir}/EGL ${includedir}/KHR ${libdir}/pkgconfig/egl.pc"
++INSANE_SKIP:libegl-imx += "dev-so"
++FILES:libegl-imx = "${libdir}/libEGL${REALSOLIBS} ${libdir}/libEGL${SOLIBSDEV} "
++FILES:libegl-imx-dev = "${includedir}/EGL ${includedir}/KHR ${libdir}/pkgconfig/egl.pc"
+ 
+-FILES_libgal-imx = "${libdir}/libGAL${SOLIBS} ${libdir}/libGAL_egl${SOLIBS}"
+-FILES_libgal-imx-dev = "${libdir}/libGAL${SOLIBSDEV} ${includedir}/HAL"
+-RDEPENDS_libgal-imx += "${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'valgrind', '', d)}"
+-RPROVIDES_libgal-imx += "libgal-imx"
+-INSANE_SKIP_libgal-imx += "build-deps"
++FILES:libgal-imx = "${libdir}/libGAL${SOLIBS} ${libdir}/libGAL_egl${SOLIBS}"
++FILES:libgal-imx-dev = "${libdir}/libGAL${SOLIBSDEV} ${includedir}/HAL"
++RDEPENDS:libgal-imx += "${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'valgrind', '', d)}"
++RPROVIDES:libgal-imx += "libgal-imx"
++INSANE_SKIP:libgal-imx += "build-deps"
+ 
+-FILES_libvsc-imx = "${libdir}/libVSC${SOLIBS}"
++FILES:libvsc-imx = "${libdir}/libVSC${SOLIBS}"
+ 
+-FILES_libgbm-imx_mx8 = "${libdir}/libgbm${REALSOLIBS} ${libdir}/libgbm${SOLIBSDEV} ${libdir}/libgbm_viv${SOLIBSDEV}"
+-FILES_libgbm-imx-dev_mx8 = "${libdir}/pkgconfig/gbm.pc ${includedir}/gbm.h"
+-RDEPENDS_libgbm-imx_append_mx8 = " libdrm"
+-INSANE_SKIP_libgbm-imx += "dev-so"
++FILES:libgbm-imx:mx8 = "${libdir}/libgbm${REALSOLIBS} ${libdir}/libgbm${SOLIBSDEV} ${libdir}/libgbm_viv${SOLIBSDEV}"
++FILES:libgbm-imx-dev:mx8 = "${libdir}/pkgconfig/gbm.pc ${includedir}/gbm.h"
++RDEPENDS:libgbm-imx:append:mx8 = " libdrm"
++INSANE_SKIP:libgbm-imx += "dev-so"
+ 
+-FILES_libvulkan-imx = "${libdir}/libvulkan_VSI${SOLIBS} ${libdir}/libvulkan_VSI${REALSOLIBS} ${libdir}/libSPIRV_viv${SOLIBS}"
+-FILES_libvulkan-imx-dev = "${includedir}/vulkan ${libdir}/libvulkan_VSI${SOLIBSDEV}"
+-INSANE_SKIP_libvulkan-imx += "dev-so"
++FILES:libvulkan-imx = "${libdir}/libvulkan_VSI${SOLIBS} ${libdir}/libvulkan_VSI${REALSOLIBS} ${libdir}/libSPIRV_viv${SOLIBS}"
++FILES:libvulkan-imx-dev = "${includedir}/vulkan ${libdir}/libvulkan_VSI${SOLIBSDEV}"
++INSANE_SKIP:libvulkan-imx += "dev-so"
+ 
+-FILES_libopenvx-imx = "${libdir}/libOpenVX${SOLIBS} ${libdir}/libOpenVX${REALSOLIBS} ${libdir}/libOvx*${SOLIBS} ${libdir}/libOpenVXC${SOLIBS} ${libdir}/libOpenVXU${SOLIBS} ${libdir}/libArchModelSw${SOLIBS}"
+-FILES_libopenvx-imx-dev = "${includedir}/VX ${libdir}/libOpenVX${SOLIBSDEV}"
+-RDEPENDS_libopenvx-imx = "libnn-imx"
+-INSANE_SKIP_libopenvx-imx += "dev-so dev-deps"
++FILES:libopenvx-imx = "${libdir}/libOpenVX${SOLIBS} ${libdir}/libOpenVX${REALSOLIBS} ${libdir}/libOvx*${SOLIBS} ${libdir}/libOpenVXC${SOLIBS} ${libdir}/libOpenVXU${SOLIBS} ${libdir}/libArchModelSw${SOLIBS}"
++FILES:libopenvx-imx-dev = "${includedir}/VX ${libdir}/libOpenVX${SOLIBSDEV}"
++RDEPENDS:libopenvx-imx = "libnn-imx"
++INSANE_SKIP:libopenvx-imx += "dev-so dev-deps"
+ 
+-FILES_libgl-imx = "${libdir}/libGL${REALSOLIBS}"
+-FILES_libgl-imx-dev = "${libdir}/libGL${SOLIBSDEV} ${includedir}/GL"
+-INSANE_SKIP_libgl-imx += "file-rdeps"
++FILES:libgl-imx = "${libdir}/libGL${REALSOLIBS}"
++FILES:libgl-imx-dev = "${libdir}/libGL${SOLIBSDEV} ${includedir}/GL"
++INSANE_SKIP:libgl-imx += "file-rdeps"
+ 
+ # libEGL needs to open libGLESv1.so
+-INSANE_SKIP_libgles1-imx += "dev-so"
+-FILES_libgles1-imx = "${libdir}/libGLESv1*${REALSOLIBS} ${libdir}/libGLESv1*${SOLIBS} ${libdir}/libGLES_*${REALSOLIBS} ${libdir}/libGLES_*${SOLIBS}"
+-FILES_libgles1-imx-dev = "${includedir}/GLES ${libdir}/libGLESv1*${SOLIBS} ${libdir}/libGLES_*${SOLIBSDEV} ${libdir}/pkgconfig/glesv1_cm.pc"
+-RPROVIDES_libgles1-imx = "libgles-imx"
+-RPROVIDES_libgles1-imx-dev = "libgles-imx-dev"
++INSANE_SKIP:libgles1-imx += "dev-so"
++FILES:libgles1-imx = "${libdir}/libGLESv1*${REALSOLIBS} ${libdir}/libGLESv1*${SOLIBS} ${libdir}/libGLES_*${REALSOLIBS} ${libdir}/libGLES_*${SOLIBS}"
++FILES:libgles1-imx-dev = "${includedir}/GLES ${libdir}/libGLESv1*${SOLIBS} ${libdir}/libGLES_*${SOLIBSDEV} ${libdir}/pkgconfig/glesv1_cm.pc"
++RPROVIDES:libgles1-imx = "libgles-imx"
++RPROVIDES:libgles1-imx-dev = "libgles-imx-dev"
+ 
+ # libEGL needs to open libGLESv2.so
+-INSANE_SKIP_libgles2-imx += "dev-so"
+-FILES_libgles2-imx = "${libdir}/libGLESv2${REALSOLIBS} ${libdir}/libGLESv2${SOLIBS}"
+-FILES_libgles2-imx-dev = "${includedir}/GLES2 ${libdir}/libGLESv2${SOLIBSDEV} ${libdir}/pkgconfig/glesv2.pc"
+-RDEPENDS_libgles2-imx = "libglslc-imx"
++INSANE_SKIP:libgles2-imx += "dev-so"
++FILES:libgles2-imx = "${libdir}/libGLESv2${REALSOLIBS} ${libdir}/libGLESv2${SOLIBS}"
++FILES:libgles2-imx-dev = "${includedir}/GLES2 ${libdir}/libGLESv2${SOLIBSDEV} ${libdir}/pkgconfig/glesv2.pc"
++RDEPENDS:libgles2-imx = "libglslc-imx"
+ 
+-FILES_libgles3-imx-dev = "${includedir}/GLES3"
++FILES:libgles3-imx-dev = "${includedir}/GLES3"
+ # as long as there is no libgles3: ship libgles3-dev along with
+ # libgles2-dev - otherwise GLES3 headers have to be added manually
+-RDEPENDS_libgles2-imx-dev += "libgles3-imx-dev"
++RDEPENDS:libgles2-imx-dev += "libgles3-imx-dev"
+ 
+-FILES_libglslc-imx = "${libdir}/libGLSLC${SOLIBS}"
+-FILES_libglslc-imx-dev = "${includedir}/CL ${libdir}/libGLSLC${SOLIBSDEV}"
++FILES:libglslc-imx = "${libdir}/libGLSLC${SOLIBS}"
++FILES:libglslc-imx-dev = "${includedir}/CL ${libdir}/libGLSLC${SOLIBSDEV}"
+ 
+-FILES_libopencl-imx = "${libdir}/libOpenCL${SOLIBS} \
++FILES:libopencl-imx = "${libdir}/libOpenCL${SOLIBS} \
+                        ${libdir}/libOpenCL${REALSOLIBS} \
+                        ${libdir}/libVivanteOpenCL${SOLIBS} \
+                        ${libdir}/libLLVM_viv${SOLIBS} \
+                        ${sysconfdir}/OpenCL/vendors/Vivante.icd"
+-FILES_libopencl-imx-dev = "${includedir}/CL ${libdir}/libOpenCL${SOLIBSDEV}"
+-RDEPENDS_libopencl-imx= "libclc-imx"
+-INSANE_SKIP_libopencl-imx += "dev-so dev-deps"
++FILES:libopencl-imx-dev = "${includedir}/CL ${libdir}/libOpenCL${SOLIBSDEV}"
++RDEPENDS:libopencl-imx= "libclc-imx"
++INSANE_SKIP:libopencl-imx += "dev-so dev-deps"
+ 
+-FILES_libnn-imx = "${libdir}/libNN*${SOLIBS}"
++FILES:libnn-imx = "${libdir}/libNN*${SOLIBS}"
+ 
+-INSANE_SKIP_libopenvg-imx += "dev-so"
+-FILES_libopenvg-imx = "${libdir}/libOpenVG*${REALSOLIBS} ${libdir}/libOpenVG*${SOLIBS}"
+-FILES_libopenvg-imx-dev = "${includedir}/VG ${libdir}/libOpenVG*${SOLIBSDEV} ${libdir}/pkgconfig/vg.pc"
+-RDEPENDS_libopenvg-imx += "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd-gpuconfig', '', d)}"
++INSANE_SKIP:libopenvg-imx += "dev-so"
++FILES:libopenvg-imx = "${libdir}/libOpenVG*${REALSOLIBS} ${libdir}/libOpenVG*${SOLIBS}"
++FILES:libopenvg-imx-dev = "${includedir}/VG ${libdir}/libOpenVG*${SOLIBSDEV} ${libdir}/pkgconfig/vg.pc"
++RDEPENDS:libopenvg-imx += "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd-gpuconfig', '', d)}"
+ 
+-FILES_libvdk-imx = "${libdir}/libVDK*${REALSOLIBS} ${libdir}/libVDK*${SOLIBS}"
+-FILES_libvdk-imx-dev = "${includedir}/*vdk*.h ${libdir}/libVDK${SOLIBSDEV}"
+-INSANE_SKIP_libvdk-imx += "dev-so"
++FILES:libvdk-imx = "${libdir}/libVDK*${REALSOLIBS} ${libdir}/libVDK*${SOLIBS}"
++FILES:libvdk-imx-dev = "${includedir}/*vdk*.h ${libdir}/libVDK${SOLIBSDEV}"
++INSANE_SKIP:libvdk-imx += "dev-so"
+ 
+-FILES_libvivante-dri-imx = "${libdir}/dri/vivante_dri.so"
+-RDEPENDS_libvivante-dri-imx = "libdrm"
++FILES:libvivante-dri-imx = "${libdir}/dri/vivante_dri.so"
++RDEPENDS:libvivante-dri-imx = "libdrm"
+ 
+-INSANE_SKIP_libwayland-viv-imx += "dev-so"
+-FILES_libwayland-viv-imx =  "${libdir}/libwayland-viv${REALSOLIBS}  ${libdir}/libwayland-viv${SOLIBS}"
+-FILES_libwayland-viv-imx-dev = "${includedir}/wayland-viv ${libdir})/libwayland-viv${SOLIBSDEV} ${libdir}/pkgconfig/wayland-viv.pc"
+-RPROVIDES_libwayland-viv-imx += "${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'xf86-video-imx-vivante', '', d)}"
++INSANE_SKIP:libwayland-viv-imx += "dev-so"
++FILES:libwayland-viv-imx =  "${libdir}/libwayland-viv${REALSOLIBS}  ${libdir}/libwayland-viv${SOLIBS}"
++FILES:libwayland-viv-imx-dev = "${includedir}/wayland-viv ${libdir})/libwayland-viv${SOLIBSDEV} ${libdir}/pkgconfig/wayland-viv.pc"
++RPROVIDES:libwayland-viv-imx += "${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'xf86-video-imx-vivante', '', d)}"
+ 
+-INSANE_SKIP_libgc-wayland-protocol-imx += "dev-so"
+-FILES_libgc-wayland-protocol-imx = "${libdir}/libgc_wayland_protocol${REALSOLIBS} ${libdir}/libgc_wayland_protocol${SOLIBS}"
+-FILES_libgc-wayland-protocol-imx-dev = "${libdir}/libgc_wayland_protocol${SOLIBSDEV} ${libdir}/pkgconfig/gc_wayland_protocol.pc"
++INSANE_SKIP:libgc-wayland-protocol-imx += "dev-so"
++FILES:libgc-wayland-protocol-imx = "${libdir}/libgc_wayland_protocol${REALSOLIBS} ${libdir}/libgc_wayland_protocol${SOLIBS}"
++FILES:libgc-wayland-protocol-imx-dev = "${libdir}/libgc_wayland_protocol${SOLIBSDEV} ${libdir}/pkgconfig/gc_wayland_protocol.pc"
+ 
+-FILES_imx-gpu-viv-tools = "${bindir}/gmem_info"
++FILES:imx-gpu-viv-tools = "${bindir}/gmem_info"
+ 
+-FILES_imx-gpu-viv-demos = "/opt"
+-INSANE_SKIP_imx-gpu-viv-demos += "rpaths dev-deps"
++FILES:imx-gpu-viv-demos = "/opt"
++INSANE_SKIP:imx-gpu-viv-demos += "rpaths dev-deps"
+ 
+ # COMPATIBLE_MACHINE = "(mx6q|mx6dl|mx6sx|mx6sl|mx8)"
+diff --git a/imx8-graphic/recipes-graphics/mesa/mesa-demos_%.bbappend b/imx8-graphic/recipes-graphics/mesa/mesa-demos_%.bbappend
+index 301f1b59f125..4b518185119b 100644
+--- a/imx8-graphic/recipes-graphics/mesa/mesa-demos_%.bbappend
++++ b/imx8-graphic/recipes-graphics/mesa/mesa-demos_%.bbappend
+@@ -1,26 +1,26 @@
+-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
++FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
+ 
+-SRC_URI_append_imxgpu = " file://Replace-glWindowPos2iARB-calls-with-glWindowPos2i.patch \
++SRC_URI:append:imxgpu = " file://Replace-glWindowPos2iARB-calls-with-glWindowPos2i.patch \
+                     file://fix-clear-build-break.patch \
+                     file://Add-OpenVG-demos-to-support-wayland.patch"
+ 
+ PACKAGECONFIG_REMOVE_IF_2D_ONLY          = ""
+-PACKAGECONFIG_REMOVE_IF_2D_ONLY_imxgpu2d = "gles1 gles2"
+-PACKAGECONFIG_REMOVE_IF_2D_ONLY_imxgpu3d = ""
++PACKAGECONFIG_REMOVE_IF_2D_ONLY:imxgpu2d = "gles1 gles2"
++PACKAGECONFIG_REMOVE_IF_2D_ONLY:imxgpu3d = ""
+ PACKAGECONFIG_REMOVE_IF_GPU              = ""
+-PACKAGECONFIG_REMOVE_IF_GPU_imxgpu       = " \
++PACKAGECONFIG_REMOVE_IF_GPU:imxgpu       = " \
+     ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'glu x11', '', d)} \
+ "
+-PACKAGECONFIG_remove = " \
++PACKAGECONFIG:remove = " \
+     ${PACKAGECONFIG_REMOVE_IF_2D_ONLY} \
+     ${PACKAGECONFIG_REMOVE_IF_GPU} \
+ "
+ 
+ PACKAGECONFIG_APPEND_IF_GPU        = ""
+-PACKAGECONFIG_APPEND_IF_GPU_imxgpu = " \
++PACKAGECONFIG_APPEND_IF_GPU:imxgpu = " \
+     ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'wayland vg', '', d)} \
+     ${@bb.utils.contains('DISTRO_FEATURES',     'x11',       'glut', '', d)} \
+ "
+-PACKAGECONFIG_append = " \
++PACKAGECONFIG:append = " \
+     ${PACKAGECONFIG_APPEND_IF_GPU} \
+ "
+diff --git a/imx8-graphic/recipes-graphics/mesa/mesa-gl_%.bbappend b/imx8-graphic/recipes-graphics/mesa/mesa-gl_%.bbappend
+index ca1c8f46d680..dafd27f0a68e 100644
+--- a/imx8-graphic/recipes-graphics/mesa/mesa-gl_%.bbappend
++++ b/imx8-graphic/recipes-graphics/mesa/mesa-gl_%.bbappend
+@@ -1 +1 @@
+-COMPATIBLE_MACHINE_imxgpu = "(-)"
++COMPATIBLE_MACHINE:imxgpu = "(-)"
+diff --git a/imx8-graphic/recipes-graphics/mesa/mesa_%.bbappend b/imx8-graphic/recipes-graphics/mesa/mesa_%.bbappend
+index 07ab91510b08..8d96806ea674 100644
+--- a/imx8-graphic/recipes-graphics/mesa/mesa_%.bbappend
++++ b/imx8-graphic/recipes-graphics/mesa/mesa_%.bbappend
+@@ -1,8 +1,8 @@
+-PROVIDES_remove_imxgpu   = "virtual/egl"
+-PROVIDES_remove_imxgpu3d = "virtual/libgl virtual/libgles1 virtual/libgles2"
++PROVIDES:remove:imxgpu   = "virtual/egl"
++PROVIDES:remove:imxgpu3d = "virtual/libgl virtual/libgles1 virtual/libgles2"
+ 
+-PACKAGECONFIG_remove_imxgpu   = "egl gbm"
+-PACKAGECONFIG_remove_imxgpu3d = "gles"
++PACKAGECONFIG:remove:imxgpu   = "egl gbm"
++PACKAGECONFIG:remove:imxgpu3d = "gles"
+ 
+ # FIXME: mesa should support 'x11-no-tls' option
+ python () {
+@@ -15,18 +15,18 @@ python () {
+ }
+ 
+ # Enable Etnaviv and Freedreno support
+-PACKAGECONFIG_append_use-mainline-bsp = " gallium etnaviv kmsro freedreno"
++PACKAGECONFIG:append:use-mainline-bsp = " gallium etnaviv kmsro freedreno"
+ 
+ USE_OSMESA_ONLY ?= "no"
+ 
+ # Etnaviv support state for i.MX8 is unknown, therefore only enable OSMesa and
+ # disable Gallium for now. If you still want to enable Etnaviv, just set
+-# USE_OSMESA_ONLY_mx8 = "no" in your bbappend.
+-USE_OSMESA_ONLY_mx8 ?= "yes"
++# USE_OSMESA_ONLY:mx8 = "no" in your bbappend.
++USE_OSMESA_ONLY:mx8 ?= "yes"
+ 
+ # Enable OSMesa which also requires dri (classic) swrast
+ # FIXME: Dirty hack to allow use of Vivante GPU libGL binary
+-do_install_append_imxgpu3d () {
++do_install:append:imxgpu3d () {
+     rm -f ${D}${libdir}/libGL.* \
+           ${D}${includedir}/GL/gl.h \
+           ${D}${includedir}/GL/glcorearb.h \
+@@ -38,10 +38,10 @@ do_install_append_imxgpu3d () {
+     fi
+ }
+ 
+-do_install_append_imxgpu () {
++do_install:append:imxgpu () {
+     rm -rf ${D}${includedir}/KHR
+ }
+ 
+ # Undo customization in meta-freescale that doesn't apply to 8DXL
+-PACKAGECONFIG_remove_mx8dxl = "osmesa"
+-DRIDRIVERS_remove = "swrast"
++PACKAGECONFIG:remove:mx8dxl = "osmesa"
++DRIDRIVERS:remove = "swrast"
+diff --git a/imx8-graphic/recipes-graphics/rapidopencl/rapidopencl_1.1.0.1.bb b/imx8-graphic/recipes-graphics/rapidopencl/rapidopencl_1.1.0.1.bb
+index 7fd0301f19a0..a4fea8fab4c8 100644
+--- a/imx8-graphic/recipes-graphics/rapidopencl/rapidopencl_1.1.0.1.bb
++++ b/imx8-graphic/recipes-graphics/rapidopencl/rapidopencl_1.1.0.1.bb
+@@ -15,4 +15,4 @@ do_install () {
+     cp -r ${S}/include/* ${D}${includedir}
+ }
+ 
+-ALLOW_EMPTY_${PN} = "1"
++ALLOW_EMPTY:${PN} = "1"
+diff --git a/imx8-graphic/recipes-graphics/rapidopenvx/rapidopenvx_1.1.0.bb b/imx8-graphic/recipes-graphics/rapidopenvx/rapidopenvx_1.1.0.bb
+index 0880f7a904a1..21ebe411784b 100644
+--- a/imx8-graphic/recipes-graphics/rapidopenvx/rapidopenvx_1.1.0.bb
++++ b/imx8-graphic/recipes-graphics/rapidopenvx/rapidopenvx_1.1.0.bb
+@@ -13,4 +13,4 @@ do_install () {
+     cp -r ${S}/include/* ${D}${includedir}
+ }
+ 
+-ALLOW_EMPTY_${PN} = "1"
++ALLOW_EMPTY:${PN} = "1"
+diff --git a/imx8-graphic/recipes-graphics/rapidvulkan/rapidvulkan_1.2.141.2001.bb b/imx8-graphic/recipes-graphics/rapidvulkan/rapidvulkan_1.2.141.2001.bb
+index 0aaacc2c3a10..5a481580842f 100644
+--- a/imx8-graphic/recipes-graphics/rapidvulkan/rapidvulkan_1.2.141.2001.bb
++++ b/imx8-graphic/recipes-graphics/rapidvulkan/rapidvulkan_1.2.141.2001.bb
+@@ -11,4 +11,4 @@ S = "${WORKDIR}/git"
+ 
+ inherit cmake
+ 
+-ALLOW_EMPTY_${PN} = "1"
++ALLOW_EMPTY:${PN} = "1"
+diff --git a/imx8-graphic/recipes-graphics/vulkan/glslang_git.bb b/imx8-graphic/recipes-graphics/vulkan/glslang_git.bb
+index 1ee5b60f4912..707cb67016d3 100644
+--- a/imx8-graphic/recipes-graphics/vulkan/glslang_git.bb
++++ b/imx8-graphic/recipes-graphics/vulkan/glslang_git.bb
+@@ -18,11 +18,11 @@ SRCREV = "1bc601c674aecc2fee0dee8ff7a118db76b4c439"
+ SRC_URI = "git://github.com/KhronosGroup/glslang \
+ "
+ 
+-FILES_${PN} += "${libdir}/*"
++FILES:${PN} += "${libdir}/*"
+ 
+ BBCLASSEXTEND = "native nativesdk"
+ 
+-do_install_append() {
++do_install:append() {
+     # Some of the vulkan samples/test require these headers
+     install -d ${D}${includedir}/SPIRV
+     cp -f ${S}/SPIRV/GlslangToSpv.h ${D}${includedir}/SPIRV
+diff --git a/imx8-graphic/recipes-graphics/vulkan/spirv-tools_git.bb b/imx8-graphic/recipes-graphics/vulkan/spirv-tools_git.bb
+index d833e672bc14..11c1a8d10376 100644
+--- a/imx8-graphic/recipes-graphics/vulkan/spirv-tools_git.bb
++++ b/imx8-graphic/recipes-graphics/vulkan/spirv-tools_git.bb
+@@ -17,11 +17,11 @@ SRCREV_spirv-headers = "38cafab379e5d16137cb97a485b9385191039b92"
+ 
+ inherit cmake python3native
+ 
+-do_install_append() {
++do_install:append() {
+ 	install -d ${D}/${includedir}/SPIRV
+ 	install -m 0644 ${DEST_DIR}/spirv-headers/include/spirv/unified1/* ${D}/${includedir}/SPIRV
+ }
+ CXXFLAGS += "-Wno-stringop-truncation"
+ 
+ FILES_SOLIBSDEV = ""
+-FILES_${PN} += "${libdir}/*.so"
++FILES:${PN} += "${libdir}/*.so"
+diff --git a/imx8-graphic/recipes-graphics/vulkan/vkmark_1.0.bb b/imx8-graphic/recipes-graphics/vulkan/vkmark_1.0.bb
+index 871e9c5da5ae..f475a9e07260 100644
+--- a/imx8-graphic/recipes-graphics/vulkan/vkmark_1.0.bb
++++ b/imx8-graphic/recipes-graphics/vulkan/vkmark_1.0.bb
+@@ -34,4 +34,4 @@ do_install() {
+     cp -r ${VKMARK_INSTALL_DIR}${libdir}/* ${D}${libdir}/
+ }
+ 
+-FILES_${PN} += "${bindir} ${datadir}"
++FILES:${PN} += "${bindir} ${datadir}"
+diff --git a/imx8-graphic/recipes-graphics/vulkan/vulkan-demos_%.bbappend b/imx8-graphic/recipes-graphics/vulkan/vulkan-demos_%.bbappend
+index 4920f229c21e..21e21d7eeefe 100644
+--- a/imx8-graphic/recipes-graphics/vulkan/vulkan-demos_%.bbappend
++++ b/imx8-graphic/recipes-graphics/vulkan/vulkan-demos_%.bbappend
+@@ -1,6 +1,6 @@
+ 
+-SRC_URI_append = " file://0001-Modify-parameter-in-vulkan-demo-computenbody.patch \
++SRC_URI:append = " file://0001-Modify-parameter-in-vulkan-demo-computenbody.patch \
+                    file://0001-Fix-bug-in-computeheadless-and-renderheadless.patch"
+ SRCREV = "21f9cd52519fab405827ecc965910bf269af3342"
+-DEPENDS_remove = "vulkan"
+-DEPENDS_append = " vulkan-headers vulkan-loader"
++DEPENDS:remove = "vulkan"
++DEPENDS:append = " vulkan-headers vulkan-loader"
+diff --git a/imx8-graphic/recipes-graphics/vulkan/vulkan-headers_%.bbappend b/imx8-graphic/recipes-graphics/vulkan/vulkan-headers_%.bbappend
+index 92e0a02a59a6..9d7fd3c1cf84 100644
+--- a/imx8-graphic/recipes-graphics/vulkan/vulkan-headers_%.bbappend
++++ b/imx8-graphic/recipes-graphics/vulkan/vulkan-headers_%.bbappend
+@@ -1,3 +1,3 @@
+ 
+ COMPATIBLE_MACHINE = "(mx8)"
+-COMPATIBLE_MACHINE_mx8mm = "(^$)"
++COMPATIBLE_MACHINE:mx8mm = "(^$)"
+diff --git a/imx8-graphic/recipes-graphics/vulkan/vulkan-headers_1.1.121.bb b/imx8-graphic/recipes-graphics/vulkan/vulkan-headers_1.1.121.bb
+index ac1165f9809f..81caa85d04c4 100644
+--- a/imx8-graphic/recipes-graphics/vulkan/vulkan-headers_1.1.121.bb
++++ b/imx8-graphic/recipes-graphics/vulkan/vulkan-headers_1.1.121.bb
+@@ -17,4 +17,4 @@ REQUIRED_DISTRO_FEATURES = "vulkan"
+ inherit cmake features_check
+ ANY_OF_DISTRO_FEATURES = "x11 wayland"
+ 
+-FILES_${PN} += "${datadir}/vulkan/registry"
++FILES:${PN} += "${datadir}/vulkan/registry"
+diff --git a/imx8-graphic/recipes-graphics/vulkan/vulkan-loader_1.1.121.bb b/imx8-graphic/recipes-graphics/vulkan/vulkan-loader_1.1.121.bb
+index b2c19079a879..4b0fe5463fd8 100644
+--- a/imx8-graphic/recipes-graphics/vulkan/vulkan-loader_1.1.121.bb
++++ b/imx8-graphic/recipes-graphics/vulkan/vulkan-loader_1.1.121.bb
+@@ -34,5 +34,5 @@ UPSTREAM_CHECK_GITTAGREGEX = "sdk-(?P<pver>\d+(\.\d+)+)"
+ # libvulkan.so is loaded dynamically, so put it in the main package
+ # instead of -dev
+ FILES_SOLIBSDEV = ""
+-FILES_${PN} += "${libdir}/lib*${SOLIBSDEV}"
+-INSANE_SKIP_${PN} += "dev-so"
++FILES:${PN} += "${libdir}/lib*${SOLIBSDEV}"
++INSANE_SKIP:${PN} += "dev-so"
+diff --git a/imx8-graphic/recipes-graphics/vulkan/vulkan-loader_1.1.121.bbappend b/imx8-graphic/recipes-graphics/vulkan/vulkan-loader_1.1.121.bbappend
+index a49e8a46cb10..95686e4c173c 100644
+--- a/imx8-graphic/recipes-graphics/vulkan/vulkan-loader_1.1.121.bbappend
++++ b/imx8-graphic/recipes-graphics/vulkan/vulkan-loader_1.1.121.bbappend
+@@ -2,11 +2,11 @@
+ # choose wayland
+ PACKAGECONFIG = "${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'wayland', '' ,d)}"
+ 
+-SRC_URI_append = " file://0001-STDIO-844-No-need-to-change-the-App-s-apiVersion-to-.patch"
++SRC_URI:append = " file://0001-STDIO-844-No-need-to-change-the-App-s-apiVersion-to-.patch"
+ 
+ # The i.MX implementation is dynamically loaded, so it requires an
+ # explicit runtime dependency.
+-RRECOMMENDS_${PN}_append_imxgpu = " libvulkan-imx"
++RRECOMMENDS:${PN}:append:imxgpu = " libvulkan-imx"
+ 
+ COMPATIBLE_MACHINE = "(mx8)"
+-COMPATIBLE_MACHINE_mx8mm = "(^$)"
++COMPATIBLE_MACHINE:mx8mm = "(^$)"
+diff --git a/imx8-graphic/recipes-graphics/vulkan/vulkan-tools_%.bbappend b/imx8-graphic/recipes-graphics/vulkan/vulkan-tools_%.bbappend
+index c088df979513..f0a176402889 100644
+--- a/imx8-graphic/recipes-graphics/vulkan/vulkan-tools_%.bbappend
++++ b/imx8-graphic/recipes-graphics/vulkan/vulkan-tools_%.bbappend
+@@ -5,4 +5,4 @@ PACKAGECONFIG = "${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'wayland', '
+ EXTRA_OECMAKE = "-DBUILD_CUBE=OFF"
+ 
+ COMPATIBLE_MACHINE = "(mx8)"
+-COMPATIBLE_MACHINE_mx8mm = "(^$)"
++COMPATIBLE_MACHINE:mx8mm = "(^$)"
+diff --git a/imx8-graphic/recipes-graphics/vulkan/vulkan-validationlayers_%.bbappend b/imx8-graphic/recipes-graphics/vulkan/vulkan-validationlayers_%.bbappend
+index 88002489e573..96e4b2716018 100644
+--- a/imx8-graphic/recipes-graphics/vulkan/vulkan-validationlayers_%.bbappend
++++ b/imx8-graphic/recipes-graphics/vulkan/vulkan-validationlayers_%.bbappend
+@@ -1,4 +1,4 @@
+-FILESEXTRAPATHS_prepend := "${THISDIR}/${BPN}:"
++FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}:"
+ 
+ SRC_URI += " \
+     file://icd_VSI.json \
+@@ -9,11 +9,11 @@ PACKAGECONFIG = "${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'wayland', '
+ 
+ DEPENDS += " virtual/egl glslang spirv-tools"
+ 
+-EXTRA_OECMAKE_remove = "-DBUILD_LAYERS=OFF"
++EXTRA_OECMAKE:remove = "-DBUILD_LAYERS=OFF"
+ # Enable validation layers
+-EXTRA_OECMAKE_append = " -DBUILD_LAYERS=ON"
++EXTRA_OECMAKE:append = " -DBUILD_LAYERS=ON"
+ 
+-do_install_append () {
++do_install:append () {
+ 
+     install -d ${D}${sysconfdir}/vulkan/icd.d
+     cp ${WORKDIR}/icd_VSI.json ${D}${sysconfdir}/vulkan/icd.d
+@@ -22,9 +22,9 @@ do_install_append () {
+ }
+ 
+ FILES_SOLIBSDEV = ""
+-FILES_${PN} += "${libdir}/libVkLayer_*.so"
++FILES:${PN} += "${libdir}/libVkLayer_*.so"
+ 
+-INSANE_SKIP_${PN} = "dev-so"
++INSANE_SKIP:${PN} = "dev-so"
+ 
+ COMPATIBLE_MACHINE = "(mx8)"
+-COMPATIBLE_MACHINE_mx8mm = "(^$)"
++COMPATIBLE_MACHINE:mx8mm = "(^$)"
+diff --git a/imx8-graphic/recipes-graphics/vulkan/vulkan-validationlayers_1.1.121.bb b/imx8-graphic/recipes-graphics/vulkan/vulkan-validationlayers_1.1.121.bb
+index 3c528ed84d35..e58d468a89cb 100644
+--- a/imx8-graphic/recipes-graphics/vulkan/vulkan-validationlayers_1.1.121.bb
++++ b/imx8-graphic/recipes-graphics/vulkan/vulkan-validationlayers_1.1.121.bb
+@@ -32,4 +32,4 @@ PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '' ,d)}
+ PACKAGECONFIG[x11] = "-DBUILD_WSI_XLIB_SUPPORT=ON -DBUILD_WSI_XCB_SUPPORT=ON -DDEMOS_WSI_SELECTION=XCB, -DBUILD_WSI_XLIB_SUPPORT=OFF -DBUILD_WSI_XCB_SUPPORT=OFF -DDEMOS_WSI_SELECTION=WAYLAND, libxcb libx11 libxrandr"
+ PACKAGECONFIG[wayland] = "-DBUILD_WSI_WAYLAND_SUPPORT=ON, -DBUILD_WSI_WAYLAND_SUPPORT=OFF, wayland"
+ 
+-RRECOMMENDS_${PN} = "mesa-vulkan-drivers"
++RRECOMMENDS:${PN} = "mesa-vulkan-drivers"
+diff --git a/imx8-graphic/recipes-graphics/waffle/waffle_%.bbappend b/imx8-graphic/recipes-graphics/waffle/waffle_%.bbappend
+index 9d090bcfe2b0..380273a8c55c 100644
+--- a/imx8-graphic/recipes-graphics/waffle/waffle_%.bbappend
++++ b/imx8-graphic/recipes-graphics/waffle/waffle_%.bbappend
+@@ -1,4 +1,4 @@
+-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
++FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
+ 
+ SRC_URI += " \
+     file://0001-meson-Add-missing-wayland-dependency-on-EGL.patch \
+@@ -6,11 +6,11 @@ SRC_URI += " \
+ "
+ 
+ PACKAGECONFIG_IMXGPU_X11          = ""
+-PACKAGECONFIG_IMXGPU_X11_imxgpu3d = "x11-egl glx"
++PACKAGECONFIG_IMXGPU_X11:imxgpu3d = "x11-egl glx"
+ PACKAGECONFIG_IMXGPU_GBM          = "gbm"
+-PACKAGECONFIG_IMXGPU_GBM_mx6      = ""
+-PACKAGECONFIG_IMXGPU_GBM_mx7      = ""
+-PACKAGECONFIG_imxgpu = " \
++PACKAGECONFIG_IMXGPU_GBM:mx6      = ""
++PACKAGECONFIG_IMXGPU_GBM:mx7      = ""
++PACKAGECONFIG:imxgpu = " \
+     ${@bb.utils.contains('DISTRO_FEATURES', 'wayland',                     'wayland', \
+        bb.utils.contains('DISTRO_FEATURES',     'x11', '${PACKAGECONFIG_IMXGPU_X11}', \
+                                                                                   '', d), d)} \
+diff --git a/imx8-graphic/recipes-graphics/wayland/wayland-protocols_1.18.imx.bb b/imx8-graphic/recipes-graphics/wayland/wayland-protocols_1.18.imx.bb
+index 7f15bdb3e93c..76a81a79b1b4 100644
+--- a/imx8-graphic/recipes-graphics/wayland/wayland-protocols_1.18.imx.bb
++++ b/imx8-graphic/recipes-graphics/wayland/wayland-protocols_1.18.imx.bb
+@@ -16,7 +16,7 @@ S = "${WORKDIR}/git"
+ inherit autotools pkgconfig
+ 
+ PACKAGES = "${PN}"
+-FILES_${PN} += "${datadir}/pkgconfig/wayland-protocols.pc"
++FILES:${PN} += "${datadir}/pkgconfig/wayland-protocols.pc"
+ 
+ PACKAGE_ARCH = "${MACHINE_SOCARCH}"
+ COMPATIBLE_MACHINE = "(imxfbdev|imxgpu)"
+diff --git a/imx8-graphic/recipes-graphics/wayland/wayland-protocols_1.20.bb b/imx8-graphic/recipes-graphics/wayland/wayland-protocols_1.20.bb
+index 3fb78f658c96..9555da7c7049 100644
+--- a/imx8-graphic/recipes-graphics/wayland/wayland-protocols_1.20.bb
++++ b/imx8-graphic/recipes-graphics/wayland/wayland-protocols_1.20.bb
+@@ -19,4 +19,4 @@ UPSTREAM_CHECK_URI = "https://wayland.freedesktop.org/releases.html"
+ inherit allarch autotools pkgconfig
+ 
+ PACKAGES = "${PN}"
+-FILES_${PN} += "${datadir}/pkgconfig/wayland-protocols.pc"
++FILES:${PN} += "${datadir}/pkgconfig/wayland-protocols.pc"
+diff --git a/imx8-graphic/recipes-graphics/wayland/wayland-protocols_1.20.imx.bb b/imx8-graphic/recipes-graphics/wayland/wayland-protocols_1.20.imx.bb
+index 7928ec16fa0f..656d83d73b95 100644
+--- a/imx8-graphic/recipes-graphics/wayland/wayland-protocols_1.20.imx.bb
++++ b/imx8-graphic/recipes-graphics/wayland/wayland-protocols_1.20.imx.bb
+@@ -20,7 +20,7 @@ UPSTREAM_CHECK_URI = "https://wayland.freedesktop.org/releases.html"
+ inherit autotools pkgconfig
+ 
+ PACKAGES = "${PN}"
+-FILES_${PN} += "${datadir}/pkgconfig/wayland-protocols.pc"
++FILES:${PN} += "${datadir}/pkgconfig/wayland-protocols.pc"
+ 
+ PACKAGE_ARCH = "${MACHINE_SOCARCH}"
+ COMPATIBLE_MACHINE = "(imxfbdev|imxgpu)"
+diff --git a/imx8-graphic/recipes-graphics/wayland/weston-init.bb b/imx8-graphic/recipes-graphics/wayland/weston-init.bb
+index e5d7baac0372..3e2974ac5a56 100644
+--- a/imx8-graphic/recipes-graphics/wayland/weston-init.bb
++++ b/imx8-graphic/recipes-graphics/wayland/weston-init.bb
+@@ -20,10 +20,10 @@ PACKAGECONFIG ??= ""
+ PACKAGECONFIG[no-idle-timeout] = ",,"
+ 
+ DEFAULTBACKEND ??= ""
+-DEFAULTBACKEND_qemuall ?= "fbdev"
+-DEFAULTBACKEND_qemuarm64 = "drm"
+-DEFAULTBACKEND_qemux86 = "drm"
+-DEFAULTBACKEND_qemux86-64 = "drm"
++DEFAULTBACKEND:qemuall ?= "fbdev"
++DEFAULTBACKEND:qemuarm64 = "drm"
++DEFAULTBACKEND:qemux86 = "drm"
++DEFAULTBACKEND:qemux86-64 = "drm"
+ 
+ do_install() {
+ 	install -Dm755 ${WORKDIR}/init ${D}/${sysconfdir}/init.d/weston
+@@ -60,16 +60,16 @@ inherit update-rc.d features_check systemd
+ # rdepends on weston which depends on virtual/egl
+ REQUIRED_DISTRO_FEATURES = "opengl"
+ 
+-RDEPENDS_${PN} = "weston kbd"
++RDEPENDS:${PN} = "weston kbd"
+ 
+ INITSCRIPT_NAME = "weston"
+ INITSCRIPT_PARAMS = "start 9 5 2 . stop 20 0 1 6 ."
+ 
+-FILES_${PN} += "${sysconfdir}/xdg/weston/weston.ini ${systemd_system_unitdir}/weston@.service ${systemd_system_unitdir}/weston@.socket ${sysconfdir}/default/weston ${sysconfdir}/pam.d/"
++FILES:${PN} += "${sysconfdir}/xdg/weston/weston.ini ${systemd_system_unitdir}/weston@.service ${systemd_system_unitdir}/weston@.socket ${sysconfdir}/default/weston ${sysconfdir}/pam.d/"
+ 
+-CONFFILES_${PN} += "${sysconfdir}/xdg/weston/weston.ini ${sysconfdir}/default/weston"
++CONFFILES:${PN} += "${sysconfdir}/xdg/weston/weston.ini ${sysconfdir}/default/weston"
+ 
+-COMPATIBLE_MACHINE_nxp-imx8 = "nxp-imx8"
+-SYSTEMD_SERVICE_${PN} = "weston@%i.service"
++COMPATIBLE_MACHINE:nxp-imx8 = "nxp-imx8"
++SYSTEMD_SERVICE:${PN} = "weston@%i.service"
+ SYSTEMD_AUTO_ENABLE = "disable"
+ 
+diff --git a/imx8-graphic/recipes-graphics/wayland/weston-init.bbappend b/imx8-graphic/recipes-graphics/wayland/weston-init.bbappend
+index 7f0411ae0cb2..71a816066d91 100644
+--- a/imx8-graphic/recipes-graphics/wayland/weston-init.bbappend
++++ b/imx8-graphic/recipes-graphics/wayland/weston-init.bbappend
+@@ -1,30 +1,30 @@
+-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
++FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
+ 
+ # OpenGL is not required for parts with GPU support for 2D but not 3D
+ IMX_REQUIRED_DISTRO_FEATURES_REMOVE          = ""
+-IMX_REQUIRED_DISTRO_FEATURES_REMOVE_imxgpu2d = "opengl"
+-IMX_REQUIRED_DISTRO_FEATURES_REMOVE_imxgpu3d = ""
+-REQUIRED_DISTRO_FEATURES_remove = "${IMX_REQUIRED_DISTRO_FEATURES_REMOVE}"
++IMX_REQUIRED_DISTRO_FEATURES_REMOVE:imxgpu2d = "opengl"
++IMX_REQUIRED_DISTRO_FEATURES_REMOVE:imxgpu3d = ""
++REQUIRED_DISTRO_FEATURES:remove = "${IMX_REQUIRED_DISTRO_FEATURES_REMOVE}"
+ 
+-SRC_URI_append_mx6sl = " file://weston.config"
++SRC_URI:append:mx6sl = " file://weston.config"
+ 
+ # To customize weston.ini, start by setting the desired assignment in weston.ini,
+ # commented out. For example:
+ #     #xwayland=true
+ # Then add the assignment to INI_UNCOMMENT_ASSIGNMENTS.
+-INI_UNCOMMENT_ASSIGNMENTS_append_imx = " \
++INI_UNCOMMENT_ASSIGNMENTS:append:imx = " \
+     ${@bb.utils.contains('DISTRO_FEATURES', 'x11 wayland', 'xwayland=true', '', d)} \
+ "
+-INI_UNCOMMENT_ASSIGNMENTS_append_mx7ulp = " \
++INI_UNCOMMENT_ASSIGNMENTS:append:mx7ulp = " \
+     use-g2d=1 \
+ "
+-INI_UNCOMMENT_ASSIGNMENTS_append_mx8mm = " \
++INI_UNCOMMENT_ASSIGNMENTS:append:mx8mm = " \
+     use-g2d=1 \
+ "
+-INI_UNCOMMENT_ASSIGNMENTS_append_mx8mp = " \
++INI_UNCOMMENT_ASSIGNMENTS:append:mx8mp = " \
+     use-g2d=1 \
+ "
+-INI_UNCOMMENT_ASSIGNMENTS_append_mx8mq = " \
++INI_UNCOMMENT_ASSIGNMENTS:append:mx8mq = " \
+     gbm-format=argb8888 \
+     \\[shell\\] \
+     size=1920x1080 \
+@@ -37,7 +37,7 @@ uncomment() {
+     sed -i -e 's,^#'"$1"','"$1"',g' $2
+ }
+ 
+-do_install_append() {
++do_install:append() {
+     if [ -f "${WORKDIR}/weston.config" ]; then
+         install -Dm0755 ${WORKDIR}/weston.config ${D}${sysconfdir}/default/weston
+     fi
+diff --git a/imx8-graphic/recipes-graphics/wayland/weston_9.0.0.sdk.bb b/imx8-graphic/recipes-graphics/wayland/weston_9.0.0.sdk.bb
+index 75f9fb05fd76..4b13b55509c7 100644
+--- a/imx8-graphic/recipes-graphics/wayland/weston_9.0.0.sdk.bb
++++ b/imx8-graphic/recipes-graphics/wayland/weston_9.0.0.sdk.bb
+@@ -13,7 +13,7 @@ SRC_URI = "https://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz \
+            file://0001-tests-include-fcntl.h-for-open-O_RDWR-O_CLOEXEC-and-.patch \
+ "
+ 
+-SRC_URI_append_libc-musl = " file://dont-use-plane-add-prop.patch "
++SRC_URI:append:libc-musl = " file://dont-use-plane-add-prop.patch "
+ 
+ SRC_URI[sha256sum] = "5cf5d6ce192e0eb15c1fc861a436bf21b5bb3b91dbdabbdebe83e1f83aa098fe"
+ 
+@@ -87,7 +87,7 @@ PACKAGECONFIG[shell-ivi] = "-Dshell-ivi=true,-Dshell-ivi=false"
+ # JPEG image loading support
+ PACKAGECONFIG[image-jpeg] = "-Dimage-jpeg=true,-Dimage-jpeg=false, jpeg"
+ 
+-do_install_append() {
++do_install:append() {
+ 	# Weston doesn't need the .la files to load modules, so wipe them
+ 	rm -f ${D}/${libdir}/libweston-${WESTON_MAJOR_VERSION}/*.la
+ 
+@@ -112,20 +112,20 @@ do_install_append() {
+ PACKAGES += "${@bb.utils.contains('PACKAGECONFIG', 'xwayland', '${PN}-xwayland', '', d)} \
+              libweston-${WESTON_MAJOR_VERSION} ${PN}-examples"
+ 
+-FILES_${PN}-dev += "${libdir}/${BPN}/libexec_weston.so"
+-FILES_${PN} = "${bindir}/weston ${bindir}/weston-terminal ${bindir}/weston-info ${bindir}/weston-launch ${bindir}/wcap-decode ${libexecdir} ${libdir}/${BPN}/*.so* ${datadir}"
++FILES:${PN}-dev += "${libdir}/${BPN}/libexec_weston.so"
++FILES:${PN} = "${bindir}/weston ${bindir}/weston-terminal ${bindir}/weston-info ${bindir}/weston-launch ${bindir}/wcap-decode ${libexecdir} ${libdir}/${BPN}/*.so* ${datadir}"
+ 
+-FILES_libweston-${WESTON_MAJOR_VERSION} = "${libdir}/lib*${SOLIBS} ${libdir}/libweston-${WESTON_MAJOR_VERSION}/*.so"
+-SUMMARY_libweston-${WESTON_MAJOR_VERSION} = "Helper library for implementing 'wayland window managers'."
++FILES:libweston-${WESTON_MAJOR_VERSION} = "${libdir}/lib*${SOLIBS} ${libdir}/libweston-${WESTON_MAJOR_VERSION}/*.so"
++SUMMARY:libweston-${WESTON_MAJOR_VERSION} = "Helper library for implementing 'wayland window managers'."
+ 
+-FILES_${PN}-examples = "${bindir}/*"
++FILES:${PN}-examples = "${bindir}/*"
+ 
+-FILES_${PN}-xwayland = "${libdir}/libweston-${WESTON_MAJOR_VERSION}/xwayland.so"
+-RDEPENDS_${PN}-xwayland += "xserver-xorg-xwayland"
++FILES:${PN}-xwayland = "${libdir}/libweston-${WESTON_MAJOR_VERSION}/xwayland.so"
++RDEPENDS:${PN}-xwayland += "xserver-xorg-xwayland"
+ 
+-RDEPENDS_${PN} += "xkeyboard-config"
+-RRECOMMENDS_${PN} = "weston-init liberation-fonts"
+-RRECOMMENDS_${PN}-dev += "wayland-protocols"
++RDEPENDS:${PN} += "xkeyboard-config"
++RRECOMMENDS:${PN} = "weston-init liberation-fonts"
++RRECOMMENDS:${PN}-dev += "wayland-protocols"
+ 
+ USERADD_PACKAGES = "${PN}"
+-GROUPADD_PARAM_${PN} = "--system weston-launch"
++GROUPADD_PARAM:${PN} = "--system weston-launch"
+diff --git a/imx8-graphic/recipes-graphics/wayland/weston_9.0.0.imx.bb b/imx8-graphic/recipes-graphics/wayland/weston_9.0.0.imx.bb
+index de3a4e69ea43..cff0afc788c7 100644
+--- a/imx8-graphic/recipes-graphics/wayland/weston_9.0.0.imx.bb
++++ b/imx8-graphic/recipes-graphics/wayland/weston_9.0.0.imx.bb
+@@ -1,31 +1,31 @@
+ require recipes-graphics/wayland/weston_9.0.0.sdk.bb
+ 
+-SRC_URI_remove = "https://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz \
++SRC_URI:remove = "https://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz \
+                   file://0001-tests-include-fcntl.h-for-open-O_RDWR-O_CLOEXEC-and-.patch"
+ WESTON_SRC ?= "git://source.codeaurora.org/external/imx/weston-imx.git;protocol=https"
+-SRC_URI_prepend = "${WESTON_SRC};branch=weston-imx-9.0 "
++SRC_URI:prepend = "${WESTON_SRC};branch=weston-imx-9.0 "
+ SRCREV = "230e9bc3d647e511e0601e3d45034f22495ed3c7"
+ S = "${WORKDIR}/git"
+ 
+ # Disable OpenGL for parts with GPU support for 2D but not 3D
+-REQUIRED_DISTRO_FEATURES_imxgpu2d = ""
+-REQUIRED_DISTRO_FEATURES_imxgpu3d = "opengl"
++REQUIRED_DISTRO_FEATURES:imxgpu2d = ""
++REQUIRED_DISTRO_FEATURES:imxgpu3d = "opengl"
+ PACKAGECONFIG_OPENGL              = "opengl"
+-PACKAGECONFIG_OPENGL_imxgpu2d     = ""
+-PACKAGECONFIG_OPENGL_imxgpu3d     = "opengl"
++PACKAGECONFIG_OPENGL:imxgpu2d     = ""
++PACKAGECONFIG_OPENGL:imxgpu3d     = "opengl"
+ 
+-PACKAGECONFIG_remove = "wayland x11"
+-PACKAGECONFIG_append = " ${@bb.utils.filter('DISTRO_FEATURES', '${PACKAGECONFIG_OPENGL}', d)}"
+-PACKAGECONFIG_remove_imxfbdev = "kms"
+-PACKAGECONFIG_append_imxgpu   = " imxgpu"
+-PACKAGECONFIG_append_imxgpu2d = " g2d"
+-#PACKAGECONFIG_append_imxgpu3d = " cairo-glesv2"
++PACKAGECONFIG:remove = "wayland x11"
++PACKAGECONFIG:append = " ${@bb.utils.filter('DISTRO_FEATURES', '${PACKAGECONFIG_OPENGL}', d)}"
++PACKAGECONFIG:remove:imxfbdev = "kms"
++PACKAGECONFIG:append:imxgpu   = " imxgpu"
++PACKAGECONFIG:append:imxgpu2d = " g2d"
++#PACKAGECONFIG:append:imxgpu3d = " cairo-glesv2"
+ 
+ # Weston with Xwayland support (requires X11 and Wayland)
+ PACKAGECONFIG[xwayland] = "-Dxwayland=true,-Dxwayland=false,libxcursor"
+ # Clients support
+ SIMPLE_CLIENTS = "all"
+-SIMPLE_CLIENTS_imxfbdev = "damage,im,egl,shm,touch,dmabuf-v4l"
++SIMPLE_CLIENTS:imxfbdev = "damage,im,egl,shm,touch,dmabuf-v4l"
+ PACKAGECONFIG[clients] = "-Dsimple-clients=${SIMPLE_CLIENTS} -Ddemo-clients=true,-Dsimple-clients= -Ddemo-clients=false"
+ # Weston with cairo glesv2 support
+ #PACKAGECONFIG[cairo-glesv2] = "-Dcairo-glesv2=true,-Dcairo=image"
+@@ -36,8 +36,8 @@ PACKAGECONFIG[g2d] = "-Drenderer-g2d=true,-Drenderer-g2d=false,virtual/libg2d"
+ # Weston with OpenGL support
+ PACKAGECONFIG[opengl] = "-Dopengl=true,-Dopengl=false"
+ 
+-FILES_${PN} += "${libdir}/${BPN}/lib*${SOLIBS}"
+-FILES_${PN}-dbg += "${libdir}/${BPN}/libexec_weston${SOLIBSDEV}"
++FILES:${PN} += "${libdir}/${BPN}/lib*${SOLIBS}"
++FILES:${PN}-dbg += "${libdir}/${BPN}/libexec_weston${SOLIBSDEV}"
+ 
+ PACKAGE_ARCH = "${MACHINE_SOCARCH}"
+ COMPATIBLE_MACHINE = "(imxfbdev|imxgpu)"
+diff --git a/imx8-graphic/recipes-graphics/xorg-xserver/xserver-xf86-config_%.bbappend b/imx8-graphic/recipes-graphics/xorg-xserver/xserver-xf86-config_%.bbappend
+index ceb438e37115..3fe677b34770 100644
+--- a/imx8-graphic/recipes-graphics/xorg-xserver/xserver-xf86-config_%.bbappend
++++ b/imx8-graphic/recipes-graphics/xorg-xserver/xserver-xf86-config_%.bbappend
+@@ -1,2 +1,2 @@
+ # Append path for freescale layer to include bsp xorg.conf 
+-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
++FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
+diff --git a/imx8-graphic/recipes-graphics/xorg-xserver/xserver-xorg.inc b/imx8-graphic/recipes-graphics/xorg-xserver/xserver-xorg.inc
+index b3e03744c0e0..e543d7e8c835 100644
+--- a/imx8-graphic/recipes-graphics/xorg-xserver/xserver-xorg.inc
++++ b/imx8-graphic/recipes-graphics/xorg-xserver/xserver-xorg.inc
+@@ -67,41 +67,41 @@ PACKAGES =+ "${PN}-sdl \
+              ${PN}-module-libxf4bpp \
+              xf86-video-modesetting"
+ 
+-SUMMARY_xf86-video-modesetting = "X.Org X server -- modesetting display driver"
+-INSANE_SKIP_${MLPREFIX}xf86-video-modesetting = "xorg-driver-abi"
++SUMMARY:xf86-video-modesetting = "X.Org X server -- modesetting display driver"
++INSANE_SKIP:${MLPREFIX}xf86-video-modesetting = "xorg-driver-abi"
+ 
+ XSERVER_RRECOMMENDS = "xkeyboard-config rgb xserver-xf86-config xkbcomp xf86-input-libinput"
+-RRECOMMENDS_${PN} += "${XSERVER_RRECOMMENDS}"
+-RRECOMMENDS_${PN}-xwayland += "${XSERVER_RRECOMMENDS}"
+-RDEPENDS_${PN}-xvfb += "xkeyboard-config"
+-RDEPENDS_${PN}-module-exa = "${PN} (= ${EXTENDPKGV})"
+-
+-FILES_${PN} = "${bindir} ${libdir}/X11/Options ${libdir}/X11/Cards ${libdir}/X11/getconfig ${libdir}/X11/etc ${libdir}/modules/*.so ${libdir}/xorg/modules/*.so /etc/X11 ${libdir}/xorg/protocol.txt ${datadir}/X11/xorg.conf.d"
+-FILES_${PN}-dev += "${libdir}/xorg/modules/*.la ${libdir}/xorg/modules/*/*.la"
+-FILES_${PN}-doc += "${libdir}/X11/doc ${datadir}/X11/xkb/compiled/README.compiled ${localstatedir}/lib/xkb/README.compiled"
+-FILES_${PN}-sdl = "${bindir}/Xsdl"
+-FILES_${PN}-fbdev = "${bindir}/Xfbdev"
+-FILES_${PN}-xvfb = "${bindir}/Xvfb"
+-FILES_${PN}-utils = "${bindir}/scanpci ${bindir}/pcitweak ${bindir}/ioport ${bindir}/in[bwl] ${bindir}/out[bwl] ${bindir}/mmap[rw] ${bindir}/gtf ${bindir}/getconfig ${bindir}/getconfig.pl"
+-FILES_${PN}-xephyr = "${bindir}/Xephyr"
+-FILES_${PN}-xwayland = "${bindir}/Xwayland"
+-FILES_${PN}-multimedia-modules = "${libdir}/xorg/modules/multimedia/*drv*"
+-FILES_${PN}-extension-dri = "${libdir}/xorg/modules/extensions/libdri.so"
+-FILES_${PN}-extension-dri2 = "${libdir}/xorg/modules/extensions/libdri2.so"
+-FILES_${PN}-extension-glx = "${libdir}/xorg/modules/extensions/libglx.so"
+-FILES_${PN}-extension-record = "${libdir}/xorg/modules/extensions/librecord.so"
+-FILES_${PN}-extension-extmod = "${libdir}/xorg/modules/extensions/libextmod.so"
+-FILES_${PN}-extension-dbe = "${libdir}/xorg/modules/extensions/libdbe.so"
+-FILES_${PN}-module-libint10 = "${libdir}/xorg/modules/libint10.so"
+-FILES_${PN}-module-libafb = "${libdir}/xorg/modules/libafb.so"
+-FILES_${PN}-module-libwfb = "${libdir}/xorg/modules/libwfb.so"
+-FILES_${PN}-module-libmfb = "${libdir}/xorg/modules/libmfb.so"
+-FILES_${PN}-module-libcfb = "${libdir}/xorg/modules/libcfb.so"
+-FILES_${PN}-module-exa = "${libdir}/xorg/modules/libexa.so"
+-FILES_${PN}-module-xaa = "${libdir}/xorg/modules/libxaa.so"
+-FILES_${PN}-module-libxf1bpp = "${libdir}/xorg/modules/libxf1bpp.so"
+-FILES_${PN}-module-libxf4bpp = "${libdir}/xorg/modules/libxf4bpp.so"
+-FILES_xf86-video-modesetting = "${libdir}/xorg/modules/drivers/modesetting_drv.so"
++RRECOMMENDS:${PN} += "${XSERVER_RRECOMMENDS}"
++RRECOMMENDS:${PN}-xwayland += "${XSERVER_RRECOMMENDS}"
++RDEPENDS:${PN}-xvfb += "xkeyboard-config"
++RDEPENDS:${PN}-module-exa = "${PN} (= ${EXTENDPKGV})"
++
++FILES:${PN} = "${bindir} ${libdir}/X11/Options ${libdir}/X11/Cards ${libdir}/X11/getconfig ${libdir}/X11/etc ${libdir}/modules/*.so ${libdir}/xorg/modules/*.so /etc/X11 ${libdir}/xorg/protocol.txt ${datadir}/X11/xorg.conf.d"
++FILES:${PN}-dev += "${libdir}/xorg/modules/*.la ${libdir}/xorg/modules/*/*.la"
++FILES:${PN}-doc += "${libdir}/X11/doc ${datadir}/X11/xkb/compiled/README.compiled ${localstatedir}/lib/xkb/README.compiled"
++FILES:${PN}-sdl = "${bindir}/Xsdl"
++FILES:${PN}-fbdev = "${bindir}/Xfbdev"
++FILES:${PN}-xvfb = "${bindir}/Xvfb"
++FILES:${PN}-utils = "${bindir}/scanpci ${bindir}/pcitweak ${bindir}/ioport ${bindir}/in[bwl] ${bindir}/out[bwl] ${bindir}/mmap[rw] ${bindir}/gtf ${bindir}/getconfig ${bindir}/getconfig.pl"
++FILES:${PN}-xephyr = "${bindir}/Xephyr"
++FILES:${PN}-xwayland = "${bindir}/Xwayland"
++FILES:${PN}-multimedia-modules = "${libdir}/xorg/modules/multimedia/*drv*"
++FILES:${PN}-extension-dri = "${libdir}/xorg/modules/extensions/libdri.so"
++FILES:${PN}-extension-dri2 = "${libdir}/xorg/modules/extensions/libdri2.so"
++FILES:${PN}-extension-glx = "${libdir}/xorg/modules/extensions/libglx.so"
++FILES:${PN}-extension-record = "${libdir}/xorg/modules/extensions/librecord.so"
++FILES:${PN}-extension-extmod = "${libdir}/xorg/modules/extensions/libextmod.so"
++FILES:${PN}-extension-dbe = "${libdir}/xorg/modules/extensions/libdbe.so"
++FILES:${PN}-module-libint10 = "${libdir}/xorg/modules/libint10.so"
++FILES:${PN}-module-libafb = "${libdir}/xorg/modules/libafb.so"
++FILES:${PN}-module-libwfb = "${libdir}/xorg/modules/libwfb.so"
++FILES:${PN}-module-libmfb = "${libdir}/xorg/modules/libmfb.so"
++FILES:${PN}-module-libcfb = "${libdir}/xorg/modules/libcfb.so"
++FILES:${PN}-module-exa = "${libdir}/xorg/modules/libexa.so"
++FILES:${PN}-module-xaa = "${libdir}/xorg/modules/libxaa.so"
++FILES:${PN}-module-libxf1bpp = "${libdir}/xorg/modules/libxf1bpp.so"
++FILES:${PN}-module-libxf4bpp = "${libdir}/xorg/modules/libxf4bpp.so"
++FILES:xf86-video-modesetting = "${libdir}/xorg/modules/drivers/modesetting_drv.so"
+ 
+ EXTRA_OECONF += "--with-fop=no \
+                  --with-pic \
+@@ -148,7 +148,7 @@ PACKAGECONFIG[openssl] = "--with-sha1=libcrypto,,openssl"
+ PACKAGECONFIG[nettle] = "--with-sha1=libnettle,,nettle"
+ PACKAGECONFIG[gcrypt] = "--with-sha1=libgcrypt,,libgcrypt"
+ 
+-do_install_append () {
++do_install:append () {
+ 	# Its assumed base-files creates this for us
+ 	rmdir ${D}${localstatedir}/log/
+         sed -i -e 's,${libdir}/xorg/modules,${prefix}/lib*/xorg/modules,' ${D}${mandir}/man5/xorg.conf.5
+@@ -156,7 +156,7 @@ do_install_append () {
+ 
+ # Add runtime provides for the ABI versions of the video and input subsystems,
+ # so that drivers can depend on the relevant version.
+-python populate_packages_prepend() {
++python populate_packages:prepend() {
+     import subprocess
+ 
+     # Set PKG_CONFIG_PATH so pkg-config looks at the .pc files that are going
+@@ -177,6 +177,6 @@ python populate_packages_prepend() {
+         return "%sxorg-abi-%s-%s" % (mlprefix, name, output)
+ 
+     pn = d.getVar("PN")
+-    d.appendVar("RPROVIDES_" + pn, " " + get_abi("input"))
+-    d.appendVar("RPROVIDES_" + pn, " " + get_abi("video"))
++    d.appendVar("RPROVIDES:" + pn, " " + get_abi("input"))
++    d.appendVar("RPROVIDES:" + pn, " " + get_abi("video"))
+ }
+diff --git a/imx8-graphic/recipes-graphics/xorg-xserver/xserver-xorg_%.bbappend b/imx8-graphic/recipes-graphics/xorg-xserver/xserver-xorg_%.bbappend
+index 02a9678c63ec..7d1bf6e6f8c3 100644
+--- a/imx8-graphic/recipes-graphics/xorg-xserver/xserver-xorg_%.bbappend
++++ b/imx8-graphic/recipes-graphics/xorg-xserver/xserver-xorg_%.bbappend
+@@ -1,9 +1,9 @@
+ IMX_OPENGL_PKGCONFIGS_REMOVE        = ""
+-IMX_OPENGL_PKGCONFIGS_REMOVE_imxgpu = "glamor"
+-OPENGL_PKGCONFIGS_remove_mx6        = "${IMX_OPENGL_PKGCONFIGS_REMOVE}"
+-OPENGL_PKGCONFIGS_remove_mx7        = "${IMX_OPENGL_PKGCONFIGS_REMOVE}"
+-OPENGL_PKGCONFIGS_remove_mx8        = "${IMX_OPENGL_PKGCONFIGS_REMOVE}"
++IMX_OPENGL_PKGCONFIGS_REMOVE:imxgpu = "glamor"
++OPENGL_PKGCONFIGS:remove:mx6        = "${IMX_OPENGL_PKGCONFIGS_REMOVE}"
++OPENGL_PKGCONFIGS:remove:mx7        = "${IMX_OPENGL_PKGCONFIGS_REMOVE}"
++OPENGL_PKGCONFIGS:remove:mx8        = "${IMX_OPENGL_PKGCONFIGS_REMOVE}"
+ 
+-FILESEXTRAPATHS_prepend := "${THISDIR}/${BPN}:"
++FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}:"
+ # Trailing space is intentional due to a bug in meta-freescale
+ SRC_URI += "file://0001-glamor-Use-CFLAGS-for-EGL-and-GBM.patch "
+diff --git a/imx8-graphic/recipes-graphics/xorg-xserver/xserver-xorg_1.20.8.bb b/imx8-graphic/recipes-graphics/xorg-xserver/xserver-xorg_1.20.8.bb
+index 26815feb33fe..bc585e794e92 100644
+--- a/imx8-graphic/recipes-graphics/xorg-xserver/xserver-xorg_1.20.8.bb
++++ b/imx8-graphic/recipes-graphics/xorg-xserver/xserver-xorg_1.20.8.bb
+@@ -12,19 +12,19 @@ SRC_URI[sha256sum] = "d17b646bee4ba0fb7850c1cc55b18e3e8513ed5c02bdf38da7e107f84e
+ # These extensions are now integrated into the server, so declare the migration
+ # path for in-place upgrades.
+ 
+-RREPLACES_${PN} =  "${PN}-extension-dri \
++RREPLACES:${PN} =  "${PN}-extension-dri \
+                     ${PN}-extension-dri2 \
+                     ${PN}-extension-record \
+                     ${PN}-extension-extmod \
+                     ${PN}-extension-dbe \
+                    "
+-RPROVIDES_${PN} =  "${PN}-extension-dri \
++RPROVIDES:${PN} =  "${PN}-extension-dri \
+                     ${PN}-extension-dri2 \
+                     ${PN}-extension-record \
+                     ${PN}-extension-extmod \
+                     ${PN}-extension-dbe \
+                    "
+-RCONFLICTS_${PN} = "${PN}-extension-dri \
++RCONFLICTS:${PN} = "${PN}-extension-dri \
+                     ${PN}-extension-dri2 \
+                     ${PN}-extension-record \
+                     ${PN}-extension-extmod \
+diff --git a/imx8-graphic/recipes-kernel/linux/linux-imx-headers_5.10.bb b/imx8-graphic/recipes-kernel/linux/linux-imx-headers_5.10.bb
+index c31babc080d8..50571effa764 100644
+--- a/imx8-graphic/recipes-kernel/linux/linux-imx-headers_5.10.bb
++++ b/imx8-graphic/recipes-kernel/linux/linux-imx-headers_5.10.bb
+@@ -52,6 +52,6 @@ do_install() {
+     done
+ }
+ 
+-ALLOW_EMPTY_${PN} = "1"
++ALLOW_EMPTY:${PN} = "1"
+ 
+ PACKAGE_ARCH = "${MACHINE_SOCARCH}"
+-- 
+2.17.1
+
