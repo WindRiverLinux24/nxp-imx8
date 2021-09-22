@@ -172,7 +172,7 @@ file_modify $GRAPHIC_DTS/imx8-graphic/conf/layer.conf \
 elif [ $PLATFORM_TYPE = "imx8qm" ]; then
 file_modify $GRAPHIC_DTS/imx8-graphic/conf/layer.conf \
 			"20iMACHINEOVERRIDES_EXTENDER:nxp-imx8   = \"imx:mx8:mx8qm:imxdrm:imxdpu:imxgpu:imxgpu2d:imxgpu3d\"" \
-			"24iIMAGE_INSTALL:append += \"assimp devil imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos\""
+			"24iIMAGE_INSTALL:append += \"assimp devil imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos armnn tensorflow-lite onnxruntime\""
 elif [ $PLATFORM_TYPE = "imx8qxp" ]; then
 file_modify $GRAPHIC_DTS/imx8-graphic/conf/layer.conf \
 			"20iMACHINEOVERRIDES_EXTENDER:nxp-imx8   = \"imx:mx8:mx8qxp:imxdrm:imxdpu:imxgpu:imxgpu2d:imxgpu3d\"" \
@@ -229,6 +229,8 @@ PNWHITELIST:imx8-graphic-layer += 'weston-init'
 PNWHITELIST:imx8-graphic-layer += 'weston'
 PNWHITELIST:openembedded-layer += 'libxaw'
 PNWHITELIST:openembedded-layer += 'xterm'
+PNWHITELIST:meta-python += 'python3-wheel'
+PNWHITELIST:meta-python += 'python3-pybind11'
 
 IMAGE_INSTALL:append += " \\
     \${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'weston-init', '', d)} \\
@@ -913,6 +915,114 @@ file_copy recipes-graphics/waffle/waffle_%.bbappend
 file_copy recipes-graphics/waffle/waffle/0001-meson-Add-missing-wayland-dependency-on-EGL.patch
 file_copy recipes-graphics/waffle/waffle/0002-meson-Separate-surfaceless-option-from-x11.patch
 
+# Add machine learning package
+SOURCE_DIR=$GRAPHIC_SRC/meta-openembedded/meta-python/
+file_copy recipes-devtools/python/python3-pybind11/0001-Do-not-check-pointer-size-when-cross-compiling.patch
+file_copy recipes-devtools/python/python3-pybind11/0001-Do-not-strip-binaries.patch
+file_copy recipes-devtools/python/python3-pybind11_2.5.0.bb
+file_copy recipes-devtools/python/python3-pybind11-json_0.2.6.bb
+file_copy recipes-devtools/python/python3-wheel_0.35.1.bb
+mkdir -p $GRAPHIC_DTS/imx8-graphic/recipes-devtools/python/python3-pybind11
+mkdir -p $GRAPHIC_DTS/imx8-graphic/recipes-devtools/python/python3-pybind11/python3-pybind11
+mv $GRAPHIC_DTS/imx8-graphic/recipes-devtools/python/python3-pybind11/0001-Do-not-check-pointer-size-when-cross-compiling.patch $GRAPHIC_DTS/imx8-graphic/recipes-devtools/python/python3-pybind11/python3-pybind11/
+mv $GRAPHIC_DTS/imx8-graphic/recipes-devtools/python/python3-pybind11/0001-Do-not-strip-binaries.patch $GRAPHIC_DTS/imx8-graphic/recipes-devtools/python/python3-pybind11/python3-pybind11/
+mv $GRAPHIC_DTS/imx8-graphic/recipes-devtools/python/python3-pybind11_2.5.0.bb $GRAPHIC_DTS/imx8-graphic/recipes-devtools/python/python3-pybind11
+mv $GRAPHIC_DTS/imx8-graphic/recipes-devtools/python/python3-pybind11-json_0.2.6.bb $GRAPHIC_DTS/imx8-graphic/recipes-devtools/python/python3-pybind11
+mkdir -p $GRAPHIC_DTS/imx8-graphic/recipes-devtools/python/python-wheel
+mv $GRAPHIC_DTS/imx8-graphic/recipes-devtools/python/python3-wheel_0.35.1.bb $GRAPHIC_DTS/imx8-graphic/recipes-devtools/python/python-wheel
+
+SOURCE_DIR=$GRAPHIC_SRC/meta-imx/meta-ml/
+file_copy recipes-devtools/armnn-swig/armnn-swig/0001-configure-use-pkg-config-for-pcre-detection.patch
+file_copy recipes-devtools/armnn-swig/armnn-swig_4.0.2.bb
+file_copy recipes-devtools/armnn-swig/armnn-swig.inc \
+			"N;68aFILES:\${PN}-dev += \"\${datadir_native\}/*\""
+file_copy recipes-devtools/flatbuffers/flatbuffers_1.11.0.bb
+file_copy recipes-devtools/flatbuffers/flatbuffers-native_1.11.0.bb
+file_copy recipes-libraries/arm-compute-library/arm-compute-library_git-imx.bb \
+			"s/a700d9de43fc22e998001a63c3feb1d2/9598101cf48c5f479cfda9f3fc6fc566/g" \
+			"s/lf-5.10.y_1.0.0/lf-5.10.y_2.0.0/g" \
+			"s/203f466760aa584913ff11d744078f817d9efee5/34e527e5a7d3df85560ec89f68b61207b8a030df/g" \
+			"38i\	cp \$CP_ARGS \${S}/src \${D}\${includedir}"
+file_copy recipes-libraries/armnn/armnn/0001-AIR-3570_pyarmnn-yocto-cross-compile.patch
+file_copy recipes-libraries/armnn/armnn_20.08.bb \
+			"s/lf-5.10.y_1.0.0/lf-5.10.y_2.0.0/g" \
+			"s/a9de15b5faed05dfa8f94030060bac1e0df0f21d/77ec2f724585ae3de2bc866c3d14e7501e158396/g" \
+			"20d" \
+			"s/-fopenmp/-fopenmp -Wno-uninitialized/g"
+file_copy recipes-libraries/armnn/armnn-caffe_1.0.bb
+file_copy recipes-libraries/armnn/armnn-onnx_1.3.0.bb
+file_copy recipes-libraries/armnn/armnn-tensorflow_1.15.0.bb
+file_copy recipes-libraries/nn-imx/nn-imx_1.1.9.bb
+file_copy recipes-libraries/onnxruntime/onnxruntime_1.5.3.bb \
+			"s/lf-5.10.y_1.0.0/lf-5.10.y_2.0.0/g" \
+			"s/e9ddc224126e678723260adb7eb10ad89dd6ea68/0a15796c7108521f91c6ae3ecd870fd173491250/g" \
+			'15i\    file://0001-Fix-a-build-error-sleep_for-number-for-thread.patch \\' \
+			'16i\    file://0002-Fix-a-build-error-about-header-file-reference-error.patch \\'
+file_copy recipes-libraries/onnxruntime/onnxruntime-native_1.5.3.bb
+mkdir -p $GRAPHIC_DTS/imx8-graphic/recipes-libraries/onnxruntime/onnxruntime
+echo "From d9ecb52f701dc7b9c54b41527780ca0b4ec94edb Mon Sep 17 00:00:00 2001
+From: Xiaolei Wang <xiaolei.wang@windriver.com>
+Date: Tue, 7 Sep 2021 12:46:17 +0800
+Subject: [PATCH] Fix a build error sleep_for number for thread
+
+include thread header file
+
+Signed-off-by: Xiaolei Wang <xiaolei.wang@windriver.com>
+---
+ onnxruntime/test/providers/cpu/controlflow/loop_test.cc | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/onnxruntime/test/providers/cpu/controlflow/loop_test.cc b/onnxruntime/test/providers/cpu/controlflow/loop_test.cc
+index 9a6ce3f7..30d0d705 100644
+--- a/onnxruntime/test/providers/cpu/controlflow/loop_test.cc
++++ b/onnxruntime/test/providers/cpu/controlflow/loop_test.cc
+@@ -12,6 +12,7 @@
+ #include \"test/providers/provider_test_utils.h\"
+ #include \"test/util/include/default_providers.h\"
+ #include \"test/framework/test_utils.h\"
++#include <thread>
+
+ using namespace ONNX_NAMESPACE;
+
+--
+2.25.1" > $GRAPHIC_DTS/imx8-graphic/recipes-libraries/onnxruntime/onnxruntime/0001-Fix-a-build-error-sleep_for-number-for-thread.patch
+echo "From 30705f2f45a6dd8caea9ca52e87d7c9c2f4eb7c0 Mon Sep 17 00:00:00 2001
+From: Xiaolei Wang <xiaolei.wang@windriver.com>
+Date: Tue, 7 Sep 2021 13:22:24 +0800
+Subject: [PATCH] Fix a build error about header file reference error
+
+Signed-off-by: Xiaolei Wang <xiaolei.wang@windriver.com>
+---
+ onnxruntime/core/providers/acl/nn/conv.cc | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/onnxruntime/core/providers/acl/nn/conv.cc b/onnxruntime/core/providers/acl/nn/conv.cc
+index 9e1af467..aa48051f 100644
+--- a/onnxruntime/core/providers/acl/nn/conv.cc
++++ b/onnxruntime/core/providers/acl/nn/conv.cc
+@@ -18,10 +18,11 @@
+ #include \"core/providers/acl/acl_fwd.h\"
+
+ // ACL
++#include \"src/core/helpers/WindowHelpers.h\"
+ #include \"arm_compute/core/TensorInfo.h\"
+ #include \"arm_compute/core/utils/misc/ShapeCalculator.h\"
+ #if defined(ACL_2008)
+-#include \"arm_compute/core/AccessWindowStatic.h\"
++#include \"src/core/AccessWindowStatic.h\"
+ #endif
+ // NEON
+ #include \"arm_compute/runtime/NEON/functions/NEConvolutionLayer.h\"
+--
+2.25.1" > $GRAPHIC_DTS/imx8-graphic/recipes-libraries/onnxruntime/onnxruntime/0002-Fix-a-build-error-about-header-file-reference-error.patch
+file_copy recipes-libraries/tensorflow-lite/tensorflow-lite_2.4.0.bb \
+			"32i\do_compile:prepend () {" \
+			"33i\    sed -i 'N;30i\\\#include <limits>' \${S}/tensorflow/lite/tools/make/downloads/ruy/ruy/block_map.cc" \
+			"34i\    sed -i 'N;30i\\\#include <limits>' \${S}/../build/abseil-cpp/absl/synchronization/internal/graphcycles.cc" \
+			"35i\    sed -i 'N;30i\\\#include <limits>' \${S}/../build/ruy/ruy/block_map.cc" \
+			"36i\}"
+
+
 SOURCE_DIR=$GRAPHIC_SRC/meta-imx/
 file_copy EULA.txt
 mv $GRAPHIC_DTS/imx8-graphic/EULA.txt $GRAPHIC_DTS/imx8-graphic/EULA
@@ -922,7 +1032,11 @@ convert_override(){
 		patchdir="`dirname $1`/patch"
 		patch -p2 -d $GRAPHIC_DTS/imx8-graphic < $patchdir/0001-nxp-imx8-imx8-graphic-convert-to-use-new-override.patch 2>&1 > /dev/null
 		if [ $? != 0 ];then
-			echo "Error: apply patch failed"
+                        echo "Error: apply patch1 failed"
+                fi
+		patch -p1 -d $GRAPHIC_DTS/imx8-graphic < $patchdir/0002-nxp-imx8-generate-graphic-layer.sh-add-machine-learn.patch 2>&1 > /dev/null
+		if [ $? != 0 ];then
+			echo "Error: apply patch2 failed"
 		fi
 	fi
 }
