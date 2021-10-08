@@ -951,6 +951,37 @@ file_copy recipes-libraries/armnn/armnn_20.08.bb \
 			"s/-fopenmp/-fopenmp -Wno-uninitialized/g"
 file_copy recipes-libraries/armnn/armnn-caffe_1.0.bb
 file_copy recipes-libraries/armnn/armnn-onnx_1.3.0.bb
+mv $GRAPHIC_DTS/imx8-graphic/recipes-libraries/armnn/armnn-onnx_1.3.0.bb $GRAPHIC_DTS/imx8-graphic/recipes-libraries/armnn/armnn-onnx-protobuf_1.6.0.bb
+echo "# Copyright 2020-2021 NXP
+SUMMARY = \"ONNX protobuf files - used in Arm NN for ONNX parser\"
+LICENSE = \"MIT\"
+LIC_FILES_CHKSUM = \"file://LICENSE;md5=efff5c5110f124a1e2163814067b16e7\"
+
+SRC_URI = \"git://github.com/onnx/onnx.git;branch=rel-1.6.0\"
+SRCREV = \"553df22c67bee5f0fe6599cff60f1afc6748c635\"
+DEPENDS = \"protobuf-native\"
+
+inherit cmake
+
+S = \"\${WORKDIR}/git\"
+
+do_configure[noexec] = \"1\"
+
+do_compile() {
+    \${STAGING_BINDIR_NATIVE}/protoc \\
+    \${S}/onnx/onnx.proto \\
+    --proto_path=\${S} \\
+    --proto_path=\${STAGING_INCDIR_NATIVE} \\
+    --cpp_out \${S}
+}
+
+do_install() {
+    install -d \${D}\${datadir}/\${BPN}/onnx/
+    for file in \${S}/onnx/onnx.pb.*
+    do
+        install -m 0644 \$file \${D}\${datadir}/\${BPN}/onnx/
+    done
+}" > $GRAPHIC_DTS/imx8-graphic/recipes-libraries/armnn/armnn-onnx-protobuf_1.6.0.bb
 file_copy recipes-libraries/armnn/armnn-tensorflow_1.15.0.bb
 file_copy recipes-libraries/nn-imx/nn-imx_1.1.9.bb
 file_copy recipes-libraries/onnxruntime/onnxruntime_1.5.3.bb \
@@ -1016,6 +1047,8 @@ index 9e1af467..aa48051f 100644
 --
 2.25.1" > $GRAPHIC_DTS/imx8-graphic/recipes-libraries/onnxruntime/onnxruntime/0002-Fix-a-build-error-about-header-file-reference-error.patch
 file_copy recipes-libraries/tensorflow-lite/tensorflow-lite_2.4.0.bb \
+			"s/51c167ba94488ae1d7599ad20c985c93484bac92/1c1ed6663a73d5d47a5a96e0e9fa85d2db280954/g" \
+			"s/lf-5.10.y_1.0.0/lf-5.10.y_2.0.0/g" \
 			"32i\do_compile:prepend () {" \
 			"33i\    sed -i 'N;30i\\\#include <limits>' \${S}/tensorflow/lite/tools/make/downloads/ruy/ruy/block_map.cc" \
 			"34i\    sed -i 'N;30i\\\#include <limits>' \${S}/../build/abseil-cpp/absl/synchronization/internal/graphcycles.cc" \
