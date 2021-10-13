@@ -948,7 +948,8 @@ file_copy recipes-libraries/armnn/armnn_20.08.bb \
 			"s/lf-5.10.y_1.0.0/lf-5.10.y_2.0.0/g" \
 			"s/a9de15b5faed05dfa8f94030060bac1e0df0f21d/77ec2f724585ae3de2bc866c3d14e7501e158396/g" \
 			"20d" \
-			"s/-fopenmp/-fopenmp -Wno-uninitialized/g"
+			"s/-fopenmp/-fopenmp -Wno-uninitialized/g" \
+			"s/armnn-onnx/armnn-onnx-protobuf/g"
 file_copy recipes-libraries/armnn/armnn-caffe_1.0.bb
 file_copy recipes-libraries/armnn/armnn-onnx_1.3.0.bb
 mv $GRAPHIC_DTS/imx8-graphic/recipes-libraries/armnn/armnn-onnx_1.3.0.bb $GRAPHIC_DTS/imx8-graphic/recipes-libraries/armnn/armnn-onnx-protobuf_1.6.0.bb
