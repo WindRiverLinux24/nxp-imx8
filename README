@@ -317,16 +317,24 @@ To run the example with the same model on the GPU hardware accelerator
 	wget https://cdn1.playbarkrun.com/wp-content/uploads/2018/05/28100508/Lab.jpg
 	wget https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Cat_November_2010-1a.jpg/767px-Cat_November_2010-1a.jpg
 	mv inception_v3_quant.tgz models
+	cd models/
+	tar xf inception_v3_quant.tgz
 	mv 3869.JPG data/shark.jpg
 	mv Lab.jpg data/Dog.jpg
 	mv 767px-Cat_November_2010-1a.jpg data/Cat.jpg
-	TfLiteInceptionV3Quantized-Armnn --data-dir=data --model-dir=models
+	./TfLiteInceptionV3Quantized-Armnn --data-dir=data --model-dir=models
 
 	ONNX tests
-	wget https://onnxzoo.blob.core.windows.net/models/opset_8/mnist/mnist.tar.gz
-	wget http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz
-	mv mnist.tar.gz data/mnist_onnx.onnx
-	OnnxMnist-Armnn --data-dir=data --model-dir=models
+	wget https://s3.amazonaws.com/onnx-model-zoo/mobilenet/mobilenetv2-1.0/mobilenetv2-1.0.tar.gz
+	mv mobilenetv2-1.0.tar.gz models
+	tar -xzvf mobilenetv2-1.0.tar.gz
+	wget http://www.norbertwu.com/nwp/landscape-subjects-for-calendars/australia_web/originals/3869.JPG
+	wget https://cdn1.playbarkrun.com/wp-content/uploads/2018/05/28100508/Lab.jpg
+	wget https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Cat_November_2010-1a.jpg/767px-Cat_November_2010-1a.jpg
+	mv 3869.JPG data/shark.jpg
+	mv Lab.jpg data/Dog.jpg
+	mv 767px-Cat_November_2010-1a.jpg data/Cat.jpg
+	./OnnxMobileNet-Armnn --data-dir=data --model-dir=model/mobilenetv2-1.0
 
 <4> ONNX Runtime
 
