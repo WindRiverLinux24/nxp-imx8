@@ -164,19 +164,19 @@ file_modify()
 if [ $PLATFORM_TYPE = "imx8mq" ]; then
 file_modify $GRAPHIC_DTS/imx8-graphic/conf/layer.conf \
 			"20iMACHINEOVERRIDES_EXTENDER:nxp-imx8   = \"imx:mx8:mx8m:mx8mq:imxdrm:imxdcss:imxvpu:imxvpuhantro:imxgpu:imxgpu3d\"" \
-			"24iIMAGE_INSTALL:append += \"assimp devil imx-vpu-hantro imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos\""
+			"24iIMAGE_INSTALL += \"assimp devil imx-vpu-hantro imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos\""
 elif [ $PLATFORM_TYPE = "imx8mm" ]; then
 file_modify $GRAPHIC_DTS/imx8-graphic/conf/layer.conf \
 			"20iMACHINEOVERRIDES_EXTENDER:nxp-imx8   = \"imx:mx8:mx8m:mx8mm:imxdrm:imxvpu:imxvpuhantro:imxgpu:imxgpu2d:imxgpu3d\"" \
-			"24iIMAGE_INSTALL:append += \"assimp devil imx-vpu-hantro imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos\""
+			"24iIMAGE_INSTALL += \"assimp devil imx-vpu-hantro imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos\""
 elif [ $PLATFORM_TYPE = "imx8qm" ]; then
 file_modify $GRAPHIC_DTS/imx8-graphic/conf/layer.conf \
 			"20iMACHINEOVERRIDES_EXTENDER:nxp-imx8   = \"imx:mx8:mx8qm:imxdrm:imxdpu:imxgpu:imxgpu2d:imxgpu3d\"" \
-			"24iIMAGE_INSTALL:append += \"assimp devil imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos armnn tensorflow-lite onnxruntime\""
+			"24iIMAGE_INSTALL += \"assimp devil imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos armnn tensorflow-lite onnxruntime\""
 elif [ $PLATFORM_TYPE = "imx8qxp" ]; then
 file_modify $GRAPHIC_DTS/imx8-graphic/conf/layer.conf \
 			"20iMACHINEOVERRIDES_EXTENDER:nxp-imx8   = \"imx:mx8:mx8qxp:imxdrm:imxdpu:imxgpu:imxgpu2d:imxgpu3d\"" \
-			"24iIMAGE_INSTALL:append += \"assimp devil imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos\""
+			"24iIMAGE_INSTALL += \"assimp devil imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos\""
 fi
 
 if [ ! -f $GRAPHIC_DTS/imx8-graphic/conf/imx8-graphic.inc ]; then
@@ -232,7 +232,7 @@ PNWHITELIST:openembedded-layer += 'xterm'
 PNWHITELIST:meta-python += 'python3-wheel'
 PNWHITELIST:meta-python += 'python3-pybind11'
 
-IMAGE_INSTALL:append += " \\
+IMAGE_INSTALL += " \\
     \${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'weston-init', '', d)} \\
     \${@bb.utils.contains('DISTRO_FEATURES', 'x11 wayland', 'weston-xwayland xterm', '', d)} \\
 "
