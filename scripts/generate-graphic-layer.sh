@@ -197,40 +197,40 @@ PREFERRED_PROVIDER_opencl-headers:nxp-imx8 = "imx-gpu-viv"
 DISTRO_FEATURES:remove = "directfb "
 DISTRO_FEATURES:append = " x11 wayland pam"
 
-PNWHITELIST:openembedded-layer += 'freeglut'
-PNWHITELIST:imx8-graphic-layer += 'imx-gpu-viv'
-PNWHITELIST:imx8-graphic-layer += 'imx-gpu-viv-demos'
-PNWHITELIST:imx8-graphic-layer += 'imx-gpu-sdk'
-PNWHITELIST:imx8-graphic-layer += 'assimp'
-PNWHITELIST:imx8-graphic-layer += 'devil'
-PNWHITELIST:imx8-graphic-layer += 'weston'
-PNWHITELIST:imx8-graphic-layer += 'imx-gpu-apitrace'
-PNWHITELIST:imx8-graphic-layer += 'systemd-gpuconfig'
-PNWHITELIST:imx8-graphic-layer += 'spirv-tools'
-PNWHITELIST:imx8-graphic-layer += 'glslang'
-PNWHITELIST:imx8-graphic-layer += 'wayland-protocols'
-PNWHITELIST:imx8-graphic-layer += 'libdrm'
-PNWHITELIST:openembedded-layer += 'fmt'
-PNWHITELIST:openembedded-layer += 'googletest'
-PNWHITELIST:openembedded-layer += 'rapidjson'
-PNWHITELIST:openembedded-layer += 'glm'
-PNWHITELIST:imx8-graphic-layer += 'stb'
-PNWHITELIST:imx8-graphic-layer += 'rapidvulkan'
-PNWHITELIST:imx8-graphic-layer += 'rapidopencl'
-PNWHITELIST:imx8-graphic-layer += 'half'
-PNWHITELIST:imx8-graphic-layer += 'gli'
-PNWHITELIST:imx8-graphic-layer += 'rapidopenvx'
-PNWHITELIST:imx8-graphic-layer += 'vulkan-validationlayers'
-PNWHITELIST:imx8-graphic-layer += 'linux-imx-headers'
-PNWHITELIST:imx8-graphic-layer += 'vulkan-headers'
-PNWHITELIST:imx8-graphic-layer += 'vulkan-loader'
-PNWHITELIST:imx8-graphic-layer += 'vulkan-tools'
-PNWHITELIST:imx8-graphic-layer += 'weston-init'
-PNWHITELIST:imx8-graphic-layer += 'weston'
-PNWHITELIST:openembedded-layer += 'libxaw'
-PNWHITELIST:openembedded-layer += 'xterm'
-PNWHITELIST:meta-python += 'python3-wheel'
-PNWHITELIST:meta-python += 'python3-pybind11'
+WRL_RECIPES:openembedded-layer += 'freeglut'
+WRL_RECIPES:imx8-graphic-layer += 'imx-gpu-viv'
+WRL_RECIPES:imx8-graphic-layer += 'imx-gpu-viv-demos'
+WRL_RECIPES:imx8-graphic-layer += 'imx-gpu-sdk'
+WRL_RECIPES:imx8-graphic-layer += 'assimp'
+WRL_RECIPES:imx8-graphic-layer += 'devil'
+WRL_RECIPES:imx8-graphic-layer += 'weston'
+WRL_RECIPES:imx8-graphic-layer += 'imx-gpu-apitrace'
+WRL_RECIPES:imx8-graphic-layer += 'systemd-gpuconfig'
+WRL_RECIPES:imx8-graphic-layer += 'spirv-tools'
+WRL_RECIPES:imx8-graphic-layer += 'glslang'
+WRL_RECIPES:imx8-graphic-layer += 'wayland-protocols'
+WRL_RECIPES:imx8-graphic-layer += 'libdrm'
+WRL_RECIPES:openembedded-layer += 'fmt'
+WRL_RECIPES:openembedded-layer += 'googletest'
+WRL_RECIPES:openembedded-layer += 'rapidjson'
+WRL_RECIPES:openembedded-layer += 'glm'
+WRL_RECIPES:imx8-graphic-layer += 'stb'
+WRL_RECIPES:imx8-graphic-layer += 'rapidvulkan'
+WRL_RECIPES:imx8-graphic-layer += 'rapidopencl'
+WRL_RECIPES:imx8-graphic-layer += 'half'
+WRL_RECIPES:imx8-graphic-layer += 'gli'
+WRL_RECIPES:imx8-graphic-layer += 'rapidopenvx'
+WRL_RECIPES:imx8-graphic-layer += 'vulkan-validationlayers'
+WRL_RECIPES:imx8-graphic-layer += 'linux-imx-headers'
+WRL_RECIPES:imx8-graphic-layer += 'vulkan-headers'
+WRL_RECIPES:imx8-graphic-layer += 'vulkan-loader'
+WRL_RECIPES:imx8-graphic-layer += 'vulkan-tools'
+WRL_RECIPES:imx8-graphic-layer += 'weston-init'
+WRL_RECIPES:imx8-graphic-layer += 'weston'
+WRL_RECIPES:openembedded-layer += 'libxaw'
+WRL_RECIPES:openembedded-layer += 'xterm'
+WRL_RECIPES:meta-python += 'python3-wheel'
+WRL_RECIPES:meta-python += 'python3-pybind11'
 
 IMAGE_INSTALL += " \\
     \${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'weston-init', '', d)} \\
@@ -262,21 +262,21 @@ fi
 
 if [ $PLATFORM_TYPE = "imx8mq" ]; then
 file_modify $GRAPHIC_DTS/imx8-graphic/conf/imx8-graphic.inc \
-			"21iPNWHITELIST:imx8-graphic-layer += 'imx-vpu-hantro'"
+			"21iWRL_RECIPES:imx8-graphic-layer += 'imx-vpu-hantro'"
 
 elif [ $PLATFORM_TYPE = "imx8mm" ]; then
 file_modify $GRAPHIC_DTS/imx8-graphic/conf/imx8-graphic.inc \
-                        "21iPNWHITELIST:imx8-graphic-layer += 'imx-vpu-hantro'" \
-			"22iPNWHITELIST:imx8-graphic-layer += 'imx-gpu-g2d'"
+                        "21iWRL_RECIPES:imx8-graphic-layer += 'imx-vpu-hantro'" \
+			"22iWRL_RECIPES:imx8-graphic-layer += 'imx-gpu-g2d'"
 
 elif [ $PLATFORM_TYPE = "imx8qm" ]; then
 file_modify $GRAPHIC_DTS/imx8-graphic/conf/imx8-graphic.inc \
-			"21iPNWHITELIST:imx8-graphic-layer += 'imx-gpu-g2d'" \
-			"22iPNWHITELIST:imx8-graphic-layer += 'imx-dpu-g2d'"
+			"21iWRL_RECIPES:imx8-graphic-layer += 'imx-gpu-g2d'" \
+			"22iWRL_RECIPES:imx8-graphic-layer += 'imx-dpu-g2d'"
 
 elif [ $PLATFORM_TYPE = "imx8qxp" ]; then
 file_modify $GRAPHIC_DTS/imx8-graphic/conf/imx8-graphic.inc \
-			"21iPNWHITELIST:imx8-graphic-layer += 'imx-dpu-g2d'"
+			"21iWRL_RECIPES:imx8-graphic-layer += 'imx-dpu-g2d'"
 fi
 
 file_copy()
