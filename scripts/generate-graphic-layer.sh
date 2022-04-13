@@ -145,7 +145,7 @@ IMX_MIRROR ?= "https://www.nxp.com/lgfiles/NMG/MAD/YOCTO/"
 FSL_MIRROR ?= "${IMX_MIRROR}"
 FSL_EULA_FILE_GRAPHIC = "${LAYERDIR}/EULA"
 
-LAYERSERIES_COMPAT_imx8-graphic-layer = "wrl honister"
+LAYERSERIES_COMPAT_imx8-graphic-layer = "wrl honister kirkstone"
 DISTRO_FEATURES:append = " imx8-graphic"
 EOF
 fi
@@ -1050,6 +1050,7 @@ index 9e1af467..aa48051f 100644
 file_copy recipes-libraries/tensorflow-lite/tensorflow-lite_2.4.0.bb \
 			"s/51c167ba94488ae1d7599ad20c985c93484bac92/1c1ed6663a73d5d47a5a96e0e9fa85d2db280954/g" \
 			"s/lf-5.10.y_1.0.0/lf-5.10.y_2.0.0/g" \
+			"s/SSTATE_DUPWHITELIST/SSTATE_ALLOW_OVERLAP_FILES/g" \
 			"32i\do_compile:prepend () {" \
 			"33i\    sed -i 'N;30i\\\#include <limits>' \${S}/tensorflow/lite/tools/make/downloads/ruy/ruy/block_map.cc" \
 			"34i\    sed -i 'N;30i\\\#include <limits>' \${S}/../build/abseil-cpp/absl/synchronization/internal/graphcycles.cc" \
