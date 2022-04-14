@@ -681,6 +681,27 @@ file_copy recipes-graphics/mesa/mesa-demos/Replace-glWindowPos2iARB-calls-with-g
 file_copy recipes-graphics/mesa/mesa-demos_%.bbappend
 file_copy recipes-graphics/mesa/mesa-gl_%.bbappend
 
+SOURCE_DIR=$GRAPHIC_SRC/poky/meta/
+file_copy recipes-graphics/mesa/mesa_20.1.8.bb
+file_copy recipes-graphics/mesa/mesa.inc
+file_copy recipes-graphics/mesa/mesa-gl_20.1.8.bb
+file_copy recipes-graphics/mesa/mesa-demos_8.4.0.bb
+file_copy recipes-graphics/mesa/files/0001-futex.h-Define-__NR_futex-if-it-does-not-exist.patch
+file_copy recipes-graphics/mesa/files/0001-meson.build-check-for-all-linux-host_os-combinations.patch
+file_copy recipes-graphics/mesa/files/0001-meson-misdetects-64bit-atomics-on-mips-clang.patch
+file_copy recipes-graphics/mesa/files/0002-meson.build-make-TLS-ELF-optional.patch
+file_copy recipes-graphics/mesa/files/0003-Allow-enable-DRI-without-DRI-drivers.patch
+file_copy recipes-graphics/mesa/files/0004-Revert-mesa-Enable-asm-unconditionally-now-that-gen_.patch
+file_copy recipes-graphics/mesa/files/0005-vc4-use-intmax_t-for-formatted-output-of-timespec-me.patch
+file_copy recipes-graphics/mesa/mesa-demos/0001-mesa-demos-Add-missing-data-files.patch
+file_copy recipes-graphics/mesa/mesa-demos/0003-configure-Allow-to-disable-demos-which-require-GLEW-.patch
+file_copy recipes-graphics/mesa/mesa-demos/0004-Use-DEMOS_DATA_DIR-to-locate-data-files.patch
+file_copy recipes-graphics/mesa/mesa-demos/0007-Install-few-more-test-programs.patch
+file_copy recipes-graphics/mesa/mesa-demos/0008-glsl-perf-Add-few-missing-.glsl-.vert-.frag-files-to.patch
+file_copy recipes-graphics/mesa/mesa-demos/0009-glsl-perf-Install-.glsl-.vert-.frag-files.patch
+file_copy recipes-graphics/mesa/mesa-demos/0012-mesa-demos-OpenVG-demos-with-single-frame-need-eglSw.patch
+file_copy recipes-graphics/mesa/mesa-demos/0013-only-build-GLX-demos-if-needed.patch
+
 SOURCE_DIR=$GRAPHIC_SRC/meta-imx/meta-sdk/
 
 file_copy recipes-graphics/rapidopencl/rapidopencl_1.1.0.1.bb
@@ -1073,6 +1094,10 @@ convert_override(){
 		if [ $? != 0 ];then
 			echo "Error: apply patch2 failed"
 		fi
+		patch -p1 -d $GRAPHIC_DTS/imx8-graphic < $patchdir/0003-nxp-imx8-convert-overrides-for-mesa_20.08.patch 2>&1 > /dev/null
+                if [ $? != 0 ];then
+                        echo "Error: apply patch2 failed"
+                fi
 	fi
 }
 
