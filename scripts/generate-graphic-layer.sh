@@ -172,7 +172,7 @@ file_modify $GRAPHIC_DTS/imx8-graphic/conf/layer.conf \
 elif [ $PLATFORM_TYPE = "imx8qm" ]; then
 file_modify $GRAPHIC_DTS/imx8-graphic/conf/layer.conf \
 			"20iMACHINEOVERRIDES_EXTENDER:nxp-imx8   = \"imx:mx8:mx8qm:imxdrm:imxdpu:imxgpu:imxgpu2d:imxgpu3d\"" \
-			"24iIMAGE_INSTALL:append = \" assimp devil imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos armnn tensorflow-lite onnxruntime\""
+			"24iIMAGE_INSTALL:append = \" assimp devil imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos\""
 elif [ $PLATFORM_TYPE = "imx8qxp" ]; then
 file_modify $GRAPHIC_DTS/imx8-graphic/conf/layer.conf \
 			"20iMACHINEOVERRIDES_EXTENDER:nxp-imx8   = \"imx:mx8:mx8qxp:imxdrm:imxdpu:imxgpu:imxgpu2d:imxgpu3d\"" \
