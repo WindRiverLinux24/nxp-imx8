@@ -322,7 +322,10 @@ file_copy classes/fsl-eula-unpack.bbclass \
 			'64i\    ${FSL_EULA_FILE_GRAPHIC_MD5SUM_LA_OPT_NXP_SOFTWARE_LICENSE_V18} \\' \
                         '65i\    ${FSL_EULA_FILE_GRAPHIC_MD5SUM_LA_OPT_NXP_SOFTWARE_LICENSE_V19} \\' \
 			'70d' \
-			'70i\    "${FSL_EULA_FILE_GRAPHIC_MD5SUM_LA_OPT_NXP_SOFTWARE_LICENSE_V19}"'
+			'70i\    "${FSL_EULA_FILE_GRAPHIC_MD5SUM_LA_OPT_NXP_SOFTWARE_LICENSE_V19}"' \
+			'151,153d' \
+			'154a\    # The binary unpack needs to be done first so 'S' is valid' \
+			'155a\    bb.build.exec_func('fsl_bin_do_unpack', d)'
 mv $GRAPHIC_DTS/imx8-graphic/classes/fsl-eula-unpack.bbclass $GRAPHIC_DTS/imx8-graphic/classes/fsl-eula-unpack-graphic.bbclass
 
 SOURCE_DIR=$GRAPHIC_SRC/meta-imx/meta-sdk/
