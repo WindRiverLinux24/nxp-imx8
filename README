@@ -236,7 +236,11 @@ Because of the licesen issue, nxp-imx8 layer doesn't integrate imx8's GPU(GC7000
 hardware acceleration related packages into WRlinux product. So, if customer wants
 to run hardware graphic feature. Detail steps as below:
 
-<1> echo the following content to local.conf:
+<1> You must change the configuration to allow downloading of packages from the
+internet. Change BB_NO_NETWORK ?= "1" to BB_NO_NETWORK ?= "0" in the file
+${buildprj}/conf/local.conf.
+
+<2> echo the following content to local.conf:
 
 ACCEPT_FSL_EULA = "1"
 BSP_NXP_DERIVED:append:nxp-imx8  = " nxp-imx8"
