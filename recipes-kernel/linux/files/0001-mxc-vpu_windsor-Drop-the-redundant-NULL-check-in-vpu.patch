@@ -1,0 +1,33 @@
+From 023a24702d58136b8324863e554db8c3ffc31307 Mon Sep 17 00:00:00 2001
+From: Xiaolei Wang <xiaolei.wang@windriver.com>
+Date: Wed, 8 Jun 2022 08:33:48 +0800
+Subject: [linux-yocto][linux-yocto v5.15/standard/nxp-sdk-5.15/nxp-soc & v5.15/standard/preempt-rt/nxp-sdk-5.15/nxp-soc][PATCH 1/1] mxc: vpu_windsor: Drop the redundant NULL check in
+ vpu_enc_mbox_free()
+
+It makes no sense to do a NULL check on the address of
+core_dev->mu_msg_fifo since it is not NULL even the
+core_dev is NULL. So drop it to fix the GCC warning.
+
+Signed-off-by: Xiaolei Wang <xiaolei.wang@windriver.com>
+---
+ drivers/mxc/vpu_windsor/vpu_encoder_mu.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/drivers/mxc/vpu_windsor/vpu_encoder_mu.c b/drivers/mxc/vpu_windsor/vpu_encoder_mu.c
+index 3bb7c60d1845..344eb2953eaf 100644
+--- a/drivers/mxc/vpu_windsor/vpu_encoder_mu.c
++++ b/drivers/mxc/vpu_windsor/vpu_encoder_mu.c
+@@ -35,10 +35,6 @@ static void vpu_enc_mbox_free(struct core_device *core_dev)
+ 
+ static void vpu_enc_mu_inq_msg(struct core_device *core_dev, void *msg)
+ {
+-	if (&core_dev->mu_msg_fifo == NULL) {
+-		vpu_err("mu_msg_fifo is NULL\n");
+-		return;
+-	}
+ 
+ 	if (kfifo_in(&core_dev->mu_msg_fifo, msg, sizeof(u_int32)) != sizeof(u_int32)) {
+ 		vpu_err("No memory for mu msg fifo\n");
+-- 
+2.25.1
+
