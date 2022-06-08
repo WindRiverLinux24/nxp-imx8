@@ -246,7 +246,7 @@ ACCEPT_FSL_EULA = "1"
 BSP_NXP_DERIVED:append:nxp-imx8  = " nxp-imx8"
 
 MACHINEOVERRIDES:prepend:nxp-imx8 = "mx8:mx8qm:imxdrm:imxdpu:imxgpu:imxgpu2d:imxgpu3d:mx8-nxp-bsp:"
-IMAGE_INSTALL += "assimp devil imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos weston weston-init imx-dpu-g2d imx-gpu-apitrace"
+IMAGE_INSTALL:append = " assimp devil imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos weston weston-init imx-dpu-g2d imx-gpu-apitrace"
 BSP_NXP_DERIVED:append:nxp-imx8  = " nxp-imx8"
 PREFERRED_PROVIDER_virtual/egl:imxgpu        ?= "imx-gpu-viv"
 PREFERRED_PROVIDER_virtual/libgl:imxgpu3d    ?= "imx-gpu-viv"
@@ -267,7 +267,7 @@ PREFERRED_VERSION_vulkan-headers:mx8  = "1.2.182.0"
 PREFERRED_VERSION_vulkan-loader:mx8 = "1.2.182.0"
 PREFERRED_VERSION_mesa:mx8 = "21.2.4"
 PREFERRED_VERSION_drm:mx8 = "2.4.107"
-PREFERRED_VERSION_wayland-protocols:mx8 = "1.25"
+PREFERRED_VERSION_wayland-protocols:mx8 = "1.25.imx"
 
 DISTRO_FEATURES:remove = "directfb "
 DISTRO_FEATURES:append = " wayland pam"
@@ -299,7 +299,7 @@ WRL_RECIPES:openembedded-layer += 'ccid'
 WRL_RECIPES:openembedded-layer += 'pcsc-lite'
 WRL_RECIPES:openembedded-layer += 'spirv-tools'
 WRL_RECIPES:freescale-distro += 'glslang'
-WRL_RECIPES:fsl-bsp-release += 'wayland-protocols'
+WRL_RECIPES:freescale-layer += 'wayland-protocols'
 WRL_RECIPES:fsl-bsp-release += 'libdrm'
 WRL_RECIPES:openembedded-layer += 'nlohmann-json'
 WRL_RECIPES:openembedded-layer += 'googletest'
