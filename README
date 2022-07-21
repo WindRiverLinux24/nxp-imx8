@@ -243,6 +243,7 @@ ${buildprj}/conf/local.conf.
 <2> echo the following content to local.conf:
 
 ACCEPT_FSL_EULA = "1"
+
 BSP_NXP_DERIVED:append:nxp-imx8  = " nxp-imx8"
 
 MACHINEOVERRIDES:prepend:nxp-imx8 = "mx8:mx8qm:imxdrm:imxdpu:imxgpu:imxgpu2d:imxgpu3d:mx8-nxp-bsp:"
@@ -252,20 +253,19 @@ PREFERRED_PROVIDER_virtual/egl:imxgpu        ?= "imx-gpu-viv"
 PREFERRED_PROVIDER_virtual/libgl:imxgpu3d    ?= "imx-gpu-viv"
 PREFERRED_PROVIDER_virtual/libgles1:imxgpu3d ?= "imx-gpu-viv"
 PREFERRED_PROVIDER_virtual/libgles2:imxgpu3d ?= "imx-gpu-viv"
+PREFERRED_PROVIDER_virtual/libgles3:imxgpu3d ?= "imx-gpu-viv"
 PREFERRED_PROVIDER_virtual/libg2d            ?= "imx-gpu-g2d"
 PREFERRED_PROVIDER_virtual/libg2d:imxdpu     ?= "imx-dpu-g2d"
-PREFERRED_VERSION_fmt:mx8  = "8.0.1"
 PREFERRED_VERSION_vulkan-headers:mx8  = "1.2.182.0"
 PREFERRED_VERSION_vulkan-loader:mx8 = "1.2.182.0"
-PREFERRED_VERSION_mesa:mx8 = "21.2.4"
-PREFERRED_VERSION_drm:mx8 = "2.4.107"
+PREFERRED_VERSION_drm:mx8 = "2.4.109.imx"
 PREFERRED_VERSION_wayland-protocols:mx8 = "1.25.imx"
+PREFERRED_VERSION_weston:mx8 = "10.0.0.imx"
 
 DISTRO_FEATURES:remove = "directfb "
 DISTRO_FEATURES:append = " wayland pam"
 
 MACHINE_HAS_VIVANTE_KERNEL_DRIVER_SUPPORT = "1"
-
 IMAGE_FEATURES:remove = "x11-base  x11-sato"
 IMAGE_FEATURES:append = " weston"
 
@@ -276,6 +276,7 @@ WARN_TO_ERROR_QA = "already-stripped compile-host-path install-host-path \
 WARN_QA:remove = "${WARN_TO_ERROR_QA}"
 ERROR_QA:append = " ${WARN_TO_ERROR_QA}"
 
+
 WRL_RECIPES:openembedded-layer += 'freeglut'
 WRL_RECIPES:fsl-bsp-release += 'imx-gpu-viv'
 WRL_RECIPES:fsl-bsp-release += 'mesa'
@@ -285,14 +286,17 @@ WRL_RECIPES:fsl-bsp-release += 'imx-gpu-g2d'
 WRL_RECIPES:fsl-bsp-release += 'imx-dpu-g2d'
 WRL_RECIPES:freescale-distro += 'assimp'
 WRL_RECIPES:freescale-distro += 'devil'
-WRL_RECIPES:freescale-layer += 'imx-gpu-apitrace'
+WRL_RECIPES:fsl-bsp-release += 'imx-gpu-apitrace'
+WRL_RECIPES:fsl-bsp-release += 'systemd-gpuconfig'
 WRL_RECIPES:fsl-bsp-release += 'systemd-gpuconfig'
 WRL_RECIPES:fsl-bsp-release += 'fmt'
+WRL_RECIPES:fsl-bsp-release += 'systemd'
+WRL_RECIPES:fsl-bsp-release += 'opencv'
 WRL_RECIPES:openembedded-layer += 'ccid'
 WRL_RECIPES:openembedded-layer += 'pcsc-lite'
 WRL_RECIPES:openembedded-layer += 'spirv-tools'
 WRL_RECIPES:freescale-distro += 'glslang'
-WRL_RECIPES:freescale-layer += 'wayland-protocols'
+WRL_RECIPES:fsl-bsp-release += 'wayland-protocols'
 WRL_RECIPES:fsl-bsp-release += 'libdrm'
 WRL_RECIPES:openembedded-layer += 'nlohmann-json'
 WRL_RECIPES:openembedded-layer += 'googletest'
@@ -310,11 +314,33 @@ WRL_RECIPES:fsl-sdk-release += 'vulkan-headers'
 WRL_RECIPES:fsl-sdk-release += 'vulkan-loader'
 WRL_RECIPES:openembedded-layer += 'vulkan-tools'
 WRL_RECIPES:fsl-bsp-release += 'weston-init'
-WRL_RECIPES:freescale-layer += 'weston'
+WRL_RECIPES:fsl-bsp-release += 'weston'
 WRL_RECIPES:openembedded-layer += 'libxaw'
+WRL_RECIPES:openembedded-layer += 'freerdp'
 WRL_RECIPES:openembedded-layer += 'xterm'
 WRL_RECIPES:meta-python += 'python3-wheel'
 WRL_RECIPES:meta-python += 'python3-pybind11'
+WRL_RECIPES:meta-python += 'python3-h5py'
+WRL_RECIPES:meta-python += 'python3-keras-applications'
+WRL_RECIPES:meta-python += 'python3-keras-preprocessing'
+WRL_RECIPES:meta-python += 'python3-pkgconfig'
+WRL_RECIPES:meta-tensorflow += 'bazel'
+WRL_RECIPES:meta-tensorflow += 'openjdk-11'
+WRL_RECIPES:openembedded-layer += 'hdf5'
+WRL_RECIPES:meta-ml += 'nn-imx'
+WRL_RECIPES:meta-ml += 'tensorflow-lite-host-tools'
+WRL_RECIPES:meta-ml += 'tensorflow-protobuf'
+WRL_RECIPES:meta-ml += 'tensorflow-lite'
+WRL_RECIPES:meta-ml += 'flatbuffers'
+WRL_RECIPES:meta-ml += 'nnstreamer'
+WRL_RECIPES:meta-ml += 'ssat'
+WRL_RECIPES:openembedded-layer += 'giflib'
+WRL_RECIPES:openembedded-layer += 'leptonica'
+WRL_RECIPES:openembedded-layer += 'tesseract'
+WRL_RECIPES:openembedded-layer += 'tesseract-lang'
+WRL_RECIPES:openembedded-layer += 'ade'
+WRL_RECIPES:openembedded-layer += 'v4l-utils'
+WRL_RECIPES:openembedded-layer += 'tbb'
 
 5.6 thermal
 -----------
