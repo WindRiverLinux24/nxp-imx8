@@ -342,6 +342,70 @@ WRL_RECIPES:openembedded-layer += 'ade'
 WRL_RECIPES:openembedded-layer += 'v4l-utils'
 WRL_RECIPES:openembedded-layer += 'tbb'
 
+5.5.3 machine learning
+----------------------
+
+Add the following steps on the basis of graphic:
+
+<1> Append the following packages to IMAGE_INSTALL:
+
+On the basis of the above graphic steps:
+IMAGE_INSTALL:append = " gstreamer1.0 gstreamer1.0-plugins-base  gstreamer1.0-plugins-good tensorflow-lite nnstreamer imx-gst1.0-plugin gstreamer1.0-plugins-bad packagegroup-imx-ml onnxruntime tensorflow-lite-vx-delegate"
+
+<2> Add PREFERRED_VERSION of gstreamer1.0:
+
+PREFERRED_VERSION_gstreamer1.0-plugins-base:mx8 = "1.20.0.imx"
+PREFERRED_VERSION_gstreamer1.0-plugins-bad:mx8  = "1.20.0.imx"
+PREFERRED_VERSION_gstreamer1.0-plugins-good:mx8 = "1.20.0.imx"
+PREFERRED_VERSION_gstreamer1.0-plugins-good-qt:mx8 = "1.20.0.imx"
+PREFERRED_VERSION_gstreamer1.0-plugins-ugly:mx8 = "1.20.0"
+PREFERRED_VERSION_gstreamer1.0:mx8              = "1.20.0.imx"
+PREFERRED_VERSION_gstreamer1.0-libav:mx8        = "1.20.0"
+PREFERRED_VERSION_gstreamer1.0-rtsp-server:mx8  = "1.20.0"
+
+<3> Append the following packages to WRL_RECIPES:
+
+WRL_RECIPES:fsl-bsp-release += 'gstreamer1.0-plugins-base'
+WRL_RECIPES:fsl-bsp-release += 'gstreamer1.0'
+WRL_RECIPES:fsl-bsp-release += 'gstreamer1.0-plugins-good'
+WRL_RECIPES:fsl-bsp-release += 'gstreamer1.0-plugins-bad'
+WRL_RECIPES:fsl-bsp-release += 'imx-gst1.0-plugin'
+WRL_RECIPES:fsl-bsp-release += 'imx-parser'
+WRL_RECIPES:fsl-bsp-release += 'imx-codec'
+WRL_RECIPES:fsl-bsp-release += 'imx-vpuwrap'
+WRL_RECIPES:fsl-sdk-release += 'tinycompress'
+WRL_RECIPES:meta-ml += 'packagegroup-imx-ml'
+WRL_RECIPES:meta-ml += 'onnxruntime'
+WRL_RECIPES:meta-ml += 'tensorflow-lite-vx-delegate'
+WRL_RECIPES:meta-ml += 'pytorch'
+WRL_RECIPES:meta-ml += 'nnshark'
+WRL_RECIPES:meta-ml += 'torchvision'
+WRL_RECIPES:meta-ml += 'tvm'
+WRL_RECIPES:meta-ml += 'deepview-rt'
+WRL_RECIPES:meta-ml += 'tim-vx'
+WRL_RECIPES:meta-ml += 'arm-compute-library'
+WRL_RECIPES:meta-ml += 'deepview-rt-examples'
+WRL_RECIPES:meta-ml += 'nnstreamer-protobuf'
+WRL_RECIPES:fsl-sdk-release += 'libgpuperfcnt'
+WRL_RECIPES:meta-python += 'python3-future'
+WRL_RECIPES:meta-python += 'python3-decorator'
+
+<4> Use the command as below to build a xwayland image:
+
+        bitbake wrlinux-image-std-sato
+
+<5> downlaod these packeges below:
+
+root:~# wget https://github.com/google-coral/test_data/raw/master/ssd_mobilenet_v2_coco_quant_postprocess.tflite
+root:~# wget https://github.com/google-coral/test_data/raw/master/coco_labels.txt
+root:~# export MODEL=$(pwd)/ssd_mobilenet_v2_coco_quant_postprocess.tflite
+root:~# export LABELS=$(pwd)/coco_labels.txt
+
+<6> Execute the following command:
+
+gst-launch-1.0 --no-position v4l2src device=/dev/video3 ! video/x-raw,width=640,height=480,framerate=30/1 ! tee name=t t. ! queue max-size-buffers=2 leaky=2 ! imxvideoconvert_g2d ! video/x-raw,width=300,height=300,format=RGBA ! videoconvert ! video/x-raw,format=RGB ! tensor_converter ! tensor_filter framework=tensorflow-lite model=${pwd}/ssd_mobilenet_v2_coco_quant_postprocess.tflite custom=Delegate:NNAPI ! tensor_decoder mode=bounding_boxes option1=tf-ssd option2=${pwd}/coco_labels.txt option3=0:1:2:3,50 option4=640:480 option5=300:300 ! mix. t. ! queue max-size-buffers=2 ! imxcompositor_g2d name=mix sink_0::zorder=2 sink_1::zorder=1 ! waylandsink
+
+
 5.6 thermal
 -----------
 
