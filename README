@@ -350,6 +350,7 @@ Add the following steps on the basis of graphic:
 <1> Append the following packages to IMAGE_INSTALL:
 
 On the basis of the above graphic steps:
+MACHINEOVERRIDES:prepend:nxp-imx8 = "use-nxp-bsp:"
 IMAGE_INSTALL:append = " gstreamer1.0 gstreamer1.0-plugins-base  gstreamer1.0-plugins-good tensorflow-lite nnstreamer imx-gst1.0-plugin gstreamer1.0-plugins-bad packagegroup-imx-ml onnxruntime tensorflow-lite-vx-delegate"
 
 <2> Add PREFERRED_VERSION of gstreamer1.0:
