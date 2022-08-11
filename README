@@ -64,7 +64,7 @@ The following table summarizes the valid Wind River Linux distros for this BSP.
 For the supported kernel type for this BSP, please check the TARGET_SUPPORTED_KTYPES
 by running 'bitbake -e virtual/kernel | grep "^TARGET_SUPPORTED_KTYPES="'.
 
-Note: The preempt-rt ktype is not available for this BSP/Machine at this time.
+Note: The preempt-rt ktype can be used for this BSP/Machine.
 
 
 3. Board Specific Patches
@@ -535,7 +535,7 @@ To burn uboot and WIC images to SD card, user need to execute two steps:
 2) Prepare the bootloader image imx-boot-<$machine>-sd.bin. User can build
    a SDK to obtain the bootloader by executing the commands as below:
 
-$repo init -u https://source.codeaurora.org/external/imx/imx-manifest -b imx-linux-gatesgarth -m imx-5.10.9-1.0.0.xml
+$repo init -u https://source.codeaurora.org/external/imx/imx-manifest -b imx-linux-honister -m imx-5.15.5-1.0.0.xml
 $repo sync
 $DISTRO=fsl-imx-xwayland MACHINE=imx8qmmek source imx-setup-release.sh -b build-xwayland
 $bitbake imx-boot
