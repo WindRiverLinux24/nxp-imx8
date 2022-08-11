@@ -608,6 +608,6 @@ Connect the usb typec port(J17) to PC host, and then run below commands:
 	# echo 20 > functions/ncm.1/qmult
 	# ln -s functions/ncm.1 configs/c.1
 
-	# echo 5b110000.usb3 > UDC
+	# echo 5b130000.usb3 > UDC
 
 After running above commands, MCIMX8QM-MEK board works as a usb mass storage device.
