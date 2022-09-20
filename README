@@ -261,8 +261,8 @@ ACCEPT_FSL_EULA = "1"
 
 BSP_NXP_DERIVED:append:nxp-imx8  = " nxp-imx8"
 
-MACHINEOVERRIDES:prepend:nxp-imx8 = "mx8:mx8qm:imxdrm:imxdpu:imxgpu:imxgpu2d:imxgpu3d:mx8-nxp-bsp:"
-IMAGE_INSTALL:append = " assimp devil imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos weston weston-init imx-dpu-g2d imx-gpu-apitrace"
+MACHINEOVERRIDES:prepend:nxp-imx8 = "mx8:mx8m:mx8qm:mx8mq:imxdrm:imxdpu:imxdcss:imxvpuhantro:imxgpu:imxgpu2d:imxgpu3d:mx8-nxp-bsp:imx-nxp-sdk:use-nxp-bsp:mx8mq-nxp-bsp:"
+IMAGE_INSTALL:append = " assimp devil imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos weston weston-init imx-dpu-g2d imx-vpu-hantro imx-gpu-apitrace"
 BSP_NXP_DERIVED:append:nxp-imx8  = " nxp-imx8"
 PREFERRED_PROVIDER_virtual/egl:imxgpu        ?= "imx-gpu-viv"
 PREFERRED_PROVIDER_virtual/libgl:imxgpu3d    ?= "imx-gpu-viv"
@@ -299,10 +299,11 @@ WRL_RECIPES:fsl-bsp-release += 'imx-gpu-viv-demos'
 WRL_RECIPES:fsl-sdk-release += 'imx-gpu-sdk'
 WRL_RECIPES:fsl-bsp-release += 'imx-gpu-g2d'
 WRL_RECIPES:fsl-bsp-release += 'imx-dpu-g2d'
+WRL_RECIPES:fsl-bsp-release += "imx-vpu-hantro"
+WRL_RECIPES:fsl-bsp-release += "imx-vpu-hantro-daemon"
 WRL_RECIPES:freescale-distro += 'assimp'
 WRL_RECIPES:freescale-distro += 'devil'
 WRL_RECIPES:fsl-bsp-release += 'imx-gpu-apitrace'
-WRL_RECIPES:fsl-bsp-release += 'systemd-gpuconfig'
 WRL_RECIPES:fsl-bsp-release += 'systemd-gpuconfig'
 WRL_RECIPES:fsl-bsp-release += 'fmt'
 WRL_RECIPES:fsl-bsp-release += 'systemd'
