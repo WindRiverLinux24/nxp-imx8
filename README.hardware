@@ -24,7 +24,7 @@ This BSP supports the following boards:
 
   - 2022/04 (LINUXPG-1014): Wind River Linux 10.22 Support MCIMX8QM-MEK board for both standard and preempt-rt
                            kernel based on NXP IMX SDK v5.15.5
-  - 2021/12 (LINUXPG-1021): Wind River Linux 10.22 RCPL02. Support MCIMX8MQ-EVK board for both standard and preempt-rt
+  - 2022/08 (LINUXPG-1134): Wind River Linux 10.22 RCPL02. Support MCIMX8MQ-EVK board for both standard and preempt-rt
 			   kernel based on NXP IMX SDK v5.15.5
 
 3. BSP Features
