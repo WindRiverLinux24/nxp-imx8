@@ -277,6 +277,7 @@ PREFERRED_VERSION_vulkan-loader:mx8 = "1.2.182.0"
 PREFERRED_VERSION_drm:mx8 = "2.4.109.imx"
 PREFERRED_VERSION_wayland-protocols:mx8 = "1.25.imx"
 PREFERRED_VERSION_weston:mx8 = "10.0.0.imx"
+PREFERRED_VERSION_ffmpeg:mx8 = "4.4.1"
 
 DISTRO_FEATURES:remove = "directfb "
 DISTRO_FEATURES:append = " wayland pam"
@@ -308,6 +309,7 @@ WRL_RECIPES:fsl-bsp-release += 'imx-gpu-apitrace'
 WRL_RECIPES:fsl-bsp-release += 'systemd-gpuconfig'
 WRL_RECIPES:fsl-bsp-release += 'fmt'
 WRL_RECIPES:fsl-bsp-release += 'systemd'
+WRL_RECIPES:fsl-bsp-release += 'ffmpeg'
 WRL_RECIPES:fsl-bsp-release += 'opencv'
 WRL_RECIPES:openembedded-layer += 'ccid'
 WRL_RECIPES:openembedded-layer += 'pcsc-lite'
