@@ -143,7 +143,7 @@ For MCIMX8QM-MEK board:
 		 video=HDMI-A-1:1920x1080-32@60
 	# booti $kernel_addr - $fdt_addr
 
-Note: for MCIMX8QM-MEK board, $kernel_addr="0x8a0000000", $fdt_addr="0x8b0000000"
+Note: for MCIMX8QM-MEK board, $kernel_addr="0x8a0000000", $fdt_addr="0x8d0000000"
 	$console_port = "ttyLP0,115200"
       for MCIMX8M-EVK board, $kernel_addr="0x40480000", $fdt_addr="0x44000000"
         $console_port = "ttymxc0,115200"
