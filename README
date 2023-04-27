@@ -8,8 +8,10 @@ Please refer to README.hardware for hardware specific information.
 
 Dependencies
 ------------
-This layer depends on the oe-core version supplied with Wind River
-Linux and the wr-kernel layer.
+This layer depends on the following layers supplied with Wind River Linux:
+  oe-core
+  meta-imx
+  meta-freescale
 
 Maintenance
 -----------
