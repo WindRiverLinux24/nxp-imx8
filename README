@@ -569,6 +569,7 @@ To burn uboot and WIC images to SD card, user need to execute two steps:
 2) Prepare the bootloader image imx-boot-nxp-imx8-${machine}.bin-flash
 
 
+BB_NO_NETWORK = '0'
 ACCEPT_FSL_EULA = "1"
 LICENSE_FLAGS_ACCEPTED:append = "commercial"
 
@@ -614,12 +615,12 @@ IMXBOOT_TARGETS = \
      "${@bb.utils.contains('UBOOT_CONFIG', 'imx8qmmek', '${IMXBOOT_TARGETS_SD}', \
                                                         '${IMXBOOT_TARGETS_FSPI}', d)}"
 
-4) bitbake imx-boot and the imx-boot-nxp-imx8-${machine}.bin-flashin can be found in build-wayland/tmp/deploy/images/<$machine>/,
+4) bitbake imx-boot and the imx-boot-nxp-imx8-${machine}.bin-flash can be found in build-wayland/tmp/deploy/images/<$machine>/,
    and then use the command as below to burn it to SD card:
 
 For MCIMX8QM-MEK board:
 
-	# dd if=imx-boot-<$machine>-sd.bin-flash_spl of=/dev/your_sd_dev bs=1k seek=<x> conv=fsync
+	# dd if=imx-boot-nxp-imx8-<$machine>.bin-flash of=/dev/your_sd_dev bs=1k seek=<x> conv=fsync
 
 Note: $machine = "imx8qmmek", seek = "32"
 
