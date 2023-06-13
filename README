@@ -588,7 +588,7 @@ CUSTOMER_RECIPES:fsl-bsp-release += 'imx-mkimage'
 UBOOT_CONFIG ??= "imx8qmmek"
 UBOOT_CONFIG[imx8qmmek] = "imx8qm_mek_defconfig,sdcard"
 
-IMAGE_BOOT_FILES += "hdmitxfw.bin hdmirxfw.bin dpfw.bin"
+IMAGE_BOOT_FILES:append = " hdmitxfw.bin hdmirxfw.bin dpfw.bin"
 IMX_DEFAULT_BOOTLOADER:use-nxp-bsp ="u-boot-imx"
 IMX_DEFAULT_BOOTLOADER:use-mainline-bsp ="u-boot-fslc"
 
