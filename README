@@ -1,4 +1,4 @@
-        MCIMX8QM-MEK/MCIMX8M-EVK Board Support Package
+        MCIMX8QM-MEK Board Support Package
 
 1. About this document
 ======================
@@ -26,7 +26,7 @@ is done automatically when using the Wind River configure wrapper.
 
 License
 -------
-Copyright (C) 2022 Wind River Systems, Inc.
+Copyright (C) 2023 Wind River Systems, Inc.
 
 Source code included in the tree for individual recipes is under the LICENSE
 stated in the associated recipe (.bb file) unless otherwise stated.
@@ -113,16 +113,6 @@ For MCIMX8QM-MEK board:
 	If you want to connect OV5640 MIPI camera to MIPI CSI1(J5) or CSI0(J10):
 	# tftp $fdt_addr imx8qm-mek-ov5640.dtb
 
-For MCIMX8M-EVK board:
-        If you want to use HDMI connector (J1001) as output:
-        # tftp $fdt_addr imx8mq-evk.dtb
-
-        If you want to use IMX-MIPI-HDMI on J1501 as output:
-        # tftp $fdt_addr imx8mq-evk-dcss-adv7535.dtb
-
-        If you want to use MX8-DSI-OLED1 on J1501 as output:
-        # tftp $fdt_addr imx8mq-evk-dcss-rm67191.dtb
-
 4.1.4 Download and load firmware
 --------------------------------
 For MCIMX8QM-MEK board:
@@ -147,8 +137,6 @@ For MCIMX8QM-MEK board:
 
 Note: for MCIMX8QM-MEK board, $kernel_addr="0x8a0000000", $fdt_addr="0x8d0000000"
 	$console_port = "ttyLP0,115200"
-      for MCIMX8M-EVK board, $kernel_addr="0x40480000", $fdt_addr="0x44000000"
-        $console_port = "ttymxc0,115200"
       The kernel image will become larger if more kernel code is compiled into kernel image.
       So, please increase "fdt_addr" value by putting dtb file at higher address if you encounter with kernel booting failed.
 
@@ -196,9 +184,6 @@ Replace cable B with cable A.
 -------------
 
 The debug UART can be set as a wakeup source with:
-
-For MCIMX8M-EVK board:
-	# echo enabled > /sys/class/tty/ttymxc0/power/wakeup
 
 For MCIMX8QM-MEK board:
 	# echo enabled > /sys/class/tty/ttyLP0/power/wakeup
@@ -527,9 +512,6 @@ argument "crashkernel" to the boot kernel as follow:
 For MCIMX8QM-MEK board:
 	crashkernel=512M
 
-For MCIMX8M-EVK board:
-        crashkernel=512M@3000M
-
 For the dump-capture kernel:
 Before booting the dump-capture kernel, add "maxcpus=1 cma=128M" to the boot parameter.
 
@@ -624,12 +606,6 @@ For MCIMX8QM-MEK board:
 
 Note: $machine = "imx8qmmek", seek = "32"
 
-For MCIMX8M-EVK board:
-
-        # dd if=imx-boot-<$machine>-sd.bin-flash_evk of=/dev/your_sd_dev bs=1k seek=<x> conv=fsync
-
-Note: $machine = "imx8mqevk", seek = "33"
-
 4) Set environment variable for booting system
 
 FOR MCIMX8QM-MEK board:
@@ -638,14 +614,6 @@ u-boot=>setenv fdt_file imx8qm-mek.dtb
 u-boot=>setenv bootfile Image
 u-boot=>setenv bootargs "root=/dev/mmcblk1p2 rootwait rw rootdelay=5 console=${console},${baudrate} earlycon ip=dhcp"
 u-boot=>setenv bootcmd "fatload mmc 1:1 $loadaddr $bootfile; fatload mmc 1:1 $fdt_addr $fdt_file; booti $loadaddr - $fdt_addr";
-u-boot=>run bootcmd
-
-For MCIMX8M-EVK board:
-
-u-boot=>setenv fdt_file imx8mq-evk-b3.dtb
-u-boot=>setenv bootfile Image
-u-boot=>setenv bootargs 'root=/dev/mmcblk1p2 rw rootdelay=5 console=ttymxc0,115200n8 ip=dhcp'
-u-boot=>setenv bootcmd 'fatload mmc 1:1 $loadaddr $bootfile; fatload mmc 1:1 $fdt_addr $fdt_file; booti $loadaddr - $fdt_addr';
 u-boot=>run bootcmd
 
 8. USB OTG
