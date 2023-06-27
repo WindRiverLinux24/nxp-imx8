@@ -657,7 +657,8 @@ Connect the usb typec port(J17) to PC host, and then run below commands:
 	# echo 0xc0 > configs/c.1/bmAttributes
 
 	# mkdir functions/mass_storage.1
-	# echo /dev/mmcblk1p1 > functions/mass_storage.1/lun.0/file
+	# dd if=/dev/zero of=/root/g_mass_file bs=512K count=1000
+	# echo /root/g_mass_file > functions/mass_storage.1/lun.0/file
 	# ln -s functions/mass_storage.1 configs/c.1/
 
 	# mkdir functions/acm.1
@@ -667,6 +668,6 @@ Connect the usb typec port(J17) to PC host, and then run below commands:
 	# echo 20 > functions/ncm.1/qmult
 	# ln -s functions/ncm.1 configs/c.1
 
-	# echo 5b130000.usb3 > UDC
+	# echo 5b130000.usb > UDC
 
 After running above commands, MCIMX8QM-MEK board works as a usb mass storage device.
