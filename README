@@ -567,7 +567,6 @@ To burn uboot and WIC images to SD card, user need to execute two steps:
 
 2) Prepare the bootloader image imx-boot-nxp-imx8-${machine}.bin-flash
 
-
 BB_NO_NETWORK = '0'
 ACCEPT_FSL_EULA = "1"
 LICENSE_FLAGS_ACCEPTED:append = "commercial"
@@ -575,7 +574,6 @@ LICENSE_FLAGS_ACCEPTED:append = "commercial"
 CUSTOMER_BUILD_BOOTLOADER = "1"
 BSP_NXP_DERIVED:append:nxp-imx8=" nxp-imx8"
 
-MACHINEOVERRIDES:prepend:nxp-imx8 = "mx8:mx8m:mx8qm:mx8mq:mx8-nxp-bsp:imx-nxp-sdk:use-nxp-bsp:mx8mq-nxp-bsp:mx8qm-nxp-bsp:imxvulkan:mx8-generic-bsp:mx8qm-generic-bsp:"
 IMAGE_INSTALL:append = " imx-boot"
 
 PREFERRED_PROVIDER_virtual/bootloader:mx8 = "u-boot-imx"
@@ -583,6 +581,18 @@ CUSTOMER_RECIPES:fsl-bsp-release += 'u-boot-imx'
 CUSTOMER_RECIPES:fsl-bsp-release += 'imx-atf'
 CUSTOMER_RECIPES:fsl-bsp-release += 'imx-boot'
 CUSTOMER_RECIPES:fsl-bsp-release += 'imx-mkimage'
+
+IMX_EXTRA_FIRMWARE:mx8-generic-bsp = "firmware-imx-8 imx-sc-firmware imx-seco"
+CUSTOMER_RECIPES:fsl-bsp-release += 'firmware-imx-8'
+CUSTOMER_RECIPES:freescale-layer += 'imx-sc-firmware'
+CUSTOMER_RECIPES:freescale-layer += 'imx-seco'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-m4-demos'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-boot'
+PREFERRED_VERSION_imx-m4-demos:mx8 = "2.9.0"
+
+If board is imx8qmmek, Please copy the following steps into local.conf:
+
+MACHINEOVERRIDES:prepend:nxp-imx8 = "mx8:mx8m:mx8qm:mx8mq:mx8-nxp-bsp:imx-nxp-sdk:use-nxp-bsp:mx8mq-nxp-bsp:mx8qm-nxp-bsp:imxvulkan:mx8-generic-bsp:mx8qm-generic-bsp:"
 
 UBOOT_CONFIG ??= "imx8qmmek"
 UBOOT_CONFIG[imx8qmmek] = "imx8qm_mek_defconfig,sdcard"
@@ -614,14 +624,41 @@ IMXBOOT_TARGETS = \
      "${@bb.utils.contains('UBOOT_CONFIG', 'imx8qmmek', '${IMXBOOT_TARGETS_SD}', \
                                                         '${IMXBOOT_TARGETS_FSPI}', d)}"
 
-4) bitbake imx-boot and the imx-boot-nxp-imx8-${machine}.bin-flash can be found in build-wayland/tmp/deploy/images/<$machine>/,
-   and then use the command as below to burn it to SD card:
+If board is imx8mqevk, Please copy the following steps into local.conf:
 
-For MCIMX8QM-MEK board:
+MACHINEOVERRIDES:prepend:nxp-imx8 = "mx8:mx8m:mx8qm:mx8mq:mx8-nxp-bsp:imx-nxp-sdk:use-nxp-bsp:mx8mq-nxp-bsp:mx8qm-nxp-bsp:imxvulkan:mx8-generic-bsp:mx8qm-generic-bsp:mx8m-generic-bsp:"
 
-	# dd if=imx-boot-nxp-imx8-<$machine>.bin-flash of=/dev/your_sd_dev bs=1k seek=<x> conv=fsync
+CUSTOMER_RECIPES:fsl-bsp-release += 'firmware-imx-8m'
 
-Note: $machine = "imx8qmmek", seek = "32"
+UBOOT_SUFFIX = "bin"
+
+UBOOT_CONFIG ??= "imx8mqevk"
+UBOOT_CONFIG[imx8mqevk]       = "imx8mq_evk_config,sdcard"
+
+SPL_BINARY = "spl/u-boot-spl.bin"
+
+# Set DDR FIRMWARE
+DDR_FIRMWARE_NAME = " \
+    lpddr4_pmu_train_1d_imem.bin \
+    lpddr4_pmu_train_1d_dmem.bin \
+    lpddr4_pmu_train_2d_imem.bin \
+    lpddr4_pmu_train_2d_dmem.bin \
+"
+
+UBOOT_DTB_NAME = "imx8mq-evk.dtb"
+
+ATF_PLATFORM = "imx8mq"
+
+IMXBOOT_TARGETS = "flash_evk flash_evk_no_hdmi flash_dp_evk"
+IMX_BOOT_SOC_TARGET = "iMX8M"
+
+UBOOT_EXTLINUX:use-mainline-bsp = "1"
+
+LOADADDR = ""
+UBOOT_MAKE_TARGET = ""
+IMX_BOOT_SEEK = "33"
+
+OPTEE_BIN_EXT = "8mq"
 
 4) Set environment variable for booting system
 

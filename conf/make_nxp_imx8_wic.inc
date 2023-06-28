@@ -6,7 +6,11 @@ nxp_imx8_wic() {
             cd "${DEPLOY_DIR_IMAGE}"
 
             cp ${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.wic ${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}-${config}.wic
-            dd if=imx-boot-nxp-imx8-${UBOOT_CONFIG}.bin-flash of=${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}-${config}.wic bs=512 seek=64 conv=fsync,notrunc
+            if [ ${UBOOT_CONFIG} = "imx8qmmek"  ]; then
+                dd if=imx-boot-nxp-imx8-${UBOOT_CONFIG}.bin-flash of=${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}-${config}.wic bs=512 seek=64 conv=fsync,notrunc
+            elif [ ${UBOOT_CONFIG} = "imx8mqevk" ]; then
+                dd if=imx-boot-nxp-imx8-${UBOOT_CONFIG}.bin-flash_evk of=${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}-${config}.wic bs=512 seek=66 conv=fsync,notrunc
+            fi
 
             cd "${IMGDEPLOYDIR}"
             bmaptool create "${IMAGE_LINK_NAME}-${config}.wic" -o "${IMAGE_LINK_NAME}-${config}.wic.bmap"
