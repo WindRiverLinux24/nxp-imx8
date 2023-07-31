@@ -265,7 +265,7 @@ BSP_NXP_DERIVED:append:nxp-imx8  = " nxp-imx8"
 DISTROOVERRIDES:nxp-imx8 = "fsl fslc"
 
 MACHINEOVERRIDES:prepend:nxp-imx8 = "mx8:mx8m:mx8qm:mx8mq:imxdrm:imxdpu:imxdcss:imxvpuhantro:imxgpu:imxgpu2d:imxgpu3d:mx8-nxp-bsp:imx-nxp-sdk:use-nxp-bsp:mx8mq-nxp-bsp:mx8qm-nxp-bsp:imxvulkan:mx8-generic-bsp:mx8qm-generic-bsp:"
-IMAGE_INSTALL:append = " assimp devil imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos weston weston-init imx-dpu-g2d imx-vpu-hantro imx-gpu-apitrace weston-xwayland imx-g2d-samples"
+IMAGE_INSTALL:append = " assimp devil imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos weston weston-init imx-dpu-g2d imx-vpu-hantro imx-gpu-apitrace weston-xwayland imx-g2d-samples gstreamer1.0 gstreamer1.0-plugins-base  gstreamer1.0-plugins-good tensorflow-lite nnstreamer imx-gst1.0-plugin gstreamer1.0-plugins-bad packagegroup-imx-ml onnxruntime tensorflow-lite-vx-delegate gstreamer1.0-plugins-ugly gstreamer1.0-libav"
 PREFERRED_PROVIDER_virtual/egl:imxgpu        ?= "imx-gpu-viv"
 PREFERRED_PROVIDER_virtual/libgl:imxgpu3d    ?= "imx-gpu-viv"
 PREFERRED_PROVIDER_virtual/libgles1:imxgpu3d ?= "imx-gpu-viv"
@@ -285,6 +285,8 @@ PREFERRED_VERSION_weston:mx8 = "11.0.1.imx"
 PREFERRED_VERSION_ffmpeg:mx8 = "4.4.1"
 PREFERRED_VERSION_opencv:mx8 = "4.6.0.imx"
 
+PREFERRED_VERSION_xwayland:mx8                  = "23.1.1.imx"
+
 DISTRO_FEATURES:remove = "directfb "
 DISTRO_FEATURES:append = " wayland pam"
 
@@ -298,7 +300,6 @@ WARN_TO_ERROR_QA = "already-stripped compile-host-path install-host-path \
                     useless-rpaths"
 WARN_QA:remove = "${WARN_TO_ERROR_QA}"
 ERROR_QA:append = " ${WARN_TO_ERROR_QA}"
-
 
 CUSTOMER_RECIPES:openembedded-layer += 'freeglut'
 CUSTOMER_RECIPES:fsl-bsp-release += 'imx-gpu-viv'
@@ -346,6 +347,7 @@ CUSTOMER_RECIPES:openembedded-layer += 'libxaw'
 CUSTOMER_RECIPES:openembedded-layer += 'freerdp'
 CUSTOMER_RECIPES:openembedded-layer += 'xterm'
 CUSTOMER_RECIPES:meta-python += 'python3-wheel'
+CUSTOMER_RECIPES:meta-python += 'python3-pip'
 CUSTOMER_RECIPES:meta-python += 'python3-pybind11'
 CUSTOMER_RECIPES:meta-python += 'python3-h5py'
 CUSTOMER_RECIPES:meta-python += 'python3-keras-applications'
@@ -368,6 +370,7 @@ CUSTOMER_RECIPES:openembedded-layer += 'tesseract-lang'
 CUSTOMER_RECIPES:openembedded-layer += 'ade'
 CUSTOMER_RECIPES:openembedded-layer += 'v4l-utils'
 CUSTOMER_RECIPES:openembedded-layer += 'tbb'
+CUSTOMER_RECIPES:multimedia-layer += 'gst-shark'
 CUSTOMER_RECIPES:fsl-sdk-release += 'libxdg-shell'
 CUSTOMER_RECIPES:freescale-layer += 'mxsldr'
 CUSTOMER_RECIPES:freescale-layer += 'xwayland'
@@ -385,14 +388,13 @@ IMAGE_INSTALL:append = " gstreamer1.0 gstreamer1.0-plugins-base  gstreamer1.0-pl
 
 <2> Add PREFERRED_VERSION of gstreamer1.0:
 
-PREFERRED_VERSION_gstreamer1.0-plugins-base:mx8 = "1.20.0.imx"
-PREFERRED_VERSION_gstreamer1.0-plugins-bad:mx8  = "1.20.0.imx"
-PREFERRED_VERSION_gstreamer1.0-plugins-good:mx8 = "1.20.0.imx"
-PREFERRED_VERSION_gstreamer1.0-plugins-good-qt:mx8 = "1.20.0.imx"
-PREFERRED_VERSION_gstreamer1.0-plugins-ugly:mx8 = "1.20.3"
-PREFERRED_VERSION_gstreamer1.0:mx8              = "1.20.0.imx"
-PREFERRED_VERSION_gstreamer1.0-libav:mx8        = "1.20.3"
-PREFERRED_VERSION_gstreamer1.0-rtsp-server:mx8  = "1.20.3"
+PREFERRED_VERSION_gstreamer1.0-plugins-base:mx8 = "1.22.0.imx"
+PREFERRED_VERSION_gstreamer1.0-plugins-bad:mx8  = "1.22.0.imx"
+PREFERRED_VERSION_gstreamer1.0-plugins-good:mx8 = "1.22.0.imx"
+PREFERRED_VERSION_gstreamer1.0-plugins-good-qt:mx8 = "1.22.0.imx"
+PREFERRED_VERSION_gstreamer1.0-plugins-ugly:mx8 = "1.22.0"
+PREFERRED_VERSION_gstreamer1.0:mx8              = "1.22.0.imx"
+PREFERRED_VERSION_gstreamer1.0-libav:mx8        = "1.22.0"
 
 <3> Append the following packages to CUSTOMER_RECIPES:
 
@@ -404,6 +406,9 @@ CUSTOMER_RECIPES:fsl-bsp-release += 'imx-gst1.0-plugin'
 CUSTOMER_RECIPES:fsl-bsp-release += 'imx-parser'
 CUSTOMER_RECIPES:fsl-bsp-release += 'imx-codec'
 CUSTOMER_RECIPES:fsl-bsp-release += 'imx-vpuwrap'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-dsp'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-dsp-codec-ext'
+CUSTOMER_RECIPES:meta-ml += 'nnstreamer-edge'
 CUSTOMER_RECIPES:fsl-sdk-release += 'tinycompress'
 CUSTOMER_RECIPES:meta-ml += 'packagegroup-imx-ml'
 CUSTOMER_RECIPES:meta-ml += 'onnxruntime'
@@ -411,6 +416,7 @@ CUSTOMER_RECIPES:meta-ml += 'tensorflow-lite-vx-delegate'
 CUSTOMER_RECIPES:meta-ml += 'pytorch'
 CUSTOMER_RECIPES:meta-ml += 'nnshark'
 CUSTOMER_RECIPES:meta-ml += 'torchvision'
+CUSTOMER_RECIPES:meta-ml += 'modelrunner'
 CUSTOMER_RECIPES:meta-ml += 'tvm'
 CUSTOMER_RECIPES:meta-ml += 'deepview-rt'
 CUSTOMER_RECIPES:meta-ml += 'tim-vx'
@@ -420,6 +426,10 @@ CUSTOMER_RECIPES:meta-ml += 'nnstreamer-protobuf'
 CUSTOMER_RECIPES:fsl-sdk-release += 'libgpuperfcnt'
 CUSTOMER_RECIPES:meta-python += 'python3-future'
 CUSTOMER_RECIPES:meta-python += 'python3-decorator'
+CUSTOMER_RECIPES:meta-python += 'python3-mpmath'
+CUSTOMER_RECIPES:meta-python += 'python3-sympy'
+CUSTOMER_RECIPES:meta-python += 'python3-coloredlogs'
+CUSTOMER_RECIPES:meta-python += 'python3-humanfriendly'
 
 <4> Use the command as below to build a xwayland image:
 
