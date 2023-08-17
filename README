@@ -592,8 +592,8 @@ CUSTOMER_RECIPES:fsl-bsp-release += 'imx-atf'
 CUSTOMER_RECIPES:fsl-bsp-release += 'imx-boot'
 CUSTOMER_RECIPES:fsl-bsp-release += 'imx-mkimage'
 
-IMX_EXTRA_FIRMWARE:mx8-generic-bsp = "firmware-imx-8 imx-sc-firmware imx-seco"
-CUSTOMER_RECIPES:fsl-bsp-release += 'firmware-imx-8'
+IMX_EXTRA_FIRMWARE:mx8-generic-bsp = "imx-boot-firmware-files imx-sc-firmware imx-seco"
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-boot-firmware-files'
 CUSTOMER_RECIPES:freescale-layer += 'imx-sc-firmware'
 CUSTOMER_RECIPES:freescale-layer += 'imx-seco'
 CUSTOMER_RECIPES:fsl-bsp-release += 'imx-m4-demos'
