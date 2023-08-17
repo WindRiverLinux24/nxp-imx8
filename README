@@ -616,14 +616,6 @@ ATF_PLATFORM = "imx8qm"
 
 IMX_BOOT_SOC_TARGET = "iMX8QM"
 
-IMX_EXTRA_FIRMWARE:mx8-generic-bsp = "firmware-imx-8 imx-sc-firmware imx-seco"
-CUSTOMER_RECIPES:fsl-bsp-release += 'firmware-imx-8'
-CUSTOMER_RECIPES:freescale-layer += 'imx-sc-firmware'
-CUSTOMER_RECIPES:freescale-layer += 'imx-seco'
-CUSTOMER_RECIPES:fsl-bsp-release += 'imx-m4-demos'
-CUSTOMER_RECIPES:fsl-bsp-release += 'imx-boot'
-PREFERRED_VERSION_imx-m4-demos:mx8 = "2.9.0"
-
 IMXBOOT_TARGETS_SD = \
      "${@bb.utils.contains('MACHINE_FEATURES', 'optee', 'flash_spl', \
                                                         'flash flash_ca72', d)}"
