@@ -5,15 +5,18 @@ nxp_imx8_wic() {
         for config in ${UBOOT_CONFIG}; do
             cd "${DEPLOY_DIR_IMAGE}"
 
-            cp ${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.wic ${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}-${config}.wic
+            ofname=${IMAGE_LINK_NAME}-${config}${IMAGE_VERSION_SUFFIX}.rootfs.wic
+            cp ${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.wic ${IMGDEPLOYDIR}/$ofname
             if [ ${UBOOT_CONFIG} = "imx8qmmek"  ]; then
-                dd if=imx-boot-nxp-imx8-${UBOOT_CONFIG}.bin-flash of=${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}-${config}.wic bs=512 seek=64 conv=fsync,notrunc
+                dd if=imx-boot-nxp-imx8-${UBOOT_CONFIG}.bin-flash of=${IMGDEPLOYDIR}/$ofname bs=512 seek=64 conv=fsync,notrunc
             elif [ ${UBOOT_CONFIG} = "imx8mqevk" ]; then
-                dd if=imx-boot-nxp-imx8-${UBOOT_CONFIG}.bin-flash_evk of=${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}-${config}.wic bs=512 seek=66 conv=fsync,notrunc
+                dd if=imx-boot-nxp-imx8-${UBOOT_CONFIG}.bin-flash_evk of=${IMGDEPLOYDIR}/$ofname bs=512 seek=66 conv=fsync,notrunc
             fi
 
             cd "${IMGDEPLOYDIR}"
-            bmaptool create "${IMAGE_LINK_NAME}-${config}.wic" -o "${IMAGE_LINK_NAME}-${config}.wic.bmap"
+            bmaptool create "$ofname" -o "${ofname}.bmap"
+            linkname="${IMAGE_LINK_NAME}-${config}.wic"
+            ln -sf $ofname $linkname
         done
 	# Remove the default wic file
         rm -rf "${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.wic"
