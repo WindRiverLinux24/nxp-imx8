@@ -573,13 +573,38 @@ Then user can write the output image to a SD card.
 7.1 Burn images to SD card
 --------------------------
 
-To burn uboot and WIC images to SD card, user need to execute two steps:
-
 1) Burn WIC image
 
 # dd if=wrlinux-image-<std-sato/std>-nxp-imx8.wic of=/dev/your_sd_dev
 
-2) Prepare the bootloader image imx-boot-nxp-imx8-${machine}.bin-flash
+2) Set environment variable for booting system
+
+FOR MCIMX8QM-MEK board:
+
+u-boot=>setenv fdt_file imx8qm-mek.dtb
+u-boot=>setenv bootfile Image
+u-boot=>setenv bootargs "root=/dev/mmcblk1p2 rootwait rw rootdelay=5 console=${console},${baudrate} earlycon ip=dhcp"
+u-boot=>setenv bootcmd "fatload mmc 1:1 $loadaddr $bootfile; fatload mmc 1:1 $fdt_addr $fdt_file; booti $loadaddr - $fdt_addr";
+u-boot=>run bootcmd
+
+For MCIMX8M-EVK board:
+
+u-boot=>setenv fdt_file imx8mq-evk-b3.dtb
+u-boot=>setenv bootfile Image
+u-boot=>setenv bootargs 'root=/dev/mmcblk1p2 rw rootdelay=5 console=ttymxc0,115200n8 ip=dhcp'
+u-boot=>setenv bootcmd 'fatload mmc 1:1 $loadaddr $bootfile; fatload mmc 1:1 $fdt_addr $fdt_file; booti $loadaddr - $fdt_addr';
+u-boot=>run bootcmd
+
+8. Build Bootloader
+===================
+
+Because of license limitation, the NXP imx8 bootloader is not supported on WRLinux product.
+But the necessary recipe files of building bootloader have been integrated into WRLinux product. In this way,
+the customers can build bootloader for NXP imx8 platform based on WRLinux product by themselves.
+To build bootloader image for NXP imx8 platform, it only needs to add below contents in local.conf file,
+and then build WRLinux image as usual.
+
+Prepare the bootloader image imx-boot-nxp-imx8-${machine}.bin-flash
 
 BB_NO_NETWORK = '0'
 ACCEPT_FSL_EULA = "1"
@@ -666,30 +691,12 @@ IMX_BOOT_SEEK = "33"
 
 OPTEE_BIN_EXT = "8mq"
 
-4) Set environment variable for booting system
-
-FOR MCIMX8QM-MEK board:
-
-u-boot=>setenv fdt_file imx8qm-mek.dtb
-u-boot=>setenv bootfile Image
-u-boot=>setenv bootargs "root=/dev/mmcblk1p2 rootwait rw rootdelay=5 console=${console},${baudrate} earlycon ip=dhcp"
-u-boot=>setenv bootcmd "fatload mmc 1:1 $loadaddr $bootfile; fatload mmc 1:1 $fdt_addr $fdt_file; booti $loadaddr - $fdt_addr";
-u-boot=>run bootcmd
-
-For MCIMX8M-EVK board:
-
-u-boot=>setenv fdt_file imx8mq-evk-b3.dtb
-u-boot=>setenv bootfile Image
-u-boot=>setenv bootargs 'root=/dev/mmcblk1p2 rw rootdelay=5 console=ttymxc0,115200n8 ip=dhcp'
-u-boot=>setenv bootcmd 'fatload mmc 1:1 $loadaddr $bootfile; fatload mmc 1:1 $fdt_addr $fdt_file; booti $loadaddr - $fdt_addr';
-u-boot=>run bootcmd
-
-8. USB OTG
+9. USB OTG
 ==========
 
 This section only describs how to verify usb otg feature on MCIMX8QM-MEK board.
 
-8.1 Host Mode
+9.1 Host Mode
 -------------
 
 Connect usb disk with usb typec port(J17) on MCIMX8QM-MEK board.
@@ -700,7 +707,7 @@ Usb disk is detected, and then confirm the speed with command as below:
 	    |__ Port 1: Dev 2, If 0, Class=Mass Storage, Driver=usb-storage, 5000M
 	/:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=/1p, 480M
 
-8.2 Device Mode
+9.2 Device Mode
 ---------------
 
 Connect the usb typec port(J17) to PC host, and then run below commands:
