@@ -766,3 +766,18 @@ Connect the usb typec port(J17) to PC host, and then run below commands:
 	# echo 5b130000.usb > UDC
 
 After running above commands, MCIMX8QM-MEK board works as a usb mass storage device.
+
+10 Optee-test
+-------------
+
+Because optee os is integrated into the bootloader image, and due to license reasons,
+we don't support building the bootloader by default. Therefore, before using optee
+features, you need to refer to section 8 ("Build Bootloader") to compile an WIC image
+with the bootloader.
+
+1) Burn WIC image
+# bitbake wrlinux-image-std
+# dd if=wrlinux-image-<std-sato/std>-nxp-imx8.wic of=/dev/your_sd_dev
+
+2) run optee testing sample 
+# xtest
