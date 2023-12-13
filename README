@@ -589,7 +589,7 @@ u-boot=>run bootcmd
 
 For MCIMX8M-EVK board:
 
-u-boot=>setenv fdt_file imx8mq-evk-b3.dtb
+u-boot=>setenv fdt_file imx8mq-evk.dtb
 u-boot=>setenv bootfile Image
 u-boot=>setenv bootargs 'root=/dev/mmcblk1p2 rw rootdelay=5 console=ttymxc0,115200n8 ip=dhcp'
 u-boot=>setenv bootcmd 'fatload mmc 1:1 $loadaddr $bootfile; fatload mmc 1:1 $fdt_addr $fdt_file; booti $loadaddr - $fdt_addr';
