@@ -669,7 +669,7 @@ MACHINEOVERRIDES:prepend = "mx8m:mx8mq:mx8mq-nxp-bsp:mx8m-generic-bsp:"
 IMX_EXTRA_FIRMWARE:mx8-generic-bsp = "imx-boot-firmware-files"
 CUSTOMER_RECIPES:fsl-bsp-release += 'imx-boot-firmware-files'
 CUSTOMER_RECIPES:fsl-bsp-release += 'imx-m4-demos'
-CUSTMER_RECIPES:fsl-bsp-release += 'imx-boot'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-boot'
 
 CUSTOMER_RECIPES:fsl-bsp-release += 'firmware-imx-8m'
 
