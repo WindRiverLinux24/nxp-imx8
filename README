@@ -1,4 +1,4 @@
-        MCIMX8QM-MEK/MCIMX8M-EVK Board Support Package
+        MCIMX8QM-MEK/MCIMX8MQ-EVK/MCIMX8MP-EVK Board Support Package
 
 1. About this document
 ======================
@@ -113,7 +113,7 @@ For MCIMX8QM-MEK board:
 	If you want to connect OV5640 MIPI camera to MIPI CSI1(J5) or CSI0(J10):
 	# tftp $fdt_addr imx8qm-mek-ov5640.dtb
 
-For MCIMX8M-EVK board:
+For MCIMX8MQ-EVK board:
 	If you want to use HDMI connector (J1001) as output:
 	# tftp $fdt_addr imx8mq-evk.dtb
 
@@ -122,6 +122,22 @@ For MCIMX8M-EVK board:
 
 	If you want to use MX8-DSI-OLED1 on J1501 as output:
 	# tftp $fdt_addr imx8mq-evk-dcss-rm67191.dtb
+
+For MCIMX8MP-EVK board:
+	If you want to connect HDMI/LVDS-HDMI/MIPI-DSI-HDMI/MIPI-CSI ov5640 monitor:
+	tftp $fdt_addr imx8mp-evk.dtb
+
+	If you want to use MX8-DSI-OLED1:
+
+	tftp $fdt_addr imx8mp-evk-rm67191.dtb
+
+	If you want to use ips module:
+
+	tftp $fdt_addr imx8mp-evk-basler-ov5640.dtb
+
+	If you want to use M7 core:
+
+	tftp $fdt_addr imx8mp-evk-rpmsg.dtb
 
 4.1.4 Download and load firmware
 --------------------------------
@@ -147,8 +163,10 @@ For MCIMX8QM-MEK board:
 
 Note: for MCIMX8QM-MEK board, $kernel_addr="0x8a0000000", $fdt_addr="0x8d0000000"
 	$console_port = "ttyLP0,115200"
-     for MCIMX8M-EVK board, $kernel_addr="0x40480000", $fdt_addr="0x44000000"
+     for MCIMX8MQ-EVK board, $kernel_addr="0x40480000", $fdt_addr="0x44000000"
         $console_port = "ttymxc0,115200"
+     for MCIMX8MP-EVK board, $kernel_addr="0x40400000", $fdt_addr="0x43000000"
+        $console_port = "ttymxc1,115200"
       The kernel image will become larger if more kernel code is compiled into kernel image.
       So, please increase "fdt_addr" value by putting dtb file at higher address if you encounter with kernel booting failed.
 
@@ -199,8 +217,10 @@ The debug UART can be set as a wakeup source with:
 
 For MCIMX8QM-MEK board:
 	# echo enabled > /sys/class/tty/ttyLP0/power/wakeup
-For MCIMX8M-EVK board:
+For MCIMX8MQ-EVK board:
 	# echo enabled > /sys/class/tty/ttymxc0/power/wakeup
+For MCIMX8MP-EVK board:
+	# echo enabled > /sys/class/tty/ttymxc1/power/wakeup
 
 	# echo mem > /sys/power/state
 
@@ -450,8 +470,36 @@ root:~# export LABELS=$(pwd)/coco_labels.txt
 
 gst-launch-1.0 --no-position v4l2src device=/dev/${capture device} ! video/x-raw,width=640,height=480,framerate=30/1 ! tee name=t t. ! queue max-size-buffers=2 leaky=2 ! imxvideoconvert_g2d ! video/x-raw,width=300,height=300,format=RGBA ! videoconvert ! video/x-raw,format=RGB ! tensor_converter ! tensor_filter framework=tensorflow-lite accelerator=true:gpu model=${pwd}/ssd_mobilenet_v2_coco_quant_postprocess.tflite custom=Delegate:NNAPI ! tensor_decoder mode=bounding_boxes option1=tf-ssd option2=${pwd}/coco_labels.txt option3=0:1:2:3,50 option4=640:480 option5=300:300 ! mix. t. ! queue max-size-buffers=2 ! imxcompositor_g2d name=mix sink_0::zorder=2 sink_1::zorder=1 ! waylandsink
 
+5.6 NPU(only MX8MP)
+-------------------
 
-5.6 thermal
+cd /usr/bin/tensorflow-lite-2.10.0/examples#
+
+USE_GPU_INFERENCE=0 ./label_image -m mobilenet_v1_1.0_224_quant.tflite -i grace_hopper.bmp -l labels.txt --external_delegate_path=/usr/lib64/libvx_delegate.so 
+
+You can get following messge:
+
+INFO: Loaded model mobilenet_v1_1.0_224_quant.tflite
+INFO: resolved reporter
+Vx delegate: allowed_cache_mode set to 0.
+Vx delegate: device num set to 0.
+Vx delegate: allowed_builtin_code set to 0.
+Vx delegate: error_during_init set to 0.
+Vx delegate: error_during_prepare set to 0.
+Vx delegate: error_during_invoke set to 0.
+EXTERNAL delegate created.
+INFO: Applied EXTERNAL delegate.
+W [HandleLayoutInfer:281]Op 162: default layout inference pass.
+INFO: invoked
+INFO: average time: 3.052 ms
+INFO: 0.768627: 653 military uniform
+INFO: 0.105882: 907 Windsor tie
+INFO: 0.0196078: 458 bow tie
+INFO: 0.0117647: 466 bulletproof vest
+INFO: 0.00784314: 835 suit
+
+
+5.7 thermal
 -----------
 
 	To check current CPU temperature
@@ -467,7 +515,7 @@ gst-launch-1.0 --no-position v4l2src device=/dev/${capture device} ! video/x-raw
 	# cat trip_point_1_temp
 	95000
 
-5.7 PCIe
+5.8 PCIe
 --------
 
 All the imx8 platforms support PCIe feature.
@@ -503,7 +551,7 @@ Execute the following commands to validate the WiFi cards:
 
 NOTE: the PCIe driver does not support hotplug and suspend/resume.
 
-5.8 FLEXCAN (MCIMX8QXP-MEK & MCIMX8QM-MEK)
+5.9 FLEXCAN (MCIMX8QXP-MEK & MCIMX8QM-MEK)
 ---------------------------
 
 Detail verification commands as below:
@@ -516,6 +564,17 @@ Detail verification commands as below:
         # ip -d -s link show can1
 
 If can0 dumps data from can1, FLEXCAN feature works fine.
+
+5.10 running M7 core
+====================
+
+Add bootargs 'mcore_clk clk-imx8mp.mcore_booted'
+
+echo imx8mp_m7_TCM_rpmsg_lite_str_echo_rtos.elf > /sys/devices/platform/imx8mp-cm7/remoteproc/remoteproc0/firmware
+
+echo start > /sys/devices/platform/imx8mp-cm7/remoteproc/remoteproc0/state
+
+cat /sys/devices/platform/imx8mp-cm7/remoteproc/remoteproc0/state 
 
 6. kexec/kdump
 ==============
@@ -540,7 +599,7 @@ argument "crashkernel" to the boot kernel as follow:
 For MCIMX8QM-MEK board:
 	crashkernel=512M
 
-+For MCIMX8M-EVK board:
++For MCIMX8MQ-EVK board:
 	crashkernel=512M@3000M
 
 For the dump-capture kernel:
@@ -587,7 +646,7 @@ u-boot=>setenv bootargs "root=/dev/mmcblk1p2 rootwait rw rootdelay=5 console=${c
 u-boot=>setenv bootcmd "fatload mmc 1:1 $loadaddr $bootfile; fatload mmc 1:1 $fdt_addr $fdt_file; booti $loadaddr - $fdt_addr";
 u-boot=>run bootcmd
 
-For MCIMX8M-EVK board:
+For MCIMX8MQ-EVK board:
 
 u-boot=>setenv fdt_file imx8mq-evk.dtb
 u-boot=>setenv bootfile Image
