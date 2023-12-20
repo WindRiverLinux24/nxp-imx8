@@ -576,6 +576,17 @@ echo start > /sys/devices/platform/imx8mp-cm7/remoteproc/remoteproc0/state
 
 cat /sys/devices/platform/imx8mp-cm7/remoteproc/remoteproc0/state 
 
+5.7 CAAM
+--------
+
+Running OpenSSL benchmarking tests with AF_ALG engine:
+
+root@nxp-imx7:~# modprobe algif_hash
+root@nxp-imx7:~# modprobe algif_skcipher
+root@nxp-imx7:~# modprobe algif_rng
+root@nxp-imx7:~# modprobe algif_aead
+root@nxp-imx7:~# openssl speed -engine afalg -multi 8 -elapsed -evp aes-128-cbc
+
 6. kexec/kdump
 ==============
 
