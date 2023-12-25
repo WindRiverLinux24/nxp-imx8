@@ -6,4 +6,5 @@ IMAGE_INSTALL += "mtdev"
 IMAGE_INSTALL += "linux-firmware-imx-sdma-imx7d"
 IMAGE_INSTALL += "ptpd"
 IMAGE_INSTALL += "optee-client optee-os optee-test"
+IMAGE_INSTALL += "kernel-module-isp-vvcam"
 require conf/make_nxp_imx8_wic.inc
