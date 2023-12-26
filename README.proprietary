@@ -1,0 +1,231 @@
+1.0 GPU
+-------
+Because of the licesen issue, nxp-imx8 layer doesn't integrate imx8's GPU(GC7000Lite) or VPU
+hardware acceleration related packages into WRlinux product. So, if customer wants
+to run hardware graphic feature. Detail steps as below:
+
+<1> You must change the configuration to allow downloading of packages from the
+internet. Change BB_NO_NETWORK ?= "1" to BB_NO_NETWORK ?= "0" in the file
+${buildprj}/conf/local.conf.
+
+<2> echo the following content to local.conf:
+
+ACCEPT_FSL_EULA = "1"
+LICENSE_FLAGS_ACCEPTED:append = " commercial"
+
+BSP_NXP_DERIVED:append:nxp-imx8  = " nxp-imx8"
+DISTROOVERRIDES:nxp-imx8 = "fsl fslc"
+
+MACHINEOVERRIDES:prepend:nxp-imx8 = "mx8:mx8m:mx8qm:mx8mq:imxdrm:imxdpu:imxdcss:imxvpuhantro:imxgpu:imxgpu2d:imxgpu3d:mx8-nxp-bsp:imx-nxp-sdk:use-nxp-bsp:mx8mq-nxp-bsp:mx8qm-nxp-bsp:imxvulkan:mx8-generic-bsp:mx8qm-generic-bsp:"
+IMAGE_INSTALL:append = " assimp devil imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos weston weston-init imx-dpu-g2d imx-vpu-hantro imx-gpu-apitrace weston-xwayland imx-g2d-samples gstreamer1.0 gstreamer1.0-plugins-base  gstreamer1.0-plugins-good imx-gst1.0-plugin gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-plugins-imx"
+PREFERRED_PROVIDER_virtual/egl:imxgpu        ?= "imx-gpu-viv"
+PREFERRED_PROVIDER_virtual/libgl:imxgpu3d    ?= "imx-gpu-viv"
+PREFERRED_PROVIDER_virtual/libgles1:imxgpu3d ?= "imx-gpu-viv"
+PREFERRED_PROVIDER_virtual/libgles2:imxgpu3d ?= "imx-gpu-viv"
+PREFERRED_PROVIDER_virtual/libgles3:imxgpu3d ?= "imx-gpu-viv"
+PREFERRED_PROVIDER_virtual/libg2d            ?= "imx-gpu-g2d"
+PREFERRED_PROVIDER_virtual/libg2d:imxdpu     ?= "imx-dpu-g2d"
+PREFERRED_PROVIDER_virtual/opencl-icd:imxgpu ?= "imx-gpu-viv"
+PREFERRED_PROVIDER_opencl-clhpp:imxgpu       ?= "imx-gpu-viv"
+PREFERRED_PROVIDER_opencl-headers:imxgpu     ?= "imx-gpu-viv"
+PREFERRED_PROVIDER_opencl-icd-loader:imxgpu  ?= "imx-gpu-viv"
+PREFERRED_VERSION_vulkan-headers:mx8  = "1.2.182.0"
+PREFERRED_VERSION_vulkan-loader:mx8 = "1.2.182.0"
+PREFERRED_VERSION_libdrm:mx8 = "2.4.114.imx"
+PREFERRED_VERSION_wayland-protocols:mx8 = "1.31.imx"
+PREFERRED_VERSION_weston:mx8 = "11.0.1.imx"
+PREFERRED_VERSION_ffmpeg:mx8 = "4.4.1"
+PREFERRED_VERSION_opencv:mx8 = "4.6.0.imx"
+
+PREFERRED_VERSION_gstreamer1.0-plugins-base:mx8 = "1.22.0.imx"
+PREFERRED_VERSION_gstreamer1.0-plugins-bad:mx8  = "1.22.0.imx"
+PREFERRED_VERSION_gstreamer1.0-plugins-good:mx8 = "1.22.0.imx"
+PREFERRED_VERSION_gstreamer1.0-plugins-good-qt:mx8 = "1.22.0.imx"
+PREFERRED_VERSION_gstreamer1.0-plugins-ugly:mx8 = "1.22.0"
+PREFERRED_VERSION_gstreamer1.0:mx8              = "1.22.0.imx"
+PREFERRED_VERSION_gstreamer1.0-libav:mx8        = "1.22.0"
+
+PREFERRED_VERSION_xwayland:mx8                  = "23.1.1.imx"
+
+DISTRO_FEATURES:remove = "directfb "
+DISTRO_FEATURES:append = " wayland pam"
+
+MACHINE_HAS_VIVANTE_KERNEL_DRIVER_SUPPORT = "1"
+IMAGE_FEATURES:remove = "x11-base  x11-sato"
+IMAGE_FEATURES:append = " weston"
+
+# QA check settings - a little stricter than the OE-Core defaults
+WARN_TO_ERROR_QA = "already-stripped compile-host-path install-host-path \
+                    installed-vs-shipped ldflags pn-overrides rpaths staticdev \
+                    useless-rpaths"
+WARN_QA:remove = "${WARN_TO_ERROR_QA}"
+ERROR_QA:append = " ${WARN_TO_ERROR_QA}"
+
+CUSTOMER_RECIPES:fsl-bsp-release += 'gstreamer1.0-plugins-base'
+CUSTOMER_RECIPES:fsl-bsp-release += 'gstreamer1.0'
+CUSTOMER_RECIPES:fsl-bsp-release += 'gstreamer1.0-plugins-good'
+CUSTOMER_RECIPES:fsl-bsp-release += 'gstreamer1.0-plugins-bad'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-gst1.0-plugin'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-parser'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-codec'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-vpuwrap'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-dsp'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-dsp-codec-ext'
+CUSTOMER_RECIPES:freescale-layer += 'gstreamer1.0-plugins-imx'
+CUSTOMER_RECIPES:freescale-layer += 'libimxdmabuffer'
+CUSTOMER_RECIPES:freescale-layer += 'libimxvpuapi'
+CUSTOMER_RECIPES:freescale-layer += 'libimxvpuapi2'
+CUSTOMER_RECIPES:freescale-layer += 'tinycompress'
+
+CUSTOMER_RECIPES:openembedded-layer += 'freeglut'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-gpu-viv'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-g2d-samples'
+CUSTOMER_RECIPES:fsl-bsp-release += 'mesa'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-gpu-viv-demos'
+CUSTOMER_RECIPES:fsl-sdk-release += 'imx-gpu-sdk'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-gpu-g2d'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-dpu-g2d'
+CUSTOMER_RECIPES:fsl-bsp-release += "imx-vpu-hantro"
+CUSTOMER_RECIPES:fsl-bsp-release += "imx-vpu-hantro-daemon"
+CUSTOMER_RECIPES:freescale-distro += 'assimp'
+CUSTOMER_RECIPES:freescale-distro += 'devil'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-gpu-apitrace'
+CUSTOMER_RECIPES:fsl-bsp-release += 'systemd-gpuconfig'
+CUSTOMER_RECIPES:fsl-bsp-release += 'fmt'
+CUSTOMER_RECIPES:fsl-bsp-release += 'systemd'
+CUSTOMER_RECIPES:freescale-layer += 'ffmpeg'
+CUSTOMER_RECIPES:freescale-layer += 'opencv'
+CUSTOMER_RECIPES:fsl-bsp-release += 'wayland-protocols'
+CUSTOMER_RECIPES:openembedded-layer += 'ccid'
+CUSTOMER_RECIPES:openembedded-layer += 'pcsc-lite'
+CUSTOMER_RECIPES:openembedded-layer += 'spirv-tools'
+CUSTOMER_RECIPES:freescale-distro += 'glslang'
+CUSTOMER_RECIPES:fsl-bsp-release += 'wayland-protocols'
+CUSTOMER_RECIPES:fsl-bsp-release += 'libdrm'
+CUSTOMER_RECIPES:openembedded-layer += 'nlohmann-json'
+CUSTOMER_RECIPES:openembedded-layer += 'googletest'
+CUSTOMER_RECIPES:openembedded-layer += 'rapidjson'
+CUSTOMER_RECIPES:openembedded-layer += 'glm'
+CUSTOMER_RECIPES:freescale-distro += 'stb'
+CUSTOMER_RECIPES:fsl-sdk-release += 'rapidvulkan'
+CUSTOMER_RECIPES:freescale-distro += 'rapidopencl'
+CUSTOMER_RECIPES:freescale-distro += 'half'
+CUSTOMER_RECIPES:fsl-sdk-release += 'gli'
+CUSTOMER_RECIPES:freescale-distro += 'rapidopenvx'
+CUSTOMER_RECIPES:fsl-sdk-release += 'vulkan-validationlayers'
+CUSTOMER_RECIPES:fsl-bsp-release += 'linux-imx-headers'
+CUSTOMER_RECIPES:freescale-layer += 'vulkan-headers'
+CUSTOMER_RECIPES:freescale-layer += 'vulkan-loader'
+CUSTOMER_RECIPES:openembedded-layer += 'vulkan-tools'
+CUSTOMER_RECIPES:fsl-bsp-release += 'weston-init'
+CUSTOMER_RECIPES:fsl-bsp-release += 'weston'
+CUSTOMER_RECIPES:openembedded-layer += 'libxaw'
+CUSTOMER_RECIPES:openembedded-layer += 'freerdp'
+CUSTOMER_RECIPES:openembedded-layer += 'xterm'
+CUSTOMER_RECIPES:meta-python += 'python3-wheel'
+CUSTOMER_RECIPES:meta-python += 'python3-pip'
+CUSTOMER_RECIPES:meta-python += 'python3-pybind11'
+CUSTOMER_RECIPES:meta-python += 'python3-h5py'
+CUSTOMER_RECIPES:meta-python += 'python3-keras-applications'
+CUSTOMER_RECIPES:meta-python += 'python3-keras-preprocessing'
+CUSTOMER_RECIPES:meta-python += 'python3-pkgconfig'
+CUSTOMER_RECIPES:meta-tensorflow += 'bazel'
+CUSTOMER_RECIPES:meta-tensorflow += 'openjdk-11'
+CUSTOMER_RECIPES:openembedded-layer += 'hdf5'
+CUSTOMER_RECIPES:meta-ml += 'nn-imx'
+CUSTOMER_RECIPES:meta-ml += 'tensorflow-lite-host-tools'
+CUSTOMER_RECIPES:meta-ml += 'tensorflow-protobuf'
+CUSTOMER_RECIPES:meta-ml += 'tensorflow-lite'
+CUSTOMER_RECIPES:meta-ml += 'flatbuffers'
+CUSTOMER_RECIPES:meta-ml += 'nnstreamer'
+CUSTOMER_RECIPES:meta-ml += 'ssat'
+CUSTOMER_RECIPES:openembedded-layer += 'giflib'
+CUSTOMER_RECIPES:openembedded-layer += 'leptonica'
+CUSTOMER_RECIPES:openembedded-layer += 'tesseract'
+CUSTOMER_RECIPES:openembedded-layer += 'tesseract-lang'
+CUSTOMER_RECIPES:openembedded-layer += 'ade'
+CUSTOMER_RECIPES:openembedded-layer += 'v4l-utils'
+CUSTOMER_RECIPES:openembedded-layer += 'tbb'
+CUSTOMER_RECIPES:multimedia-layer += 'gst-shark'
+CUSTOMER_RECIPES:fsl-sdk-release += 'libxdg-shell'
+CUSTOMER_RECIPES:freescale-layer += 'mxsldr'
+CUSTOMER_RECIPES:freescale-layer += 'xwayland'
+
+1.1 machine learning
+--------------------
+
+Add the following steps on the basis of graphic:
+
+<1> Append the following packages to IMAGE_INSTALL:
+
+On the basis of the above graphic steps:
+MACHINEOVERRIDES:prepend:nxp-imx8 = "use-nxp-bsp:"
+IMAGE_INSTALL:append = " gstreamer1.0 gstreamer1.0-plugins-base  gstreamer1.0-plugins-good tensorflow-lite nnstreamer imx-gst1.0-plugin gstreamer1.0-plugins-bad packagegroup-imx-ml onnxruntime tensorflow-lite-vx-delegate gstreamer1.0-rtsp-server gstreamer1.0-plugins-ugly gstreamer1.0-libav"
+
+<2> Append the following packages to CUSTOMER_RECIPES:
+
+CUSTOMER_RECIPES:meta-ml += 'nnstreamer-edge'
+CUSTOMER_RECIPES:fsl-sdk-release += 'tinycompress'
+CUSTOMER_RECIPES:meta-ml += 'packagegroup-imx-ml'
+CUSTOMER_RECIPES:meta-ml += 'onnxruntime'
+CUSTOMER_RECIPES:meta-ml += 'tensorflow-lite-vx-delegate'
+CUSTOMER_RECIPES:meta-ml += 'pytorch'
+CUSTOMER_RECIPES:meta-ml += 'nnshark'
+CUSTOMER_RECIPES:meta-ml += 'torchvision'
+CUSTOMER_RECIPES:meta-ml += 'modelrunner'
+CUSTOMER_RECIPES:meta-ml += 'tvm'
+CUSTOMER_RECIPES:meta-ml += 'deepview-rt'
+CUSTOMER_RECIPES:meta-ml += 'tim-vx'
+CUSTOMER_RECIPES:meta-ml += 'arm-compute-library'
+CUSTOMER_RECIPES:meta-ml += 'deepview-rt-examples'
+CUSTOMER_RECIPES:meta-ml += 'nnstreamer-protobuf'
+CUSTOMER_RECIPES:fsl-sdk-release += 'libgpuperfcnt'
+CUSTOMER_RECIPES:meta-python += 'python3-future'
+CUSTOMER_RECIPES:meta-python += 'python3-decorator'
+CUSTOMER_RECIPES:meta-python += 'python3-mpmath'
+CUSTOMER_RECIPES:meta-python += 'python3-sympy'
+CUSTOMER_RECIPES:meta-python += 'python3-coloredlogs'
+CUSTOMER_RECIPES:meta-python += 'python3-humanfriendly'
+
+<3> Use the command as below to build a xwayland image:
+
+        bitbake wrlinux-image-std-sato
+
+<4> downlaod these packeges below:
+
+root:~# wget https://github.com/google-coral/test_data/raw/master/ssd_mobilenet_v2_coco_quant_postprocess.tflite
+root:~# wget https://github.com/google-coral/test_data/raw/master/coco_labels.txt
+root:~# export MODEL=$(pwd)/ssd_mobilenet_v2_coco_quant_postprocess.tflite
+root:~# export LABELS=$(pwd)/coco_labels.txt
+
+<6> Execute the following command:
+
+gst-launch-1.0 --no-position v4l2src device=/dev/${capture device} ! video/x-raw,width=640,height=480,framerate=30/1 ! tee name=t t. ! queue max-size-buffers=2 leaky=2 ! imxvideoconvert_g2d ! video/x-raw,width=300,height=300,format=RGBA ! videoconvert ! video/x-raw,format=RGB ! tensor_converter ! tensor_filter framework=tensorflow-lite accelerator=true:gpu model=${pwd}/ssd_mobilenet_v2_coco_quant_postprocess.tflite custom=Delegate:NNAPI ! tensor_decoder mode=bounding_boxes option1=tf-ssd option2=${pwd}/coco_labels.txt option3=0:1:2:3,50 option4=640:480 option5=300:300 ! mix. t. ! queue max-size-buffers=2 ! imxcompositor_g2d name=mix sink_0::zorder=2 sink_1::zorder=1 ! waylandsink
+
+1.2 NPU(only MX8MP)
+-------------------
+
+cd /usr/bin/tensorflow-lite-2.10.0/examples#
+
+USE_GPU_INFERENCE=0 ./label_image -m mobilenet_v1_1.0_224_quant.tflite -i grace_hopper.bmp -l labels.txt --external_delegate_path=/usr/lib64/libvx_delegate.so
+
+You can get following messge:
+
+INFO: Loaded model mobilenet_v1_1.0_224_quant.tflite
+INFO: resolved reporter
+Vx delegate: allowed_cache_mode set to 0.
+Vx delegate: device num set to 0.
+Vx delegate: allowed_builtin_code set to 0.
+Vx delegate: error_during_init set to 0.
+Vx delegate: error_during_prepare set to 0.
+Vx delegate: error_during_invoke set to 0.
+EXTERNAL delegate created.
+INFO: Applied EXTERNAL delegate.
+W [HandleLayoutInfer:281]Op 162: default layout inference pass.
+INFO: invoked
+INFO: average time: 3.052 ms
+INFO: 0.768627: 653 military uniform
+INFO: 0.105882: 907 Windsor tie
+INFO: 0.0196078: 458 bow tie
+INFO: 0.0117647: 466 bulletproof vest
+INFO: 0.00784314: 835 suit
