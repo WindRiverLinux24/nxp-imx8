@@ -334,17 +334,6 @@ Detail verification commands as below:
 
 If can0 dumps data from can1, FLEXCAN feature works fine.
 
-5.10 running M7 core
-====================
-
-Add bootargs 'mcore_clk clk-imx8mp.mcore_booted'
-
-echo imx8mp_m7_TCM_rpmsg_lite_str_echo_rtos.elf > /sys/devices/platform/imx8mp-cm7/remoteproc/remoteproc0/firmware
-
-echo start > /sys/devices/platform/imx8mp-cm7/remoteproc/remoteproc0/state
-
-cat /sys/devices/platform/imx8mp-cm7/remoteproc/remoteproc0/state 
-
 5.7 CAAM
 --------
 
