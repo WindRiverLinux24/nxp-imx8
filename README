@@ -287,6 +287,9 @@ Note: For GPU support please refer to the instructions in README.proprietary
 5.8 PCIe
 --------
 
+For imx8mp, pcie is verified using the built-in nxp wifi module.
+Please refer to the wifi part of README.proprietary for verification.
+
 All the imx8 platforms support PCIe feature.
 The PCIe bus is provided through the M.2 connector.
 
