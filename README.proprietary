@@ -290,3 +290,118 @@ Execute the following commands to validate the WiFi cards:
         # iw dev wlan<idx> connect <AP essid>
         # dhclient wlan<idx>
         # ping <AP address> -i wlan<idx> -c 5
+
+2.5 Build Bootloader
+--------------------
+
+Because of license limitation, the NXP imx8 bootloader is not supported on WRLinux product.
+But the necessary recipe files of building bootloader have been integrated into WRLinux product. In this way,
+the customers can build bootloader for NXP imx8 platform based on WRLinux product by themselves.
+To build bootloader image for NXP imx8 platform, it only needs to add below contents in local.conf file,
+and then build WRLinux image as usual.
+
+Prepare the bootloader image imx-boot-nxp-imx8-${machine}.bin-flash
+
+BB_NO_NETWORK = '0'
+ACCEPT_FSL_EULA = "1"
+LICENSE_FLAGS_ACCEPTED:append = "commercial"
+
+CUSTOMER_BUILD_BOOTLOADER = "1"
+BSP_NXP_DERIVED:append=" nxp-imx8"
+
+IMAGE_INSTALL:append = " imx-boot"
+
+PREFERRED_PROVIDER_virtual/bootloader:mx8 = "u-boot-imx"
+CUSTOMER_RECIPES:fsl-bsp-release += 'u-boot-imx'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-atf'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-boot'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-mkimage'
+
+# if board is imx8qm
+
+MACHINEOVERRIDES:prepend = "mx8qm:mx8qm-nxp-bsp:mx8-generic-bsp:mx8qm-generic-bsp:"
+
+IMX_EXTRA_FIRMWARE:mx8-generic-bsp = "imx-boot-firmware-files imx-sc-firmware imx-seco"
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-boot-firmware-files'
+CUSTOMER_RECIPES:freescale-layer += 'imx-sc-firmware'
+CUSTOMER_RECIPES:freescale-layer += 'imx-seco'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-m4-demos'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-boot'
+PREFERRED_VERSION_imx-m4-demos:mx8qm-nxp-bsp = "2.9.0"
+
+UBOOT_CONFIG ??= "mx8qmmek"
+UBOOT_CONFIG[mx8qmmek] = "imx8qm_mek_defconfig,sdcard"
+
+IMAGE_BOOT_FILES:append = " hdmitxfw.bin hdmirxfw.bin dpfw.bin"
+IMX_DEFAULT_BOOTLOADER:use-nxp-bsp ="u-boot-imx"
+IMX_DEFAULT_BOOTLOADER:use-mainline-bsp ="u-boot-fslc"
+
+# Set ATF platform name
+ATF_PLATFORM = "imx8qm"
+
+IMX_BOOT_SOC_TARGET = "iMX8QM"
+
+UBOOT_MAKE_TARGET = \
+    "${@bb.utils.contains('MACHINE_FEATURES', 'optee', '', \
+                                                       'u-boot.bin', d)}"
+SPL_BINARY = \
+    "${@bb.utils.contains('MACHINE_FEATURES', 'optee', 'spl/u-boot-spl.bin', \
+                                                       '', d)}"
+
+IMXBOOT_TARGETS_SD = \
+     "${@bb.utils.contains('MACHINE_FEATURES', 'optee', 'flash_spl', \
+                                                        'flash flash_ca72', d)}"
+IMXBOOT_TARGETS_FSPI=\
+     "${@bb.utils.contains('MACHINE_FEATURES', 'optee', 'flash_spl_flexspi', \
+                                                        'flash_flexspi', d)}"
+IMXBOOT_TARGETS = \
+     "${@bb.utils.contains('UBOOT_CONFIG', 'mx8qmmek', '${IMXBOOT_TARGETS_SD}', \
+                                                        '${IMXBOOT_TARGETS_FSPI}', d)}"
+
+# if board is imx8mq
+
+MACHINEOVERRIDES:prepend = "mx8m:mx8mq:mx8mq-nxp-bsp:mx8m-generic-bsp:"
+
+IMX_EXTRA_FIRMWARE:mx8-generic-bsp = "imx-boot-firmware-files"
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-boot-firmware-files'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-m4-demos'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-boot'
+
+CUSTOMER_RECIPES:fsl-bsp-release += 'firmware-imx-8m'
+
+UBOOT_SUFFIX = "bin"
+
+UBOOT_CONFIG ??= "mx8mqevk"
+UBOOT_CONFIG[mx8mqevk]       = "imx8mq_evk_config,sdcard"
+
+SPL_BINARY = "spl/u-boot-spl.bin"
+
+OPTEE_BOOT_IMAGE:mx8-nxp-bsp ?= "tee.bin"
+
+IMAGE_BOOT_FILES:append:imx8mq-evk = " \
+    imx8mq_m4_TCM_hello_world.bin \
+    imx8mq_m4_TCM_rpmsg_lite_pingpong_rtos_linux_remote.bin \
+    imx8mq_m4_TCM_rpmsg_lite_str_echo_rtos.bin \
+"
+# Set DDR FIRMWARE
+DDR_FIRMWARE_NAME = " \
+    lpddr4_pmu_train_1d_imem.bin \
+    lpddr4_pmu_train_1d_dmem.bin \
+    lpddr4_pmu_train_2d_imem.bin \
+    lpddr4_pmu_train_2d_dmem.bin \
+"
+
+UBOOT_DTB_NAME = "imx8mq-evk.dtb"
+
+ATF_PLATFORM = "imx8mq"
+
+IMXBOOT_TARGETS = "flash_evk flash_evk_no_hdmi flash_dp_evk"
+IMX_BOOT_SOC_TARGET = "iMX8M"
+
+UBOOT_EXTLINUX:use-mainline-bsp = "1"
+
+LOADADDR = ""
+UBOOT_MAKE_TARGET = ""
+IMX_BOOT_SEEK = "33"
+
+OPTEE_BIN_EXT = "8mq"
