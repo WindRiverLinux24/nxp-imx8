@@ -92,7 +92,7 @@ The following BSP features are validated and supported.
 3.2 Unsupported Features
 ------------------------
 
-The following features are not supported and validated:
+The following features are not supported and not validated:
 
 	x APBH-Bridge-DMA
 	x IEEE 1588
