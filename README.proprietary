@@ -97,6 +97,7 @@ CUSTOMER_RECIPES:freescale-layer += 'libimxdmabuffer'
 CUSTOMER_RECIPES:freescale-layer += 'libimxvpuapi'
 CUSTOMER_RECIPES:freescale-layer += 'libimxvpuapi2'
 CUSTOMER_RECIPES:freescale-layer += 'tinycompress'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-vpu-hantro-vc'
 
 CUSTOMER_RECIPES:openembedded-layer += 'freeglut'
 CUSTOMER_RECIPES:fsl-bsp-release += 'imx-gpu-viv'
@@ -455,6 +456,7 @@ IMX_BOOT_SEEK = "32"
 OPTEE_BIN_EXT = "8mp"
 TEE_LOAD_ADDR = "0x56000000"
 UBOOT_CONFIG_BASENAME = "imx8mp_evk"
+KERNEL_DEVICETREE_BASENAME = "imx8mp-evk"
 
 # Set DDR FIRMWARE
 DDR_FIRMWARE_VERSION = "202006"
