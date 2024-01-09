@@ -139,6 +139,9 @@ For MCIMX8MP-EVK board:
 
 	tftp $fdt_addr imx8mp-evk-rpmsg.dtb
 
+	If you want to use flexcan2:
+	tftp $fdt_addr imx8mp-evk-flexcan2.dtb
+
 4.1.4 Download and load firmware
 --------------------------------
 For MCIMX8QM-MEK board:
