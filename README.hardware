@@ -55,6 +55,7 @@ The following BSP features are validated and supported.
 
   o Storage
 	+ eMMC: On-chip 32GB  MTFC32GAKAEEF-AIT (MCIMX8QM-MEK)
+	+ eMMC: On-chip 32GB  SDINBDG4-32G-I1 (MCIMX8MP-EVK)
 	+ NOR Flash: 32MB MT25QL256ABA1EW9 SPI NOR Flash (MCIMX8M-EVK)
 	+ NOR flash: 32 MB MT25QU256ABA1 SPI NOR Flash (MCIMX8MP-EVK)
 
