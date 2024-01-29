@@ -286,11 +286,11 @@ modprobe moal mod_para=nxp/wifi_mod_para.conf
 
 Execute the following commands to validate the WiFi cards:
 
-        # ifconfig wlan<idx> up
-        # iw wlan<idx> scan
-        # iw dev wlan<idx> connect <AP essid>
-        # dhclient wlan<idx>
-        # ping <AP address> -i wlan<idx> -c 5
+        # ifconfig mlan<idx> up
+        # iw mlan<idx> scan
+        # iw dev mlan<idx> connect <AP essid>
+        # dhclient mlan<idx>
+        # ping <AP address> -i mlan<idx> -c 5
 
 2.5 Build Bootloader
 --------------------
