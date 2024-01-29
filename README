@@ -371,11 +371,7 @@ For the boot kernel:
 To reserve a memory region for the capture kernel, you need to pass the bootargs
 argument "crashkernel" to the boot kernel as follow:
 
-For MCIMX8QM-MEK board:
-	crashkernel=512M
-
-+For MCIMX8MQ-EVK board:
-	crashkernel=512M@3000M
+    crashkernel=512M
 
 For the dump-capture kernel:
 Before booting the dump-capture kernel, add "maxcpus=1 cma=128M" to the boot parameter.
@@ -426,6 +422,14 @@ For MCIMX8MQ-EVK board:
 u-boot=>setenv fdt_file imx8mq-evk.dtb
 u-boot=>setenv bootfile Image
 u-boot=>setenv bootargs 'root=/dev/mmcblk1p2 rw rootdelay=5 console=ttymxc0,115200n8 ip=dhcp'
+u-boot=>setenv bootcmd 'fatload mmc 1:1 $loadaddr $bootfile; fatload mmc 1:1 $fdt_addr $fdt_file; booti $loadaddr - $fdt_addr';
+u-boot=>run bootcmd
+
+For MCIMX8MP-EVK board:
+
+u-boot=>setenv fdt_file imx8mp-evk.dtb
+u-boot=>setenv bootfile Image
+u-boot=>setenv bootargs 'root=/dev/mmcblk1p2 rw rootdelay=5 console=ttymxc1,115200n8 ip=dhcp'
 u-boot=>setenv bootcmd 'fatload mmc 1:1 $loadaddr $bootfile; fatload mmc 1:1 $fdt_addr $fdt_file; booti $loadaddr - $fdt_addr';
 u-boot=>run bootcmd
 
