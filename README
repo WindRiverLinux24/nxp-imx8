@@ -227,33 +227,11 @@ For MCIMX8MP-EVK board:
 
 	# echo mem > /sys/power/state
 
-5.4 DMA & VPU
--------------
-
-In wrlinux project, the version of sdma & vpu firmware which comes from linux-firmware
-is 4.2, and there is a newer version 4.4 in the NXP i.mx SDK. Because of license issue,
-the new version firmware can't be integrated into wrlinux product. If customer want to
-use version 4.4 firmware, execute the following commands:
-
-1) Download the firmware from URL:
-	$ wget http://sources.buildroot.net/firmware-imx/firmware-imx-8.20.bin
-
-2) Extract the firmware from the binary file:
-	$ chmod 777 firmware-imx-8.20.bin
-	$ ./firmware-imx-8.20.bin
-
-3) You need to read and accept the EULA, and press y to continue. Then copy
-firmwares to your rootfs:
-	$ cd firmware-imx-8.20.bin
-	$ cp firmware/sdma/sdma-imx7d.bin path_to_your_rootfs/lib/firmware/sdma/
-	$ cp firmware/vpu/vpu_fw_imx8_dec.bin path_to_your_rootfs/lib/firmware/amphion/vpu/
-	$ cp firmware/vpu/vpu_fw_imx8_enc.bin path_to_your_rootfs/lib/firmware/amphion/vpu/
-
-5.5 Graphics
+5.4 Graphics
 ------------
 
-5.5.1 Xwayland
---------------
+5.5 Xwayland
+------------
 If you want to build a xwayland image, please follow the steps as below:
 
 <1> Setup program and create a build directory by using the following arguments:
@@ -271,7 +249,7 @@ If you want to build a xwayland image, please follow the steps as below:
 
 Note: For GPU support please refer to the instructions in README.proprietary
 
-5.7 thermal
+5.6 thermal
 -----------
 
 	To check current CPU temperature
@@ -287,7 +265,7 @@ Note: For GPU support please refer to the instructions in README.proprietary
 	# cat trip_point_1_temp
 	95000
 
-5.8 PCIe
+5.7 PCIe
 --------
 
 For imx8mp, pcie is verified using the built-in nxp wifi module.
@@ -326,8 +304,8 @@ Execute the following commands to validate the WiFi cards:
 
 NOTE: the PCIe driver does not support hotplug and suspend/resume.
 
-5.9 FLEXCAN (MCIMX8QXP-MEK & MCIMX8QM-MEK)
----------------------------
+5.8 FLEXCAN (MCIMX8QXP-MEK & MCIMX8QM-MEK)
+------------------------------------------
 
 Detail verification commands as below:
 
@@ -340,7 +318,7 @@ Detail verification commands as below:
 
 If can0 dumps data from can1, FLEXCAN feature works fine.
 
-5.7 CAAM
+5.9 CAAM
 --------
 
 Running OpenSSL benchmarking tests with AF_ALG engine:
