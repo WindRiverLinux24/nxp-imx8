@@ -1,7 +1,7 @@
 1.0 common configuration
 ------------------------
 # All private packages of imx require the following configuration
-BB_NO_NETWORK ?= '0'
+BB_NO_NETWORK = '0'
 ACCEPT_FSL_EULA = "1"
 LICENSE_FLAGS_ACCEPTED:append = " commercial"
 
@@ -33,12 +33,6 @@ hardware acceleration related packages into WRlinux product. So, if customer wan
 to run hardware graphic feature. Detail steps as below:
 
 2.1.1 The common configurations for all boards:
-
-<1> You must change the configuration to allow downloading of packages from the
-internet. Change BB_NO_NETWORK ?= "1" to BB_NO_NETWORK ?= "0" in the file
-${buildprj}/conf/local.conf.
-
-<2> echo the following content to local.conf:
 
 PREFERRED_PROVIDER_virtual/egl:imxgpu        ?= "imx-gpu-viv"
 PREFERRED_PROVIDER_virtual/libgl:imxgpu3d    ?= "imx-gpu-viv"
@@ -306,7 +300,6 @@ Prepare the bootloader image imx-boot-nxp-imx8-${machine}.bin-flash
 2.5.1 Common configurations for all boards
 ------------------------------------------
 
-BB_NO_NETWORK = '0'
 ACCEPT_FSL_EULA = "1"
 LICENSE_FLAGS_ACCEPTED:append = "commercial"
 
