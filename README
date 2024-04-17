@@ -309,8 +309,8 @@ NOTE: the PCIe driver does not support hotplug and suspend/resume.
 
 Detail verification commands as below:
 
-        # ip link set can0 up type can bitrate 125000 dbitrate 8000000 fd on
-        # ip link set can1 up type can bitrate 125000 dbitrate 8000000 fd on
+        # ip link set can0 up type can bitrate 500000 dbitrate 8000000 fd on
+        # ip link set can1 up type can bitrate 500000 dbitrate 8000000 fd on
         # candump can0 &
         # cansend can1 5A1#11.22.33.44.55.66.77.88
         # ip -d -s link show can0
