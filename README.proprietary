@@ -7,24 +7,6 @@ LICENSE_FLAGS_ACCEPTED:append = " commercial"
 
 BSP_NXP_DERIVED:append:nxp-imx8  = " nxp-imx8"
 DISTROOVERRIDES:nxp-imx8 = "fsl fslc"
-CUSTOMER_RECIPES:fsl-bsp-release += 'imx-m7-demos'
-
-2.0 M7-core test
-----------------
-
-MACHINEOVERRIDES:prepend = "mx8mp-nxp-bsp:"
-
-IMAGE_INSTALL:append = " imx-m7-demos"
-
-bitbake wrlinux-image-std
-
-Add bootargs 'mcore_clk clk-imx8mp.mcore_booted'
-
-echo imx8mp_m7_TCM_rpmsg_lite_str_echo_rtos.elf > /sys/devices/platform/imx8mp-cm7/remoteproc/remoteproc0/firmware
-
-echo start > /sys/devices/platform/imx8mp-cm7/remoteproc/remoteproc0/state
-
-cat /sys/devices/platform/imx8mp-cm7/remoteproc/remoteproc0/state
 
 2.1 GPU
 -------
@@ -35,7 +17,8 @@ to run hardware graphic feature. Detail steps as below:
 2.1.1 The common configurations for all boards:
 
 PREFERRED_PROVIDER_virtual/egl:imxgpu        ?= "imx-gpu-viv"
-PREFERRED_PROVIDER_virtual/libgl:imxgpu3d    ?= "imx-gpu-viv"
+PREFERRED_PROVIDER_virtual/libgl:imxgpu    ?= "mesa-gl"
+PREFERRED_PROVIDER_virtual/mesa:imxgpu    ?= "mesa-gl"
 PREFERRED_PROVIDER_virtual/libgles1:imxgpu3d ?= "imx-gpu-viv"
 PREFERRED_PROVIDER_virtual/libgles2:imxgpu3d ?= "imx-gpu-viv"
 PREFERRED_PROVIDER_virtual/libgles3:imxgpu3d ?= "imx-gpu-viv"
@@ -44,21 +27,22 @@ PREFERRED_PROVIDER_virtual/opencl-icd:imxgpu ?= "imx-gpu-viv"
 PREFERRED_PROVIDER_opencl-clhpp:imxgpu       ?= "imx-gpu-viv"
 PREFERRED_PROVIDER_opencl-headers:imxgpu     ?= "imx-gpu-viv"
 PREFERRED_PROVIDER_opencl-icd-loader:imxgpu  ?= "imx-gpu-viv"
-PREFERRED_VERSION_vulkan-headers:mx8  = "1.2.182.0"
-PREFERRED_VERSION_vulkan-loader:mx8 = "1.2.182.0"
-PREFERRED_VERSION_libdrm:mx8 = "2.4.114.imx"
-PREFERRED_VERSION_wayland-protocols:mx8 = "1.31.imx"
-PREFERRED_VERSION_weston:mx8 = "11.0.1.imx"
+PREFERRED_VERSION_vulkan-headers:mx8  = "1.3.261.1.imx"
+PREFERRED_VERSION_vulkan-loader:mx8 = "1.3.261.1.imx"
+PREFERRED_VERSION_libdrm:mx8 = "2.4.116.imx"
+PREFERRED_VERSION_wayland-protocols:mx8 = "1.32.imx"
+PREFERRED_VERSION_weston:mx8 = "12.0.3.imx"
 PREFERRED_VERSION_ffmpeg:mx8 = "4.4.1"
 PREFERRED_VERSION_opencv:mx8 = "4.6.0.imx"
 
-PREFERRED_VERSION_gstreamer1.0-plugins-base:mx8 = "1.22.0.imx"
-PREFERRED_VERSION_gstreamer1.0-plugins-bad:mx8  = "1.22.0.imx"
-PREFERRED_VERSION_gstreamer1.0-plugins-good:mx8 = "1.22.0.imx"
-PREFERRED_VERSION_gstreamer1.0-plugins-good-qt:mx8 = "1.22.0.imx"
-PREFERRED_VERSION_gstreamer1.0-plugins-ugly:mx8 = "1.22.0"
-PREFERRED_VERSION_gstreamer1.0:mx8              = "1.22.0.imx"
-PREFERRED_VERSION_gstreamer1.0-libav:mx8        = "1.22.0"
+PREFERRED_VERSION_gstreamer1.0-plugins-base:mx8 = "1.22.5.imx"
+PREFERRED_VERSION_gstreamer1.0-plugins-bad:mx8  = "1.22.5.imx"
+PREFERRED_VERSION_gstreamer1.0-plugins-good:mx8 = "1.22.5.imx"
+PREFERRED_VERSION_gstreamer1.0-plugins-good-qt:mx8 = "1.22.5.imx"
+PREFERRED_VERSION_gstreamer1.0-plugins-ugly:mx8 = "1.22.11"
+PREFERRED_VERSION_gstreamer1.0:mx8              = "1.22.5.imx"
+PREFERRED_VERSION_gstreamer1.0-libav:mx8        = "1.22.11"
+LICENSE_FLAGS_ACCEPTED += "commercial"
 
 PREFERRED_VERSION_xwayland:mx8                  = "23.1.1.imx"
 
@@ -105,7 +89,9 @@ CUSTOMER_RECIPES:fsl-bsp-release += "imx-vpu-hantro"
 CUSTOMER_RECIPES:fsl-bsp-release += "imx-vpu-hantro-daemon"
 CUSTOMER_RECIPES:freescale-distro += 'assimp'
 CUSTOMER_RECIPES:freescale-distro += 'devil'
-CUSTOMER_RECIPES:fsl-bsp-release += 'imx-gpu-apitrace'
+CUSTOMER_RECIPES:freescale-layer += 'imx-gpu-apitrace'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-opencl-converter'
+CUSTOMER_RECIPES:fsl-bsp-release += 'pugixml'
 CUSTOMER_RECIPES:fsl-bsp-release += 'systemd-gpuconfig'
 CUSTOMER_RECIPES:fsl-bsp-release += 'fmt'
 CUSTOMER_RECIPES:fsl-bsp-release += 'systemd'
@@ -148,13 +134,13 @@ CUSTOMER_RECIPES:meta-python += 'python3-pkgconfig'
 CUSTOMER_RECIPES:meta-tensorflow += 'bazel'
 CUSTOMER_RECIPES:meta-tensorflow += 'openjdk-11'
 CUSTOMER_RECIPES:openembedded-layer += 'hdf5'
-CUSTOMER_RECIPES:meta-ml += 'nn-imx'
-CUSTOMER_RECIPES:meta-ml += 'tensorflow-lite-host-tools'
-CUSTOMER_RECIPES:meta-ml += 'tensorflow-protobuf'
-CUSTOMER_RECIPES:meta-ml += 'tensorflow-lite'
-CUSTOMER_RECIPES:meta-ml += 'flatbuffers'
-CUSTOMER_RECIPES:meta-ml += 'nnstreamer'
-CUSTOMER_RECIPES:meta-ml += 'ssat'
+CUSTOMER_RECIPES:imx-machine-learning += 'nn-imx'
+CUSTOMER_RECIPES:imx-machine-learning += 'tensorflow-lite-host-tools'
+CUSTOMER_RECIPES:imx-machine-learning += 'tensorflow-protobuf'
+CUSTOMER_RECIPES:imx-machine-learning += 'tensorflow-lite'
+CUSTOMER_RECIPES:imx-machine-learning += 'flatbuffers'
+CUSTOMER_RECIPES:imx-machine-learning += 'nnstreamer'
+CUSTOMER_RECIPES:imx-machine-learning += 'ssat'
 CUSTOMER_RECIPES:openembedded-layer += 'giflib'
 CUSTOMER_RECIPES:openembedded-layer += 'leptonica'
 CUSTOMER_RECIPES:openembedded-layer += 'tesseract'
@@ -167,20 +153,13 @@ CUSTOMER_RECIPES:fsl-sdk-release += 'libxdg-shell'
 CUSTOMER_RECIPES:freescale-layer += 'mxsldr'
 CUSTOMER_RECIPES:freescale-layer += 'xwayland'
 
-2.1.2 The specific configurations for i.MX8QM or i.MX8MQ:
+2.1.2 The specific configurations for i.MX8QM:
 
-MACHINEOVERRIDES:prepend:nxp-imx8 = "mx8:mx8m:mx8qm:mx8mq:imxdrm:imxdpu:imxdcss:imxvpuhantro:imxgpu:imxgpu2d:imxgpu3d:mx8-nxp-bsp:imx-nxp-sdk:use-nxp-bsp:mx8mq-nxp-bsp:mx8qm-nxp-bsp:imxvulkan:mx8-generic-bsp:mx8qm-generic-bsp:"
-IMAGE_INSTALL:append = " assimp devil imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos weston weston-init imx-dpu-g2d imx-vpu-hantro imx-gpu-apitrace weston-xwayland imx-g2d-samples gstreamer1.0 gstreamer1.0-plugins-base  gstreamer1.0-plugins-good imx-gst1.0-plugin gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-plugins-imx"
+MACHINEOVERRIDES:prepend:nxp-imx8 = "mx8:mx8qm:imxdrm:imxdpu:imxdcss:imxvpuhantro:imxgpu:imxgpu2d:imxgpu3d:mx8-nxp-bsp:imx-nxp-sdk:use-nxp-bsp:mx8qm-nxp-bsp:imxvulkan:mx8-generic-bsp:mx8qm-generic-bsp:"
+IMAGE_INSTALL:append = " assimp devil imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos weston weston-init imx-dpu-g2d imx-gpu-apitrace weston-xwayland imx-g2d-samples gstreamer1.0 gstreamer1.0-plugins-base  gstreamer1.0-plugins-good imx-gst1.0-plugin gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-plugins-imx"
 
 PREFERRED_PROVIDER_virtual/libg2d:imxdpu     ?= "imx-dpu-g2d"
 
-2.1.3 The specific configurations for i.MX8MP:
-
-MACHINEOVERRIDES:prepend:nxp-imx8 = "mx8:mx8m:imxdrm:imxvpuhantro:imxgpu:imxgpu2d:imxgpu3d:mx8-nxp-bsp:imx-nxp-sdk:use-nxp-bsp:imxvulkan:mx8-generic-bsp:imx-generic-bsp:mx8m-generic-bsp:mx8m-nxp-bsp:mx8mp-generic-bsp:mx8mp-nxp-bsp:"
-
-IMAGE_INSTALL:append = " assimp devil imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos imx-gpu-g2d weston weston-init imx-vpu-hantro imx-gpu-apitrace weston-xwayland imx-g2d-samples gstreamer1.0 gstreamer1.0-plugins-base  gstreamer1.0-plugins-good imx-gst1.0-plugin gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-plugins-imx gstreamer1.0 gstreamer1.0-plugins-base  gstreamer1.0-plugins-good imx-gst1.0-plugin gstreamer1.0-plugins-bad gstreamer1.0-rtsp-server gstreamer1.0-plugins-ugly gstreamer1.0-libav"
-
-PREFERRED_PROVIDER_virtual/libg2d:imxgpu2d   ?= "imx-gpu-g2d"
 
 2.2 machine learning
 --------------------
@@ -195,21 +174,21 @@ IMAGE_INSTALL:append = " gstreamer1.0 gstreamer1.0-plugins-base  gstreamer1.0-pl
 
 <2> Append the following packages to CUSTOMER_RECIPES:
 
-CUSTOMER_RECIPES:meta-ml += 'nnstreamer-edge'
+CUSTOMER_RECIPES:imx-machine-learning += 'nnstreamer-edge'
 CUSTOMER_RECIPES:fsl-sdk-release += 'tinycompress'
-CUSTOMER_RECIPES:meta-ml += 'packagegroup-imx-ml'
-CUSTOMER_RECIPES:meta-ml += 'onnxruntime'
-CUSTOMER_RECIPES:meta-ml += 'tensorflow-lite-vx-delegate'
-CUSTOMER_RECIPES:meta-ml += 'pytorch'
-CUSTOMER_RECIPES:meta-ml += 'nnshark'
-CUSTOMER_RECIPES:meta-ml += 'torchvision'
-CUSTOMER_RECIPES:meta-ml += 'modelrunner'
-CUSTOMER_RECIPES:meta-ml += 'tvm'
-CUSTOMER_RECIPES:meta-ml += 'deepview-rt'
-CUSTOMER_RECIPES:meta-ml += 'tim-vx'
-CUSTOMER_RECIPES:meta-ml += 'arm-compute-library'
-CUSTOMER_RECIPES:meta-ml += 'deepview-rt-examples'
-CUSTOMER_RECIPES:meta-ml += 'nnstreamer-protobuf'
+CUSTOMER_RECIPES:imx-machine-learning += 'packagegroup-imx-ml'
+CUSTOMER_RECIPES:imx-machine-learning += 'onnxruntime'
+CUSTOMER_RECIPES:imx-machine-learning += 'tensorflow-lite-vx-delegate'
+CUSTOMER_RECIPES:imx-machine-learning += 'pytorch'
+CUSTOMER_RECIPES:imx-machine-learning += 'nnshark'
+CUSTOMER_RECIPES:imx-machine-learning += 'torchvision'
+CUSTOMER_RECIPES:imx-machine-learning += 'modelrunner'
+CUSTOMER_RECIPES:imx-machine-learning += 'tvm'
+CUSTOMER_RECIPES:imx-machine-learning += 'deepview-rt'
+CUSTOMER_RECIPES:imx-machine-learning += 'tim-vx'
+CUSTOMER_RECIPES:imx-machine-learning += 'arm-compute-library'
+CUSTOMER_RECIPES:imx-machine-learning += 'deepview-rt-examples'
+CUSTOMER_RECIPES:imx-machine-learning += 'nnstreamer-protobuf'
 CUSTOMER_RECIPES:fsl-sdk-release += 'libgpuperfcnt'
 CUSTOMER_RECIPES:meta-python += 'python3-future'
 CUSTOMER_RECIPES:meta-python += 'python3-decorator'
@@ -217,6 +196,7 @@ CUSTOMER_RECIPES:meta-python += 'python3-mpmath'
 CUSTOMER_RECIPES:meta-python += 'python3-sympy'
 CUSTOMER_RECIPES:meta-python += 'python3-coloredlogs'
 CUSTOMER_RECIPES:meta-python += 'python3-humanfriendly'
+PREFERRED_VERSION_tensorflow-lite:mx8 = "2.14.0"
 
 <3> Use the command as below to build a xwayland image:
 
@@ -233,58 +213,6 @@ root:~# export LABELS=$(pwd)/coco_labels.txt
 
 gst-launch-1.0 --no-position v4l2src device=/dev/${capture device} ! video/x-raw,width=640,height=480,framerate=30/1 ! tee name=t t. ! queue max-size-buffers=2 leaky=2 ! imxvideoconvert_g2d ! video/x-raw,width=300,height=300,format=RGBA ! videoconvert ! video/x-raw,format=RGB ! tensor_converter ! tensor_filter framework=tensorflow-lite accelerator=true:gpu model=${pwd}/ssd_mobilenet_v2_coco_quant_postprocess.tflite custom=Delegate:NNAPI ! tensor_decoder mode=bounding_boxes option1=tf-ssd option2=${pwd}/coco_labels.txt option3=0:1:2:3,50 option4=640:480 option5=300:300 ! mix. t. ! queue max-size-buffers=2 ! imxcompositor_g2d name=mix sink_0::zorder=2 sink_1::zorder=1 ! waylandsink
 
-2.3 NPU(only MX8MP)
--------------------
-
-cd /usr/bin/tensorflow-lite-2.10.0/examples#
-
-USE_GPU_INFERENCE=0 ./label_image -m mobilenet_v1_1.0_224_quant.tflite -i grace_hopper.bmp -l labels.txt --external_delegate_path=/usr/lib64/libvx_delegate.so
-
-You can get following messge:
-
-INFO: Loaded model mobilenet_v1_1.0_224_quant.tflite
-INFO: resolved reporter
-Vx delegate: allowed_cache_mode set to 0.
-Vx delegate: device num set to 0.
-Vx delegate: allowed_builtin_code set to 0.
-Vx delegate: error_during_init set to 0.
-Vx delegate: error_during_prepare set to 0.
-Vx delegate: error_during_invoke set to 0.
-EXTERNAL delegate created.
-INFO: Applied EXTERNAL delegate.
-W [HandleLayoutInfer:281]Op 162: default layout inference pass.
-INFO: invoked
-INFO: average time: 3.052 ms
-INFO: 0.768627: 653 military uniform
-INFO: 0.105882: 907 Windsor tie
-INFO: 0.0196078: 458 bow tie
-INFO: 0.0117647: 466 bulletproof vest
-INFO: 0.00784314: 835 suit
-
-2.4 WIFI module 88W8997(Only iMX8MP)
-------------------------------------
-
-MACHINEOVERRIDES:prepend:nxp-imx8 = "mx8mp-nxp-bsp:"
-IMAGE_INSTALL:append = " kernel-module-nxp-wlan connman firmware-nxp-wifi-nxp8997-pcie firmware-nxp-wifi-nxp8997-sdio"
-
-CUSTOMER_RECIPES:fsl-bsp-release += "imx-m7-demos"
-CUSTOMER_RECIPES:fsl-bsp-release += "kernel-module-nxp-wlan"
-CUSTOMER_RECIPES:fsl-bsp-release += "wireless-tools"
-CUSTOMER_RECIPES:fsl-bsp-release += "nxp-wlan-sdk"
-CUSTOMER_RECIPES:freescale-layer += "firmware-nxp-wifi"
-
-bitbake wrlinux-image-std
-
-# kernel startup run
-modprobe moal mod_para=nxp/wifi_mod_para.conf
-
-Execute the following commands to validate the WiFi cards:
-
-        # ifconfig mlan<idx> up
-        # iw mlan<idx> scan
-        # iw dev mlan<idx> connect <AP essid>
-        # dhclient mlan<idx>
-        # ping <AP address> -i mlan<idx> -c 5
 
 2.5 Build Bootloader
 --------------------
@@ -322,10 +250,12 @@ MACHINEOVERRIDES:prepend = "mx8qm:mx8qm-nxp-bsp:mx8-generic-bsp:mx8qm-generic-bs
 IMX_EXTRA_FIRMWARE:mx8-generic-bsp = "imx-boot-firmware-files imx-sc-firmware imx-seco"
 CUSTOMER_RECIPES:fsl-bsp-release += 'imx-boot-firmware-files'
 CUSTOMER_RECIPES:freescale-layer += 'imx-sc-firmware'
-CUSTOMER_RECIPES:freescale-layer += 'imx-seco'
-CUSTOMER_RECIPES:fsl-bsp-release += 'imx-m4-demos'
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-seco'
+CUSTOMER_RECIPES:freescale-layer += 'imx-m4-demos'
 CUSTOMER_RECIPES:fsl-bsp-release += 'imx-boot'
 PREFERRED_VERSION_imx-m4-demos:mx8qm-nxp-bsp = "2.9.0"
+PREFERRED_VERSION_imx-seco:mx8 = "5.9.2"
+IMX_SOC_REV_LOWER = "b0"
 
 UBOOT_CONFIG ??= "mx8qmmek"
 UBOOT_CONFIG[mx8qmmek] = "imx8qm_mek_defconfig,sdcard"
@@ -355,130 +285,9 @@ IMXBOOT_TARGETS_FSPI=\
 IMXBOOT_TARGETS = \
      "${@bb.utils.contains('UBOOT_CONFIG', 'mx8qmmek', '${IMXBOOT_TARGETS_SD}', \
                                                         '${IMXBOOT_TARGETS_FSPI}', d)}"
-2.5.3 Specific configurations for imx8mq
-----------------------------------------
-
-MACHINEOVERRIDES:prepend = "mx8m:mx8mq:mx8mq-nxp-bsp:mx8m-generic-bsp:"
-
-IMX_EXTRA_FIRMWARE:mx8-generic-bsp = "imx-boot-firmware-files"
-CUSTOMER_RECIPES:fsl-bsp-release += 'imx-boot-firmware-files'
-CUSTOMER_RECIPES:fsl-bsp-release += 'imx-m4-demos'
-CUSTOMER_RECIPES:fsl-bsp-release += 'imx-boot'
-
-CUSTOMER_RECIPES:fsl-bsp-release += 'firmware-imx-8m'
-
-UBOOT_SUFFIX = "bin"
-
-UBOOT_CONFIG ??= "mx8mqevk"
-UBOOT_CONFIG[mx8mqevk]       = "imx8mq_evk_config,sdcard"
-
-SPL_BINARY = "spl/u-boot-spl.bin"
-
-OPTEE_BOOT_IMAGE:mx8-nxp-bsp ?= "tee.bin"
-
-IMAGE_BOOT_FILES:append:imx8mq-evk = " \
-    imx8mq_m4_TCM_hello_world.bin \
-    imx8mq_m4_TCM_rpmsg_lite_pingpong_rtos_linux_remote.bin \
-    imx8mq_m4_TCM_rpmsg_lite_str_echo_rtos.bin \
-"
-# Set DDR FIRMWARE
-DDR_FIRMWARE_NAME = " \
-    lpddr4_pmu_train_1d_imem.bin \
-    lpddr4_pmu_train_1d_dmem.bin \
-    lpddr4_pmu_train_2d_imem.bin \
-    lpddr4_pmu_train_2d_dmem.bin \
-"
-
-UBOOT_DTB_NAME = "imx8mq-evk.dtb"
-
-ATF_PLATFORM = "imx8mq"
-
-IMXBOOT_TARGETS = "flash_evk flash_evk_no_hdmi flash_dp_evk"
-IMX_BOOT_SOC_TARGET = "iMX8M"
-
-UBOOT_EXTLINUX:use-mainline-bsp = "1"
-
-LOADADDR = ""
-UBOOT_MAKE_TARGET = ""
-IMX_BOOT_SEEK = "33"
-
-OPTEE_BIN_EXT = "8mq"
-
-2.5.4 Specific configurations for imx8mp
-----------------------------------------
-
-MACHINEOVERRIDES:prepend:nxp-imx8 = "mx8m:mx8m-generic-bsp:mx8m-nxp-bsp:mx8mp-generic-bsp:mx8mp-nxp-bsp:mx8mp:"
-
-CUSTOMER_RECIPES:fsl-bsp-release += 'imx-boot-firmware-files'
-# imx8mpevk machine
-KERNEL_DEVICETREE = " \
-    freescale/${KERNEL_DEVICETREE_BASENAME}.dtb \
-"
-
-UBOOT_DTB_NAME = "${KERNEL_DEVICETREE_BASENAME}.dtb"
-
-IMX_DEFAULT_BOOTLOADER:use-nxp-bsp = "u-boot-imx"
-
-UBOOT_SUFFIX = "bin"
-# IMX_EXTRA_FIRMWARE:mx8-generic-bsp    = "imx-boot-firmware-files imx-sc-firmware imx-seco"
-IMX_EXTRA_FIRMWARE:mx8m-generic-bsp   = "imx-boot-firmware-files"
-SOC_ATF_BOOT_UART_BASE                    = ""
-
-SOC_ATF_BOOT_UART_BASE:mx8m-generic-bsp   = "0x30890000"
-ATF_BOOT_UART_BASE                       ?= "${SOC_ATF_BOOT_UART_BASE}"
-
-UBOOT_CONFIG ??= "mx8mpevk"
-UBOOT_CONFIG[mx8mpevk]      = "${UBOOT_CONFIG_BASENAME}_defconfig,sdcard"
-
-SPL_BINARY = "spl/u-boot-spl.bin"
-
-ATF_PLATFORM = "imx8mp"
-
-IMXBOOT_TARGETS = \
-    "${@bb.utils.contains('UBOOT_CONFIG', 'fspi', '${IMXBOOT_TARGETS_BASENAME}_flexspi', \
-                                                  '${IMXBOOT_TARGETS_BASENAME}', d)}"
-
-IMX_BOOT_SOC_TARGET = "iMX8MP"
-
-SERIAL_CONSOLES = "115200;ttymxc1"
-
-LOADADDR = ""
-UBOOT_MAKE_TARGET = "all"
-IMX_BOOT_SEEK = "32"
-
-OPTEE_BIN_EXT = "8mp"
-TEE_LOAD_ADDR = "0x56000000"
-UBOOT_CONFIG_BASENAME = "imx8mp_evk"
-KERNEL_DEVICETREE_BASENAME = "imx8mp-evk"
-
-# Set DDR FIRMWARE
-DDR_FIRMWARE_VERSION = "202006"
-DDR_FIRMWARE_NAME = " \
-    lpddr4_pmu_train_1d_dmem_${DDR_FIRMWARE_VERSION}.bin \
-    lpddr4_pmu_train_1d_imem_${DDR_FIRMWARE_VERSION}.bin \
-    lpddr4_pmu_train_2d_dmem_${DDR_FIRMWARE_VERSION}.bin \
-    lpddr4_pmu_train_2d_imem_${DDR_FIRMWARE_VERSION}.bin \
-"
-
-IMXBOOT_TARGETS_BASENAME = "flash_evk"
-
-# Mainline BSP doesn't support LPDDR4 so it must be set to nxp.
-# Also this machine isn't supported by u-boot-fslc but imx8mn-evk.inc already
-# set the bootloader to u-boot-imx instead when NXP BSP is used.
-IMX_DEFAULT_BSP = "nxp"
-
-2.6 XCVR firmware
------------------
-
-Add firmware for the XCVR module that comes with iMX8MP
-
-MACHINEOVERRIDES:prepend:nxp-imx8 = "mx8mp-nxp-bsp:"
-IMAGE_INSTALL:append = "firmware-imx-xcvr-imx8mp"
-CUSTOMER_RECIPES:fsl-bsp-release += "firmware-imx"
-
-2.7 VPU firmware(MX8QM)
+2.6 VPU firmware(MX8QM)
 -----------------------
 
-MACHINEOVERRIDES:prepend:nxp-imx8 = "mx8mp-nxp-bsp:"
-IMAGE_INSTALL:append = "firmware-imx-vpu-imx8"
+MACHINEOVERRIDES:prepend:nxp-imx8 = "mx8qm-nxp-bsp:"
+IMAGE_INSTALL:append = " firmware-imx-vpu-imx8"
 CUSTOMER_RECIPES:fsl-bsp-release += "firmware-imx"
