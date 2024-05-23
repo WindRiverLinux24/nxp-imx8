@@ -1,4 +1,4 @@
-        MCIMX8QM-MEK/MCIMX8MQ-EVK/MCIMX8MP-EVK Board Support Package
+        MCIMX8QM-MEK Board Support Package
 
 1. About this document
 ======================
@@ -113,35 +113,6 @@ For MCIMX8QM-MEK board:
 	If you want to connect OV5640 MIPI camera to MIPI CSI1(J5) or CSI0(J10):
 	# tftp $fdt_addr imx8qm-mek-ov5640.dtb
 
-For MCIMX8MQ-EVK board:
-	If you want to use HDMI connector (J1001) as output:
-	# tftp $fdt_addr imx8mq-evk.dtb
-
-	If you want to use IMX-MIPI-HDMI on J1501 as output:
-	# tftp $fdt_addr imx8mq-evk-dcss-adv7535.dtb
-
-	If you want to use MX8-DSI-OLED1 on J1501 as output:
-	# tftp $fdt_addr imx8mq-evk-dcss-rm67191.dtb
-
-For MCIMX8MP-EVK board:
-	If you want to connect HDMI/LVDS-HDMI/MIPI-DSI-HDMI/MIPI-CSI ov5640 monitor:
-	tftp $fdt_addr imx8mp-evk.dtb
-
-	If you want to use MX8-DSI-OLED1:
-
-	tftp $fdt_addr imx8mp-evk-rm67191.dtb
-
-	If you want to use ips module:
-
-	tftp $fdt_addr imx8mp-evk-basler-ov5640.dtb
-
-	If you want to use M7 core:
-
-	tftp $fdt_addr imx8mp-evk-rpmsg.dtb
-
-	If you want to use flexcan2:
-	tftp $fdt_addr imx8mp-evk-flexcan2.dtb
-
 4.1.4 Download and load firmware
 --------------------------------
 For MCIMX8QM-MEK board:
@@ -166,10 +137,6 @@ For MCIMX8QM-MEK board:
 
 Note: for MCIMX8QM-MEK board, $kernel_addr="0x8a0000000", $fdt_addr="0x8d0000000"
 	$console_port = "ttyLP0,115200"
-     for MCIMX8MQ-EVK board, $kernel_addr="0x40480000", $fdt_addr="0x44000000"
-        $console_port = "ttymxc0,115200"
-     for MCIMX8MP-EVK board, $kernel_addr="0x40400000", $fdt_addr="0x43000000"
-        $console_port = "ttymxc1,115200"
       The kernel image will become larger if more kernel code is compiled into kernel image.
       So, please increase "fdt_addr" value by putting dtb file at higher address if you encounter with kernel booting failed.
 
@@ -220,11 +187,6 @@ The debug UART can be set as a wakeup source with:
 
 For MCIMX8QM-MEK board:
 	# echo enabled > /sys/class/tty/ttyLP0/power/wakeup
-For MCIMX8MQ-EVK board:
-	# echo enabled > /sys/class/tty/ttymxc0/power/wakeup
-For MCIMX8MP-EVK board:
-	# echo enabled > /sys/class/tty/ttymxc1/power/wakeup
-
 	# echo mem > /sys/power/state
 
 5.4 Graphics
@@ -267,9 +229,6 @@ Note: For GPU support please refer to the instructions in README.proprietary
 
 5.7 PCIe
 --------
-
-For imx8mp, pcie is verified using the built-in nxp wifi module.
-Please refer to the wifi part of README.proprietary for verification.
 
 All the imx8 platforms support PCIe feature.
 The PCIe bus is provided through the M.2 connector.
@@ -393,22 +352,6 @@ u-boot=>setenv fdt_file imx8qm-mek.dtb
 u-boot=>setenv bootfile Image
 u-boot=>setenv bootargs "root=/dev/mmcblk1p2 rootwait rw rootdelay=5 console=${console},${baudrate} earlycon ip=dhcp"
 u-boot=>setenv bootcmd "fatload mmc 1:1 $loadaddr $bootfile; fatload mmc 1:1 $fdt_addr $fdt_file; booti $loadaddr - $fdt_addr";
-u-boot=>run bootcmd
-
-For MCIMX8MQ-EVK board:
-
-u-boot=>setenv fdt_file imx8mq-evk.dtb
-u-boot=>setenv bootfile Image
-u-boot=>setenv bootargs 'root=/dev/mmcblk1p2 rw rootdelay=5 console=ttymxc0,115200n8 ip=dhcp'
-u-boot=>setenv bootcmd 'fatload mmc 1:1 $loadaddr $bootfile; fatload mmc 1:1 $fdt_addr $fdt_file; booti $loadaddr - $fdt_addr';
-u-boot=>run bootcmd
-
-For MCIMX8MP-EVK board:
-
-u-boot=>setenv fdt_file imx8mp-evk.dtb
-u-boot=>setenv bootfile Image
-u-boot=>setenv bootargs 'root=/dev/mmcblk1p2 rw rootdelay=5 console=ttymxc1,115200n8 ip=dhcp'
-u-boot=>setenv bootcmd 'fatload mmc 1:1 $loadaddr $bootfile; fatload mmc 1:1 $fdt_addr $fdt_file; booti $loadaddr - $fdt_addr';
 u-boot=>run bootcmd
 
 8. USB OTG
