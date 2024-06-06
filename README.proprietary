@@ -285,6 +285,10 @@ IMXBOOT_TARGETS_FSPI=\
 IMXBOOT_TARGETS = \
      "${@bb.utils.contains('UBOOT_CONFIG', 'mx8qmmek', '${IMXBOOT_TARGETS_SD}', \
                                                         '${IMXBOOT_TARGETS_FSPI}', d)}"
+
+CUSTOMER_RECIPES:meta-arm += 'arm-ffa-user arm-tstee libts'
+IMAGE_INSTALL:append = " libts"
+
 2.6 VPU firmware(MX8QM)
 -----------------------
 
