@@ -26,7 +26,7 @@ is done automatically when using the Wind River configure wrapper.
 
 License
 -------
-Copyright (C) 2023 Wind River Systems, Inc.
+Copyright (C) 2024 Wind River Systems, Inc.
 
 Source code included in the tree for individual recipes is under the LICENSE
 stated in the associated recipe (.bb file) unless otherwise stated.
@@ -406,7 +406,7 @@ Connect the usb typec port(J17) to PC host, and then run below commands:
 	# echo 20 > functions/ncm.1/qmult
 	# ln -s functions/ncm.1 configs/c.1
 
-	# echo 5b130000.usb > UDC
+	# echo 5b120000.usb > UDC
 
 After running above commands, MCIMX8QM-MEK board works as a usb mass storage device.
 
