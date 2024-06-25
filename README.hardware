@@ -56,7 +56,11 @@ The following BSP features are validated and supported.
 		+ Raydium RM67191 FHD panel (MX8-DSI-OLED1 accessory card)
 	+ MIPI CSI Host Controller:
 		+ OmniVision chipset OV5640 (MINISASTOCSI accessory card)
-	+ ISP: ISP8000Nano
+	+ GPU: Vivante GC7000 Lite
+        + VPU: On-Chip video processing unit
+
+Note: GPU, NPU, VPU all require proprietary packages or firmware
+to work. If you want to use them, please refer to README.proprietary
 
   o Power Mgmt
 	+ CPU Freq
@@ -77,9 +81,6 @@ The following BSP features are validated and supported.
 
 The following features are not supported and not validated:
 
-	x GPU: Vivante GC7000 Lite
-	x NPU: Vivante VIP8000 NPU
-	x VPU: On-Chip video processing unit
 	x APBH-Bridge-DMA
 	x IEEE 1588
 	x eCSPI
@@ -87,9 +88,6 @@ The following features are not supported and not validated:
 	x SPDIF
 	x PWM
 	x eLCDIF
-
-Note: GPU, NPU, VPU and XCVR all require proprietary packages or firmware
-to work. If you want to use them, please refer to README.proprietary
 
 
 4. BSP Notes
