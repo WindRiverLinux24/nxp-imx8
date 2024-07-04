@@ -5,8 +5,8 @@ nxp_imx8_wic() {
         for config in ${UBOOT_CONFIG}; do
             cd "${DEPLOY_DIR_IMAGE}"
 
-            ofname=${IMAGE_LINK_NAME}-${config}${IMAGE_VERSION_SUFFIX}.rootfs.wic
-            cp ${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.wic ${IMGDEPLOYDIR}/$ofname
+            ofname=${IMAGE_BASENAME}${IMAGE_MACHINE_SUFFIX}-${config}${IMAGE_NAME_SUFFIX}${IMAGE_VERSION_SUFFIX}.wic
+            cp ${IMGDEPLOYDIR}/${IMAGE_NAME}.wic ${IMGDEPLOYDIR}/$ofname
             dd if=imx-boot-nxp-imx8-${UBOOT_CONFIG}.bin-flash_spl of=${IMGDEPLOYDIR}/$ofname bs=512 seek=64 conv=fsync,notrunc
 
             cd "${IMGDEPLOYDIR}"
