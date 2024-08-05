@@ -1,4 +1,4 @@
-        MCIMX8QM-MEK Board Support Package
+        MCIMX8QM-MEK/MCIMX8MQ-EVK Board Support Package
 
 1. About this document
 ======================
@@ -113,6 +113,16 @@ For MCIMX8QM-MEK board:
 	If you want to connect OV5640 MIPI camera to MIPI CSI1(J5) or CSI0(J10):
 	# tftp $fdt_addr imx8qm-mek-ov5640.dtb
 
+For MCIMX8MQ-EVK board:
+	If you want to use HDMI connector (J1001) as output:
+	# tftp $fdt_addr imx8mq-evk.dtb
+
+	If you want to use IMX-MIPI-HDMI on J1501 as output:
+	# tftp $fdt_addr imx8mq-evk-dcss-adv7535.dtb
+
+	If you want to use MX8-DSI-OLED1 on J1501 as output:
+	# tftp $fdt_addr imx8mq-evk-dcss-rm67191.dtb
+
 4.1.4 Download and load firmware
 --------------------------------
 For MCIMX8QM-MEK board:
@@ -125,6 +135,9 @@ For MCIMX8QM-MEK board:
 	# hdp load ${hdp_addr}
 	# tftp ${hdprx_addr} hdmirxfw.bin
 	# hdprx load ${hdprx_addr}
+
+for MCIMX8MQ-EVK board, $kernel_addr="0x40480000", $fdt_addr="0x44000000"
+	$console_port = "ttymxc0,115200"
 
 4.1.5 Set bootargs and boot the system
 --------------------------------------
@@ -187,6 +200,9 @@ The debug UART can be set as a wakeup source with:
 
 For MCIMX8QM-MEK board:
 	# echo enabled > /sys/class/tty/ttyLP0/power/wakeup
+For MCIMX8MQ-EVK board:
+	# echo enabled > /sys/class/tty/ttymxc0/power/wakeup
+
 	# echo mem > /sys/power/state
 
 5.4 Graphics
@@ -355,6 +371,14 @@ u-boot=>setenv fdt_file imx8qm-mek.dtb
 u-boot=>setenv bootfile Image
 u-boot=>setenv bootargs "root=/dev/mmcblk1p2 rootwait rw rootdelay=5 console=${console},${baudrate} earlycon ip=dhcp"
 u-boot=>setenv bootcmd "fatload mmc 1:1 $loadaddr $bootfile; fatload mmc 1:1 $fdt_addr $fdt_file; booti $loadaddr - $fdt_addr";
+u-boot=>run bootcmd
+
+For MCIMX8MQ-EVK board:
+
+u-boot=>setenv fdt_file imx8mq-evk.dtb
+u-boot=>setenv bootfile Image
+u-boot=>setenv bootargs 'root=/dev/mmcblk1p2 rw rootdelay=5 console=ttymxc0,115200n8 ip=dhcp'
+u-boot=>setenv bootcmd 'fatload mmc 1:1 $loadaddr $bootfile; fatload mmc 1:1 $fdt_addr $fdt_file; booti $loadaddr - $fdt_addr';
 u-boot=>run bootcmd
 
 8. USB OTG
