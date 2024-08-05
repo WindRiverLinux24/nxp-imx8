@@ -152,6 +152,8 @@ CUSTOMER_RECIPES:multimedia-layer += 'gst-shark'
 CUSTOMER_RECIPES:fsl-sdk-release += 'libxdg-shell'
 CUSTOMER_RECIPES:freescale-layer += 'mxsldr'
 CUSTOMER_RECIPES:freescale-layer += 'xwayland'
+CUSTOMER_RECIPES:openembedded-layer += 'fftw'
+CUSTOMER_RECIPES:openembedded-layer += 'imagemagick'
 
 2.1.2 The specific configurations for i.MX8QM:
 
