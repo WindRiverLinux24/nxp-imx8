@@ -117,7 +117,7 @@ MCIMX8MQ-EVK:
 	CPU Revision:          rev2.0
 	Board Revision:        MCIMX8MQ-EVK SCH-29615 REV B3, 700-29615 REV X6
 	BootLoader:            U-Boot
-	BootLoader Version:    U-Boot 2022.04-lf_v2022.04+g7376547b9e
+	BootLoader Version:    U-Boot 2023.04+gf8a2983ec83+p0
 
 
 4.2 Specify boot medium
