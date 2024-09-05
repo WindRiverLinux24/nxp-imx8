@@ -42,7 +42,7 @@ The following BSP features are validated and supported.
 
   o Network
 	+ Ethernet: FEC 10/100/1000 MAC ethernet controller, Qualcomm AR8031 external PHY
-	+ FLEXCAN: Flexible controller area network
+	+ FLEXCAN: Flexible controller area network(only MCIMX8QM-MEK)
 
   o USB
 	+ USB OTG Type C: On-Chip UTMI transceiver, high/full/low speed
