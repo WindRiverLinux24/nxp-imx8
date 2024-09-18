@@ -162,6 +162,11 @@ IMAGE_INSTALL:append = " assimp devil imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos 
 
 PREFERRED_PROVIDER_virtual/libg2d:imxdpu     ?= "imx-dpu-g2d"
 
+2.1.3 VPU test
+
+For imx8mq: vpudec
+	gst-launch-1.0 filesrc location=test.mp4 typefind=true ! video/quicktime ! aiurdemux ! queue max-size-time=0 ! vpudec ! autovideosink
+
 
 2.2 machine learning
 --------------------
