@@ -349,5 +349,5 @@ OPTEE_BIN_EXT = "8mq"
 -----------------------
 
 MACHINEOVERRIDES:prepend:nxp-imx8 = "mx8qm-nxp-bsp:"
-IMAGE_INSTALL:append = " firmware-imx-vpu-imx8"
+IMAGE_INSTALL:append = " firmware-imx-vpu-amphion"
 CUSTOMER_RECIPES:fsl-bsp-release += "firmware-imx"
