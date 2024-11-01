@@ -299,7 +299,7 @@ IMAGE_INSTALL:append = " libts"
 2.5.3 Specific configurations for imx8mq
 ----------------------------------------
 
-MACHINEOVERRIDES:prepend = "mx8m:mx8mq:mx8mq-nxp-bsp:mx8m-generic-bsp:"
+MACHINEOVERRIDES:prepend = "mx8m:mx8mq:mx8mq-nxp-bsp:mx8m-generic-bsp:mx8mq-generic-bsp:"
 
 IMX_EXTRA_FIRMWARE:mx8-generic-bsp = "imx-boot-firmware-files"
 CUSTOMER_RECIPES:fsl-bsp-release += 'imx-boot-firmware-files'
@@ -333,6 +333,9 @@ DDR_FIRMWARE_NAME = " \
 UBOOT_DTB_NAME = "imx8mq-evk.dtb"
 
 ATF_PLATFORM = "imx8mq"
+
+SOC_ATF_BOOT_UART_BASE:mx8mq-generic-bsp="0x30860000"
+ATF_BOOT_UART_BASE               = "${SOC_ATF_BOOT_UART_BASE}"
 
 IMXBOOT_TARGETS = "flash_evk flash_evk_no_hdmi flash_dp_evk"
 IMX_BOOT_SOC_TARGET = "iMX8M"
