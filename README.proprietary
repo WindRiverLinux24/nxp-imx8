@@ -183,7 +183,11 @@ Note: Please refer to the '2.6 VPU firmware(MX8QM)' section to add the firmware.
     v4l2h264dec:
 	gst-launch-1.0 filesrc location=sample-5s.mp4 ! qtdemux name=d d.video_0 ! queue ! h264parse ! v4l2h264dec ! imxvideoconvert_g2d ! queue ! waylandsink
 
+    vp8dec:
+	gst-launch-1.0 filesrc location=big-buck-bunny_trailer.webm ! matroskademux ! v4l2vp8dec ! imxvideoconvert_g2d ! queue ! waylandsink
 
+    h265dec:
+	gst-launch-1.0 filesrc location=1718886721_sample_1920x1080.hevc ! queue ! h265parse ! v4l2h265dec ! imxvideoconvert_g2d ! queue ! waylandsink
 
 2.2 machine learning
 --------------------
