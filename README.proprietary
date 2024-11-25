@@ -215,6 +215,16 @@ Mode2: 4K linear:
 Mode 3: 4K HDR:
         gst-launch-1.0 -v v4l2src device=/dev/video3 ! "video/x-raw,format=YUY2,width=3840,height=2160" ! queue ! waylandsink
 
+2.1.4.1 iMX8MP VPU
+------------------
+
+    H264dec:
+	gst-launch-1.0 filesrc location=file_example_MP4_480_1_5MG.mp4 ! qtdemux name=d d.video_0 ! queue ! h264parse ! vpudec ! imxvideoconvert_g2d ! queue ! waylandsink
+    Vp8dec:
+	gst-launch-1.0 filesrc location=big-buck-bunny_trailer.webm ! matroskademux ! vpudec ! imxvideoconvert_g2d ! queue ! waylandsink
+    H265dec:
+	gst-launch-1.0 filesrc location=1718886721_sample_1920x1080.hevc ! queue ! h265parse ! vpudec ! imxvideoconvert_g2d ! queue ! waylandsink
+
 2.2 machine learning
 --------------------
 
