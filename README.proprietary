@@ -156,8 +156,11 @@ CUSTOMER_RECIPES:freescale-layer += 'libimxdmabuffer'
 CUSTOMER_RECIPES:freescale-layer += 'imx-usb-loader'
 CUSTOMER_RECIPES:openembedded-layer += 'fftw'
 CUSTOMER_RECIPES:openembedded-layer += 'imagemagick'
+CUSTOMER_RECIPES:openembedded-layer += 'libtinyxml2'
+CUSTOMER_RECIPES:fsl-bsp-release += 'isp-imx'
 
 2.1.2 The specific configurations for i.MX8QM or i.MX8MQ:
+---------------------------------------------------------
 
 MACHINEOVERRIDES:prepend:nxp-imx8 = "mx8:mx8m:mx8qm:mx8mq:imxdrm:imxdpu:imxdcss:imxvpu:imxvpuhantro:imxgpu:imxgpu2d:imxgpu3d:mx8-nxp-bsp:imx-nxp-sdk:use-nxp-bsp:mx8mq-nxp-bsp:mx8qm-nxp-bsp:imxvulkan:mx8-generic-bsp:mx8qm-generic-bsp:"
 IMAGE_INSTALL:append = " assimp devil imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos weston weston-init imx-dpu-g2d imx-vpu-hantro imx-gpu-apitrace weston-xwayland imx-g2d-samples gstreamer1.0 gstreamer1.0-plugins-base  gstreamer1.0-plugins-good imx-gst1.0-plugin gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav"
@@ -188,6 +191,15 @@ Note: Please refer to the '2.6 VPU firmware(MX8QM)' section to add the firmware.
 
     h265dec:
 	gst-launch-1.0 filesrc location=1718886721_sample_1920x1080.hevc ! queue ! h265parse ! v4l2h265dec ! imxvideoconvert_g2d ! queue ! waylandsink
+
+2.1.4 The specific configurations for i.MX8MP:
+----------------------------------------------
+
+MACHINEOVERRIDES:prepend:nxp-imx8 = "mx8:mx8m:imxdrm:imxvpu:imxvpuhantro:imxgpu:imxgpu2d:imxgpu3d:mx8-nxp-bsp:imx-nxp-sdk:use-nxp-bsp:imxvulkan:mx8-generic-bsp:imx-generic-bsp:mx8m-generic-bsp:mx8m-nxp-bsp:mx8mp-generic-bsp:mx8mp-nxp-bsp:"
+
+IMAGE_INSTALL:append = " assimp devil imx-gpu-viv imx-gpu-sdk imx-gpu-viv-demos imx-gpu-g2d weston weston-init imx-vpu-hantro imx-gpu-apitrace weston-xwayland imx-g2d-samples gstreamer1.0 gstreamer1.0-plugins-base  gstreamer1.0-plugins-good imx-gst1.0-plugin gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0 isp-imx imx-vpu-hantro-daemon"
+
+PREFERRED_PROVIDER_virtual/libg2d:imxgpu2d   ?= "imx-gpu-g2d"
 
 2.2 machine learning
 --------------------
