@@ -205,15 +205,21 @@ PREFERRED_PROVIDER_virtual/libg2d:imxgpu2d   ?= "imx-gpu-g2d"
 --------------------------
 
 Mode0: 1080p linear:
-        Change "Sensor0_Entry.cfg" to mode 0:
-        gst-launch-1.0 -v v4l2src device=/dev/video3 ! "video/x-raw,format=YUY2,width=1920,height=1080" ! queue ! waylandsink
+	# Configure the sensor to mode 0
+	sed -i "s/^mode = .*$/mode = 0/" /opt/imx8-isp/bin/Sensor0_Entry.cfg
+	gst-launch-1.0 -v v4l2src device=/dev/video3 ! "video/x-raw,format=YUY2,width=1920,height=1080" ! queue ! waylandsink
 Mode1: 1080p HDR:
-        Change "Sensor0_Entry.cfg" to mode 1:
-        gst-launch-1.0 -v v4l2src device=/dev/video3 ! "video/x-raw,format=YUY2,width=1920,height=1080" ! queue ! waylandsink
+	# Configure the sensor to mode 1
+	sed -i "s/^mode = .*$/mode = 1/" /opt/imx8-isp/bin/Sensor0_Entry.cfg
+	gst-launch-1.0 -v v4l2src device=/dev/video3 ! "video/x-raw,format=YUY2,width=1920,height=1080" ! queue ! waylandsink
 Mode2: 4K linear:
-        gst-launch-1.0 -v v4l2src device=/dev/video3 ! "video/x-raw,format=YUY2,width=3840,height=2160" ! queue ! waylandsink
+	# Configure the sensor to mode 2
+	sed -i "s/^mode = .*$/mode = 2/" /opt/imx8-isp/bin/Sensor0_Entry.cfg
+	gst-launch-1.0 -v v4l2src device=/dev/video3 ! "video/x-raw,format=YUY2,width=3840,height=2160" ! queue ! waylandsink
 Mode 3: 4K HDR:
-        gst-launch-1.0 -v v4l2src device=/dev/video3 ! "video/x-raw,format=YUY2,width=3840,height=2160" ! queue ! waylandsink
+	# Configure the sensor to mode 3
+	sed -i "s/^mode = .*$/mode = 3/" /opt/imx8-isp/bin/Sensor0_Entry.cfg
+	gst-launch-1.0 -v v4l2src device=/dev/video3 ! "video/x-raw,format=YUY2,width=3840,height=2160" ! queue ! waylandsink
 
 2.1.4.1 iMX8MP VPU
 ------------------
