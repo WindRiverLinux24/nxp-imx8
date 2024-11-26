@@ -8,6 +8,23 @@ LICENSE_FLAGS_ACCEPTED:append = " commercial"
 BSP_NXP_DERIVED:append:nxp-imx8  = " nxp-imx8"
 DISTROOVERRIDES:nxp-imx8 = "fsl fslc"
 
+2.0 M7-core test
+----------------
+
+MACHINEOVERRIDES:prepend = "mx8mp-nxp-bsp:"
+
+IMAGE_INSTALL:append = " imx-m7-demos"
+
+bitbake wrlinux-image-std
+
+Add bootargs 'mcore_clk clk-imx8mp.mcore_booted'
+
+echo imx8mp_m7_TCM_rpmsg_lite_str_echo_rtos.elf > /sys/devices/platform/imx8mp-cm7/remoteproc/remoteproc0/firmware
+
+echo start > /sys/devices/platform/imx8mp-cm7/remoteproc/remoteproc0/state
+
+cat /sys/devices/platform/imx8mp-cm7/remoteproc/remoteproc0/state
+
 2.1 GPU
 -------
 Because of the licesen issue, nxp-imx8 layer doesn't integrate imx8's GPU(GC7000Lite) or VPU
