@@ -328,6 +328,31 @@ INFO: 0.0196078: 458 bow tie
 INFO: 0.0117647: 466 bulletproof vest
 INFO: 0.00784314: 835 suit
 
+2.4 WIFI module 88W8997(Only iMX8MP)
+------------------------------------
+
+MACHINEOVERRIDES:prepend:nxp-imx8 = "mx8mp-nxp-bsp:"
+IMAGE_INSTALL:append = " kernel-module-nxp-wlan connman firmware-nxp-wifi-nxp8997-pcie firmware-nxp-wifi-nxp8997-sdio"
+
+CUSTOMER_RECIPES:fsl-bsp-release += "imx-m7-demos"
+CUSTOMER_RECIPES:fsl-bsp-release += "kernel-module-nxp-wlan"
+CUSTOMER_RECIPES:fsl-bsp-release += "wireless-tools"
+CUSTOMER_RECIPES:fsl-bsp-release += "nxp-wlan-sdk"
+CUSTOMER_RECIPES:freescale-layer += "firmware-nxp-wifi"
+
+bitbake wrlinux-image-std
+
+# kernel startup run
+modprobe moal mod_para=nxp/wifi_mod_para.conf
+
+Execute the following commands to validate the WiFi cards:
+
+        # ifconfig mlan<idx> up
+        # iw mlan<idx> scan
+        # iw dev mlan<idx> connect <AP essid>
+        # dhclient mlan<idx>
+        # ping <AP address> -i mlan<idx> -c 5
+
 2.5 Build Bootloader
 --------------------
 
