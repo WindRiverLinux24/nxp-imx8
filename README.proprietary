@@ -283,6 +283,33 @@ root:~# export LABELS=$(pwd)/coco_labels.txt
 
 gst-launch-1.0 --no-position v4l2src device=/dev/${capture device} ! video/x-raw,width=640,height=480,framerate=30/1 ! tee name=t t. ! queue max-size-buffers=2 leaky=2 ! imxvideoconvert_g2d ! video/x-raw,width=300,height=300,format=RGBA ! videoconvert ! video/x-raw,format=RGB ! tensor_converter ! tensor_filter framework=tensorflow-lite accelerator=true:gpu model=${pwd}/ssd_mobilenet_v2_coco_quant_postprocess.tflite custom=Delegate:NNAPI ! tensor_decoder mode=bounding_boxes option1=tf-ssd option2=${pwd}/coco_labels.txt option3=0:1:2:3,50 option4=640:480 option5=300:300 ! mix. t. ! queue max-size-buffers=2 ! imxcompositor_g2d name=mix sink_0::zorder=2 sink_1::zorder=1 ! waylandsink
 
+2.3 NPU(only MX8MP)
+-------------------
+
+cd /usr/bin/tensorflow-lite-2.16.2/examples#
+
+USE_GPU_INFERENCE=0 ./label_image -m mobilenet_v1_1.0_224_quant.tflite -i grace_hopper.bmp -l labels.txt --external_delegate_path=/usr/lib64/libvx_delegate.so
+
+You can get following messge:
+
+INFO: Loaded model mobilenet_v1_1.0_224_quant.tflite
+INFO: resolved reporter
+INFO: Vx delegate: allowed_cache_mode set to 0.
+INFO: Vx delegate: device num set to 0.
+INFO: Vx delegate: allowed_builtin_code set to 0.
+INFO: Vx delegate: error_during_init set to 0.
+INFO: Vx delegate: error_during_prepare set to 0.
+INFO: Vx delegate: error_during_invoke set to 0.
+INFO: EXTERNAL delegate created.
+INFO: Applied EXTERNAL delegate.
+W [HandleLayoutInfer:332]Op 162: default layout inference pass.
+INFO: invoked
+INFO: average time: 2.878 ms
+INFO: 0.768627: 653 military uniform
+INFO: 0.105882: 907 Windsor tie
+INFO: 0.0196078: 458 bow tie
+INFO: 0.0117647: 466 bulletproof vest
+INFO: 0.00784314: 835 suit
 
 2.5 Build Bootloader
 --------------------
