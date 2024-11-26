@@ -11,6 +11,8 @@ nxp_imx8_wic() {
                 dd if=imx-boot-nxp-imx8-${UBOOT_CONFIG}.bin-flash_spl of=${IMGDEPLOYDIR}/$ofname bs=512 seek=64 conv=fsync,notrunc
             elif [ ${UBOOT_CONFIG} = "mx8mqevk" ]; then
                 dd if=imx-boot-nxp-imx8-${UBOOT_CONFIG}.bin-flash_evk of=${IMGDEPLOYDIR}/$ofname bs=512 seek=66 conv=fsync,notrunc
+	    elif [ ${UBOOT_CONFIG} = "mx8mpevk" ]; then
+		dd if=imx-boot-nxp-imx8-${UBOOT_CONFIG}.bin-flash_evk of=${IMGDEPLOYDIR}/$ofname bs=512 seek=64 conv=fsync,notrunc
             fi
 
             cd "${IMGDEPLOYDIR}"
