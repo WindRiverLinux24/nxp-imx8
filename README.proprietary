@@ -7,6 +7,7 @@ LICENSE_FLAGS_ACCEPTED:append = " commercial"
 
 BSP_NXP_DERIVED:append:nxp-imx8  = " nxp-imx8"
 DISTROOVERRIDES:nxp-imx8 = "fsl fslc"
+CUSTOMER_RECIPES:fsl-bsp-release += 'imx-m7-demos'
 
 2.0 M7-core test
 ----------------
